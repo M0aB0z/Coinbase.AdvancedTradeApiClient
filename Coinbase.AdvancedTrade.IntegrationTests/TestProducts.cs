@@ -34,7 +34,7 @@ namespace Coinbase.AdvancedTradeTest
                 try
                 {
                     string productId = "BTC-USDC";
-                    var product = await (_coinbaseClient?.Products.GetProductAsync(productId) ?? Task.FromResult<Product?>(null));
+                    var product = await (_coinbaseClient?.Products.GetProductAsync(productId, CancellationToken.None) ?? Task.FromResult<Product?>(null));
                     Assert.IsNotNull(product, "Product should not be null.");
                     Assert.IsNotNull(product?.ProductId, "ProductId should not be null.");
                 }
@@ -59,7 +59,7 @@ namespace Coinbase.AdvancedTradeTest
                     string end = "1693612800";
                     var granularity = AdvancedTrade.Enums.Granularity.FIVE_MINUTE;
 
-                    var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, start, end, granularity) ?? Task.FromResult<List<Candle>?>(null));
+                    var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, start, end, granularity, CancellationToken.None) ?? Task.FromResult<List<Candle>?>(null));
 
                     Assert.IsNotNull(candles, "Candles list should not be empty.");
                     Assert.IsTrue(candles?.Count > 0, "Candles list should have at least one item.");
@@ -83,7 +83,7 @@ namespace Coinbase.AdvancedTradeTest
                     var productId = "BTC-USDC";
                     var limit = 10;
 
-                    var result = await (_coinbaseClient?.Products.GetMarketTradesAsync(productId, limit) ?? Task.FromResult<MarketTrades?>(null));
+                    var result = await (_coinbaseClient?.Products.GetMarketTradesAsync(productId, limit, CancellationToken.None) ?? Task.FromResult<MarketTrades?>(null));
 
                     Assert.IsNotNull(result, "Result should not be null.");
                     Assert.IsFalse(string.IsNullOrEmpty(result?.BestBid), "BestBid should not be empty.");
@@ -126,12 +126,12 @@ namespace Coinbase.AdvancedTradeTest
             await ExecuteRateLimitedTest(async () =>
             {
                 var productIds = new List<string> { "BTC-USDC", "ETH-USDC" };
-                var results = await _coinbaseClient!.Products.GetBestBidAskAsync(productIds);
+                var results = await _coinbaseClient!.Products.GetBestBidAskAsync(productIds, CancellationToken.None);
 
                 Assert.IsNotNull(results, "Product Books list should not be null.");
                 Assert.AreEqual(productIds.Count, results?.Count, "Number of returned ProductBooks should match the number of queried product IDs.");
 
-                foreach (var result in results ?? new List<ProductBook>())
+                foreach (var result in results ?? [])
                 {
                     Assert.IsTrue(productIds.Contains(result?.ProductId ?? string.Empty), $"Unexpected Product ID: {result?.ProductId}");
                     Assert.IsTrue(result?.Bids?.Count > 0, $"Bids list for Product ID: {result?.ProductId} should not be empty.");

@@ -96,7 +96,7 @@ namespace Coinbase.AdvancedTrade.Utilities
         /// </summary>
         /// <param name="obj">The object to convert.</param>
         /// <returns>A dictionary representation of the object's properties.</returns>
-        public static Dictionary<string, string> ConvertToDictionary(object obj)
+        private static Dictionary<string, string> ConvertToDictionary(object obj)
         {
             return obj.GetType().GetProperties()
                 .Where(prop => prop.GetValue(obj) != null) // Simplified null check
@@ -106,19 +106,26 @@ namespace Coinbase.AdvancedTrade.Utilities
                     {
                         var value = prop.GetValue(obj);
                         if (value is Array array) // Handle arrays
-                        {
                             return string.Join(",", array.Cast<object>());
-                        }
                         else if (value is IList && !(value is string)) // Handle non-generic lists
-                        {
                             return string.Join(",", ((IList)value).Cast<object>());
-                        }
                         else // Handle other types
-                        {
                             return value?.ToString() ?? string.Empty;
-                        }
                     }
                 );
+        }
+
+        /// <summary>
+        /// Builds a URI with query parameters from an object's properties.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="paramsObj"></param>
+        /// <returns></returns>
+        public static string BuildParamUri(string uri, object paramsObj)
+        {
+            var parameters = ConvertToDictionary(paramsObj);
+            var queryString = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+            return $"{uri}?{queryString}";
         }
 
         /// <summary>

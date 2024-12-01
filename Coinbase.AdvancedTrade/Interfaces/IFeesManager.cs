@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Coinbase.AdvancedTrade.Models;
 
@@ -16,12 +17,14 @@ namespace Coinbase.AdvancedTrade.Interfaces
         /// <param name="endDate">The end date of the transactions to retrieve.</param>
         /// <param name="userNativeCurrency">The native currency of the user. Defaults to "USD".</param>
         /// <param name="productType">The type of product. Defaults to "SPOT".</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A task representing the operation. The result of the task is a summary of the transactions or null if none are found.</returns>
         Task<TransactionsSummary> GetTransactionsSummaryAsync(
             DateTime startDate,
             DateTime endDate,
             string userNativeCurrency = "USD",
-            string productType = "SPOT"
+            string productType = "SPOT",
+            CancellationToken cancellationToken = default
         );
     }
 }

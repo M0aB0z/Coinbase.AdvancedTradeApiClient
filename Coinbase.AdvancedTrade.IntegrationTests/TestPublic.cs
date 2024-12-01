@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+﻿using Coinbase.AdvancedTrade;
 using Coinbase.AdvancedTrade.Enums;
 
 namespace Coinbase.AdvancedTradeTest
@@ -48,7 +43,7 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetCoinbaseServerTimeAsync method returns valid server time details using authenticated client.")]
         public async Task Test_Public_GetCoinbaseServerTimeAsync_WithAuth()
         {
-            var serverTime = await _coinbaseClient.Public.GetCoinbaseServerTimeAsync();
+            var serverTime = await _coinbaseClient.Public.GetCoinbaseServerTimeAsync(CancellationToken.None);
 
             Assert.IsNotNull(serverTime, "Server Time should not be null.");
             Assert.IsFalse(string.IsNullOrWhiteSpace(serverTime.Iso), "ISO time should not be null or whitespace.");
@@ -61,7 +56,7 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetCoinbaseServerTimeAsync method returns valid server time details using public client.")]
         public async Task Test_Public_GetCoinbaseServerTimeAsync_WithoutAuth()
         {
-            var serverTime = await _coinbasePublicClient.Public.GetCoinbaseServerTimeAsync();
+            var serverTime = await _coinbasePublicClient.Public.GetCoinbaseServerTimeAsync(CancellationToken.None);
 
             Assert.IsNotNull(serverTime, "Server Time should not be null.");
             Assert.IsFalse(string.IsNullOrWhiteSpace(serverTime.Iso), "ISO time should not be null or whitespace.");
@@ -107,7 +102,7 @@ namespace Coinbase.AdvancedTradeTest
         public async Task Test_Public_GetPublicProductAsync_WithAuth()
         {
             var productId = "BTC-USDC"; 
-            var product = await _coinbaseClient.Public.GetPublicProductAsync(productId);
+            var product = await _coinbaseClient.Public.GetPublicProductAsync(productId, CancellationToken.None);
 
             Assert.IsNotNull(product, "Product should not be null.");
             Assert.IsFalse(string.IsNullOrEmpty(product.Price), "Price should not be null or empty.");
@@ -121,7 +116,7 @@ namespace Coinbase.AdvancedTradeTest
         public async Task Test_Public_GetPublicProductAsync_WithoutAuth()
         {
             var productId = "BTC-USDC"; 
-            var product = await _coinbasePublicClient.Public.GetPublicProductAsync(productId);
+            var product = await _coinbasePublicClient.Public.GetPublicProductAsync(productId, CancellationToken.None);
 
             Assert.IsNotNull(product, "Product should not be null.");
             Assert.IsFalse(string.IsNullOrEmpty(product.Price), "Price should not be null or empty.");
@@ -198,7 +193,7 @@ namespace Coinbase.AdvancedTradeTest
             var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
             var granularity = Granularity.ONE_HOUR; 
 
-            var candles = await _coinbaseClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity);
+            var candles = await _coinbaseClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);
 
             Assert.IsNotNull(candles, "Candles should not be null.");
             Assert.IsTrue(candles.Count > 0, "Candles list should not be empty.");
@@ -215,7 +210,7 @@ namespace Coinbase.AdvancedTradeTest
             var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
             var granularity = Granularity.ONE_HOUR; 
 
-            var candles = await _coinbasePublicClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity);
+            var candles = await _coinbasePublicClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);
 
             Assert.IsNotNull(candles, "Candles should not be null.");
             Assert.IsTrue(candles.Count > 0, "Candles list should not be empty.");

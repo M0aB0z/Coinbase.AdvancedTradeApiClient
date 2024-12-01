@@ -45,11 +45,10 @@ namespace Coinbase.AdvancedTrade
         /// <param name="apiKey">The API key for authentication with Coinbase.</param>
         /// <param name="apiSecret">The API secret for authentication with Coinbase.</param>
         /// <param name="websocketBufferSize">The buffer size for WebSocket messages in bytes (Default 5,242,880 bytes/ 5 MB).</param>
-        /// <param name="apiKeyType">Specifies the type of API key used. This can be either a Legacy key (Depricated) or a Coinbase Developer Platform (CDP) key.</param>
-        public CoinbaseClient(string apiKey, string apiSecret, int websocketBufferSize = 5 * 1024 * 1024, ApiKeyType apiKeyType = ApiKeyType.CoinbaseDeveloperPlatform)
+        public CoinbaseClient(string apiKey, string apiSecret, int websocketBufferSize = 5 * 1024 * 1024)
         {
             // Create an instance of CoinbaseAuthenticator with the provided credentials and API key type
-            var authenticator = new CoinbaseAuthenticator(apiKey, apiSecret, apiKeyType);
+            var authenticator = new CoinbaseAuthenticator(apiKey, apiSecret);
 
             // Initialize various service managers with the authenticator
             Accounts = new AccountsManager(authenticator);
@@ -59,7 +58,7 @@ namespace Coinbase.AdvancedTrade
             Public = new PublicManager(authenticator);
 
             // Initialize WebSocketManager for real-time data feed
-            WebSocket = new WebSocketManager("wss://advanced-trade-ws.coinbase.com", apiKey, apiSecret, websocketBufferSize, apiKeyType);
+            WebSocket = new WebSocketManager("wss://advanced-trade-ws.coinbase.com", apiKey, apiSecret, websocketBufferSize);
         }
 
     }

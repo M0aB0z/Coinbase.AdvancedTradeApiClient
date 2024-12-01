@@ -31,10 +31,8 @@ namespace Coinbase.AdvancedTrade
         // The API secret used for authentication.
         private readonly string _apiSecret;
 
-        private readonly ApiKeyType _apiKeyType;
-
         // Dictionary to map channel names to message processors.
-        private readonly Dictionary<string, Action<string>> _messageMap = new Dictionary<string, Action<string>>();
+        private readonly Dictionary<string, Action<string>> _messageMap = [];
 
         // Semaphore for controlling access to critical sections of the code.
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
@@ -55,7 +53,7 @@ namespace Coinbase.AdvancedTrade
         };
 
         // Tracks the subscriptions
-        private readonly HashSet<string> _subscriptions = new HashSet<string>();
+        private readonly HashSet<string> _subscriptions = [];
 
         /// <summary>
         /// Gets the current status of the WebSocket connection.
@@ -101,8 +99,7 @@ namespace Coinbase.AdvancedTrade
         /// <param name="apiKey">The API key used for authentication.</param>
         /// <param name="apiSecret">The API secret used for authentication.</param>
         /// <param name="bufferSize">The buffer size for receiving messages, in bytes (default is 5,242,880 bytes or 5MB).</param>
-        /// <param name="apiKeyType">Specifies the type of API key used. This can be either a Legacy key (Depricated) or a Coinbase Developer Platform (CDP) key.</param>
-        public WebSocketManager(string webSocketUri, string apiKey, string apiSecret, int bufferSize = 5 * 1024 * 1024, ApiKeyType apiKeyType = ApiKeyType.CoinbaseDeveloperPlatform)
+        public WebSocketManager(string webSocketUri, string apiKey, string apiSecret, int bufferSize = 5 * 1024 * 1024)
         {
             // Check for null or empty values and throw exceptions if necessary.
             if (string.IsNullOrWhiteSpace(webSocketUri)) throw new ArgumentNullException(nameof(webSocketUri));
@@ -114,7 +111,6 @@ namespace Coinbase.AdvancedTrade
             _apiKey = apiKey;
             _apiSecret = apiSecret;
             _bufferSize = bufferSize;
-            _apiKeyType = apiKeyType;
 
             // Initialize the message map, mapping channel names to message processors.
             _messageMap = new Dictionary<string, Action<string>>
@@ -138,27 +134,18 @@ namespace Coinbase.AdvancedTrade
         public static string GetChannelString(ChannelType channelType)
         {
             // Use a switch statement to map the channel type to its string representation.
-            switch (channelType)
+            return channelType switch
             {
-                case ChannelType.Candles:
-                    return "candles";
-                case ChannelType.Heartbeats:
-                    return "heartbeats";
-                case ChannelType.MarketTrades:
-                    return "market_trades";
-                case ChannelType.Status:
-                    return "status";
-                case ChannelType.Ticker:
-                    return "ticker";
-                case ChannelType.TickerBatch:
-                    return "ticker_batch";
-                case ChannelType.Level2:
-                    return "level2";
-                case ChannelType.User:
-                    return "user";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(channelType), channelType, "Invalid channel type provided.");
-            }
+                ChannelType.Candles => "candles",
+                ChannelType.Heartbeats => "heartbeats",
+                ChannelType.MarketTrades => "market_trades",
+                ChannelType.Status => "status",
+                ChannelType.Ticker => "ticker",
+                ChannelType.TickerBatch => "ticker_batch",
+                ChannelType.Level2 => "level2",
+                ChannelType.User => "user",
+                _ => throw new ArgumentOutOfRangeException(nameof(channelType), channelType, "Invalid channel type provided."),
+            };
         }
 
         /// <summary>
@@ -369,21 +356,8 @@ namespace Coinbase.AdvancedTrade
                 {"timestamp", timestamp}
             };
 
-            // Depending on the API key type, add either JWT or a signature
-            if (_apiKeyType == ApiKeyType.CoinbaseDeveloperPlatform)
-            {
-                // Generate JWT for Cloud Trading keys
-                var jwt = JwtTokenGenerator.GenerateJwt(_apiKey, _apiSecret, "public_websocket_api");
-                message.Add("jwt", jwt);
-            }
-            else
-            {
-                // For Legacy keys, generate a signature
-                var productsString = products != null ? string.Join(",", products) : string.Empty;
-                var stringToSign = $"{timestamp}{channelName}{productsString}";
-                var signature = ComputeSignature(stringToSign, _apiSecret);
-                message.Add("signature", signature);
-            }
+            var jwt = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, "public_websocket_api");
+            message.Add("jwt", jwt);
 
             // Return the constructed message
             return message;

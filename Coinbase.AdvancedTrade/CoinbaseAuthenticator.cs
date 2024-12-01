@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Coinbase.AdvancedTrade.Enums;
 using Newtonsoft.Json;
-using RestSharp;
 
 namespace Coinbase.AdvancedTrade
 {
@@ -16,12 +16,11 @@ namespace Coinbase.AdvancedTrade
     /// </summary>
     public sealed class CoinbaseAuthenticator
     {
-        private readonly RestClient _client;
+        private readonly HttpClient httpClient;
         private readonly string _apiKey;
         private readonly string _apiSecret;
         private readonly string _oAuth2AccessToken;
         private readonly bool _useOAuth;
-        private ApiKeyType _apiKeyType;
         private const string _apiUrl = "https://api.coinbase.com";
 
         /// <summary>
@@ -39,13 +38,14 @@ namespace Coinbase.AdvancedTrade
         /// </summary>
         /// <param name="apiKey">The API key for Coinbase authentication.</param>
         /// <param name="apiSecret">The API secret for Coinbase authentication.</param>
-        /// <param name="apiKeyType">The type of API key, CoinbaseDeveloperPlatform or Legacy (deprecated).</param>
-        public CoinbaseAuthenticator(string apiKey, string apiSecret, ApiKeyType apiKeyType = ApiKeyType.CoinbaseDeveloperPlatform)
+        public CoinbaseAuthenticator(string apiKey, string apiSecret)
         {
             _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey), "API key cannot be null.");
             _apiSecret = apiSecret ?? throw new ArgumentNullException(nameof(apiSecret), "API secret cannot be null.");
-            _apiKeyType = apiKeyType;
-            _client = new RestClient(_apiUrl);
+            httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(_apiUrl)
+            };
             _useOAuth = false;
         }
 
@@ -56,37 +56,42 @@ namespace Coinbase.AdvancedTrade
         public CoinbaseAuthenticator(string oAuth2AccessToken)
         {
             _oAuth2AccessToken = oAuth2AccessToken ?? throw new ArgumentNullException(nameof(oAuth2AccessToken), "OAuth2 access token cannot be null.");
-            _client = new RestClient(_apiUrl);
+            httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(_apiUrl)
+            };
             _useOAuth = true;
         }
 
         /// <summary>
-        /// Sends an authenticated asynchronous request to a specified path.
+        /// 
         /// </summary>
-        /// <param name="method">The HTTP method for the request.</param>
-        /// <param name="path">The path for the request.</param>
-        /// <param name="queryParams">Optional query parameters to append to the request.</param>
-        /// <param name="bodyObj">Optional body object to be sent with the request.</param>
-        /// <returns>A Task representing the asynchronous operation, which upon completion returns a dictionary containing the response, or null if the response content is empty or invalid.</returns>
-        public async Task<Dictionary<string, object>> SendAuthenticatedRequestAsync(string method, string path, Dictionary<string, string> queryParams = null, object bodyObj = null)
+        /// <param name="path"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<Dictionary<string, object>> GetAsync(string path, CancellationToken cancellationToken = default)
         {
-            // Validate the 'method' parameter for null or empty values
-            if (string.IsNullOrEmpty(method))
-            {
-                throw new ArgumentException("Method cannot be null or empty", nameof(method));
-            }
-
-            // Ensure the provided method is a valid HTTP method
-            if (!Enum.GetNames(typeof(Method)).Any(e => e.Equals(method, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new ArgumentException("Invalid method type", nameof(method));
-            }
-
             // Generate headers required for the authenticated request
-            var headers = _useOAuth ? CreateOAuth2Headers() : CreateHeaders(method, path, bodyObj);
+            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Get, path);
 
             // Execute the request and return the result
-            return await ExecuteRequestAsync(method, path, bodyObj, headers, queryParams);
+            return await ExecuteRequestAsync(HttpMethod.Get, path, null, headers, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sends a POST request to the specified path with the provided body object and query parameters.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="bodyObj"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<Dictionary<string, object>> PostAsync(string path, object bodyObj, CancellationToken cancellationToken = default)
+        {
+            // Generate headers required for the authenticated request
+            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Post, path);
+
+            // Execute the request and return the result
+            return await ExecuteRequestAsync(HttpMethod.Post, path, bodyObj, headers, cancellationToken);
         }
 
         /// <summary>
@@ -104,12 +109,12 @@ namespace Coinbase.AdvancedTrade
         /// <summary>
         /// Generates headers for API key/secret authentication using JWT (JSON Web Token).
         /// </summary>
-        /// <param name="method">The HTTP method being used for the request (e.g., 'GET', 'POST').</param>
+        /// <param name="method">Wich HTTP method is used ? (GET / POST)</param>
         /// <param name="path">The path of the API endpoint being accessed.</param>
         /// <returns>A dictionary of headers with the Authorization header containing the JWT for authenticating the request using Coinbase Developer Platform (CDP) API keys.</returns>
-        private Dictionary<string, string> CreateJwtHeaders(string method, string path)
+        private Dictionary<string, string> CreateJwtHeaders(HttpMethod method, string path)
         {
-            string jwtToken = JwtTokenGenerator.GenerateJwt(_apiKey, _apiSecret, "retail_rest_api_proxy", method, path);
+            string jwtToken = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, $"{method} {_apiUrl.Substring("https://".Length)}{path.Split('?').First()}");
             return new Dictionary<string, string>
             {
                 { "Authorization", $"Bearer {jwtToken}" }
@@ -123,96 +128,38 @@ namespace Coinbase.AdvancedTrade
         /// <param name="path">The request path.</param>
         /// <param name="bodyObj">The request body object.</param>
         /// <param name="headers">Headers to be added to the request.</param>
-        /// <param name="queryParams">Query parameters to be added to the request.</param>
+        /// <param name="cancellationToken">Http request cancellation token</param>
         /// <returns>A Task representing the asynchronous operation, which upon completion returns a dictionary representation of the response content, or null if the content is empty or only consists of white-space characters.</returns>
-        private async Task<Dictionary<string, object>> ExecuteRequestAsync(string method, string path, object bodyObj, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
+        private async Task<Dictionary<string, object>> ExecuteRequestAsync(HttpMethod method, string path, object bodyObj, Dictionary<string, string> headers, CancellationToken cancellationToken)
         {
             try
             {
-                // Create a new request object with the specified method and path
-                if (!Enum.TryParse<Method>(method, ignoreCase: true, out var httpMethod))
+                using (var requestMessage = new HttpRequestMessage(method, path))
                 {
-                    throw new ArgumentException($"Invalid method '{method}'.", nameof(method));
+                    //requestMessage.Headers.Authorization =
+                    //    new AuthenticationHeaderValue("Bearer", your_token);
+
+                    // Add headers to the request
+                    foreach (var header in headers)
+                        requestMessage.Headers.Add(header.Key, header.Value);
+
+                    if (bodyObj != null)
+                        requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bodyObj), Encoding.UTF8, "application/json");
+
+                    var response = await httpClient.SendAsync(requestMessage, cancellationToken);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    // Check if the response content is empty or just white-space
+                    if (string.IsNullOrWhiteSpace(responseContent))
+                        return null;
+
+                    // Deserialize the content into a dictionary
+                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(responseContent);
                 }
-
-                var request = new RestRequest(path, httpMethod);
-
-                // Add headers to the request
-                foreach (var header in headers)
-                {
-                    request.AddHeader(header.Key, header.Value);
-                }
-
-                // Add query parameters if provided
-                if (queryParams != null)
-                {
-                    foreach (var param in queryParams)
-                    {
-                        request.AddParameter(param.Key, param.Value);
-                    }
-                }
-
-                // Serialize and add the body if provided
-                if (bodyObj != null)
-                {
-                    request.AddJsonBody(JsonConvert.SerializeObject(bodyObj));
-                }
-
-                // Execute the request
-                var response = await _client.ExecuteAsync(request); // Using the async version of Execute
-
-                return HandleResponse(response);
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException("An error occurred while executing the request.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Parses and returns the response content as a dictionary.
-        /// </summary>
-        /// <param name="response">The response received from a REST request.</param>
-        /// <returns>A dictionary representation of the response content, or null if the content is empty or only consists of white-space characters.</returns>
-        private static Dictionary<string, object> HandleResponse(RestResponse response)
-        {
-            // Check if the response content is empty or just white-space
-            if (string.IsNullOrWhiteSpace(response.Content))
-            {
-                return null;
-            }
-
-            // Deserialize the content into a dictionary
-            return JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
-        }
-
-        /// <summary>
-        /// Creates headers for a request, with values appropriate to the type of API key being used.
-        /// For legacy keys, it delegates to CreateLegacyHeaders method to include a signature based on the HMACSHA256 algorithm.
-        /// For Cloud Trading keys, it includes a JWT (JSON Web Token) in the Authorization header.
-        /// </summary>
-        /// <param name="method">HTTP method being used (GET, POST, etc.)</param>
-        /// <param name="path">API endpoint path.</param>
-        /// <param name="bodyObj">Request body object, if any. Used in signature generation for legacy keys. Not used for JWT.</param>
-        /// <returns>A dictionary containing headers for the request. The headers include authentication details appropriate to the API key type.</returns>
-        private Dictionary<string, string> CreateHeaders(string method, string path, object bodyObj)
-        {
-            try
-            {
-                if (_apiKeyType == ApiKeyType.CoinbaseDeveloperPlatform)
-                {
-                    // For JWT-based Cloud Trading keys, generate JWT headers
-                    return CreateJwtHeaders(method, path);
-                }
-                else
-                {
-                    // For legacy keys, generate headers including the HMACSHA256 signature
-                    return CreateLegacyHeaders(method, path, bodyObj);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
