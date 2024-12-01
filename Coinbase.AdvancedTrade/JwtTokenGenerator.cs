@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using Jose;
 using System.Linq;
+using System.Xml.Linq;
 
 
 /*
@@ -22,13 +23,15 @@ public static class JwtTokenGenerator
     /// <summary>
     /// Generates a JSON Web Token (JWT) for authenticating with the Coinbase Developer Platform (CDP) API.
     /// </summary>
-    /// <param name="appKey">Your applicatio key</param>
-    /// <param name="appSecret">Your application secret</param>
+    /// <param name="appKey">Your application public key like 'organizations/{org_id}/apiKeys/{key_id}'</param>
+    /// <param name="cbPrivateKey">Your application private key</param>
     /// <param name="uri">the requested uri</param>
     /// <returns></returns>
-    public static string GenerateToken(string appKey, string appSecret, string uri)//"organizations/{org_id}/apiKeys/{key_id}";
+    public static string GenerateToken(string appKey, string cbPrivateKey, string uri)
     {
-        var privateKeyBytes = Convert.FromBase64String(appSecret); // Assuming PEM is base64 encoded
+        string base64Key = ParseKey(cbPrivateKey.Replace("\\n", "\n"));
+
+        var privateKeyBytes = Convert.FromBase64String(base64Key); // Assuming PEM is base64 encoded
         using var key = ECDsa.Create();
         key.ImportECPrivateKey(privateKeyBytes, out _);
 
@@ -52,6 +55,15 @@ public static class JwtTokenGenerator
         return JWT.Encode(payload, key, JwsAlgorithm.ES256, extraHeaders);
     }
 
+    static string ParseKey(string key)
+    {
+        List<string> keyLines = [.. key.Split('\n', StringSplitOptions.RemoveEmptyEntries)];
+
+        keyLines.RemoveAt(0);
+        keyLines.RemoveAt(keyLines.Count - 1);
+
+        return String.Join("", keyLines);
+    }
 
     static string RandomHex(int digits)
     {
