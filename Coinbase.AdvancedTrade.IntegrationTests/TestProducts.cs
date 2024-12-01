@@ -131,7 +131,7 @@ namespace Coinbase.AdvancedTradeTest
                 Assert.IsNotNull(results, "Product Books list should not be null.");
                 Assert.AreEqual(productIds.Count, results?.Count, "Number of returned ProductBooks should match the number of queried product IDs.");
 
-                foreach (var result in results ?? new List<ProductBook>())
+                foreach (var result in results ?? [])
                 {
                     Assert.IsTrue(productIds.Contains(result?.ProductId ?? string.Empty), $"Unexpected Product ID: {result?.ProductId}");
                     Assert.IsTrue(result?.Bids?.Count > 0, $"Bids list for Product ID: {result?.ProductId} should not be empty.");

@@ -1,5 +1,4 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.ExchangeManagers;
+﻿using Coinbase.AdvancedTrade.ExchangeManagers;
 using Coinbase.AdvancedTrade.Interfaces;
 
 namespace Coinbase.AdvancedTrade

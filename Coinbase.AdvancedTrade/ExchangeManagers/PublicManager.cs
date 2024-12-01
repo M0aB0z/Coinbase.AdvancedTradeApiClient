@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coinbase.AdvancedTrade.Interfaces;
-using RestSharp;
 using Coinbase.AdvancedTrade.Models.Public;
 using Coinbase.AdvancedTrade.Utilities;
 using Newtonsoft.Json;
 using System.Linq;
 using Coinbase.AdvancedTrade.Enums;
+using System.Threading;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
 {
@@ -28,15 +28,15 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         public PublicManager() : base(null) { }
 
         /// <inheritdoc/>
-        public async Task<ServerTime> GetCoinbaseServerTimeAsync()
+        public async Task<ServerTime> GetCoinbaseServerTimeAsync(CancellationToken cancellationToken)
         {
             try
             {
-                var request = new RestRequest("/api/v3/brokerage/time", Method.Get);
-                var response = await _client.ExecuteAsync<ServerTime>(request);
-                if (response.IsSuccessful)
+                var response = await _client.GetAsync("/api/v3/brokerage/time", cancellationToken);
+                if (response.IsSuccessStatusCode)
                 {
-                    return response.Data;
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ServerTime>(content);
                 }
                 else
                 {
@@ -50,31 +50,33 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<List<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null)
+        public async Task<List<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null, CancellationToken cancellationToken = default)
         {
             try
             {
-                var request = new RestRequest("/api/v3/brokerage/market/products", Method.Get);
-
-                // Add query parameters if provided
+                var parameters = new Dictionary<string, object>();
                 if (limit.HasValue)
-                    request.AddParameter("limit", limit.Value);
+                    parameters.Add("limit", limit.Value);
+
                 if (offset.HasValue)
-                    request.AddParameter("offset", offset.Value);
+                    parameters.Add("offset", offset.Value);
+
                 if (!string.IsNullOrEmpty(productType))
-                    request.AddParameter("product_type", productType);
-                if (productIds != null && productIds.Any())
+                    parameters.Add("product_type", productType);
+
+                if (productIds != null && productIds.Count != 0)
                 {
                     foreach (var productId in productIds)
-                    {
-                        request.AddParameter("product_ids", productId);
-                    }
+                        parameters.Add("product_ids", productId);
                 }
 
-                var response = await _client.ExecuteAsync(request);
-                if (response.IsSuccessful)
+                var uri = UtilityHelper.BuildParamUri("/api/v3/brokerage/market/products", parameters);
+
+                var response = await _client.GetAsync(uri, cancellationToken);
+                if (response.IsSuccessStatusCode)
                 {
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
                     return UtilityHelper.DeserializeJsonElement<List<PublicProduct>>(responseDict, "products");
                 }
                 else
@@ -89,26 +91,21 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<PublicProduct> GetPublicProductAsync(string productId)
+        public async Task<PublicProduct> GetPublicProductAsync(string productId, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(productId))
-            {
                 throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
-            }
-
             try
             {
-                var request = new RestRequest($"/api/v3/brokerage/market/products/{productId}", Method.Get);
-                var response = await _client.ExecuteAsync(request);
-                if (response.IsSuccessful)
+                var response = await _client.GetAsync($"/api/v3/brokerage/market/products/{productId}", cancellationToken);
+                if (response.IsSuccessStatusCode)
                 {
-                    var publicProduct = JsonConvert.DeserializeObject<PublicProduct>(response.Content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var publicProduct = JsonConvert.DeserializeObject<PublicProduct>(content);
                     return publicProduct;
                 }
                 else
-                {
                     throw new InvalidOperationException($"Failed to get public product. Status: {response.StatusCode}, Content: {response.Content}");
-                }
             }
             catch (Exception ex)
             {
@@ -117,33 +114,26 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<PublicProductBook> GetPublicProductBookAsync(string productId, int? limit = null)
+        public async Task<PublicProductBook> GetPublicProductBookAsync(string productId, int? limit = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(productId))
-            {
                 throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
-            }
-
+   
             try
             {
-                var request = new RestRequest("/api/v3/brokerage/market/product_book", Method.Get);
-                request.AddParameter("product_id", productId);
-
+                var parameters = new Dictionary<string, object> { { "product_id", productId } };
                 if (limit.HasValue)
-                {
-                    request.AddParameter("limit", limit.Value);
-                }
+                    parameters.Add("limit", limit.Value);
 
-                var response = await _client.ExecuteAsync(request);
-                if (response.IsSuccessful)
+                var response = await _client.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/market/product_book", parameters), cancellationToken);
+                if (response.IsSuccessStatusCode)
                 {
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
                     return UtilityHelper.DeserializeJsonElement<PublicProductBook>(responseDict, "pricebook");
                 }
                 else
-                {
                     throw new InvalidOperationException($"Failed to get public product book. Status: {response.StatusCode}, Content: {response.Content}");
-                }
             }
             catch (Exception ex)
             {
@@ -152,32 +142,26 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, long? start = null, long? end = null)
+        public async Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, long? start = null, long? end = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(productId))
-            {
                 throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
-            }
 
             try
             {
-                var request = new RestRequest($"/api/v3/brokerage/market/products/{productId}/ticker", Method.Get);
-                request.AddParameter("limit", limit);
+                var parameters = new Dictionary<string, object> { { "limit", limit } };
 
                 if (start.HasValue)
-                {
-                    request.AddParameter("start", start.Value);
-                }
+                    parameters.Add("start", start.Value);
 
                 if (end.HasValue)
-                {
-                    request.AddParameter("end", end.Value);
-                }
+                    parameters.Add("end", end.Value);
 
-                var response = await _client.ExecuteAsync(request);
-                if (response.IsSuccessful)
+                var response = await _client.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/market/products/{productId}/ticker", parameters), cancellationToken);
+                if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<PublicMarketTrades>(response.Content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<PublicMarketTrades>(content);
                 }
                 else
                 {
@@ -191,21 +175,22 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<List<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity)
+        public async Task<List<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken)
         {
             try
             {
-                var request = new RestRequest($"/api/v3/brokerage/market/products/{productId}/candles", Method.Get);
-
-                // Add query parameters
-                request.AddParameter("start", start);
-                request.AddParameter("end", end);
-                request.AddParameter("granularity", granularity.ToString());
-
-                var response = await _client.ExecuteAsync(request);
-                if (response.IsSuccessful)
+                var parameters = new Dictionary<string, object>
                 {
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
+                    { "start", start },
+                    { "end", end },
+                    { "granularity", granularity }
+                };
+
+                var response = await _client.GetAsync($"/api/v3/brokerage/market/products/{productId}/candles", cancellationToken);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
                     return UtilityHelper.DeserializeJsonElement<List<PublicCandle>>(responseDict, "candles");
                 }
                 else

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Coinbase.AdvancedTrade;
 
 namespace Coinbase.AdvancedTradeTest
 {

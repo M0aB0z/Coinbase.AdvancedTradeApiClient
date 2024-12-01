@@ -3,6 +3,7 @@ using Coinbase.AdvancedTrade.Models;
 using Coinbase.AdvancedTrade.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
@@ -19,12 +20,12 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         public AccountsManager(CoinbaseAuthenticator authenticator) : base(authenticator) { }
 
         /// <inheritdoc/>
-        public async Task<List<Account>> ListAccountsAsync(int limit = 49, string cursor = null)
+        public async Task<List<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default)
         {
             try
             {
                 var parameters = new { limit, cursor };
-                var response = await _authenticator.SendAuthenticatedRequestAsync("GET", "/api/v3/brokerage/accounts", UtilityHelper.ConvertToDictionary(parameters)) ?? new Dictionary<string, object>();
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/accounts", parameters));
 
                 return UtilityHelper.DeserializeJsonElement<List<Account>>(response, "accounts");
             }
@@ -36,7 +37,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         }
 
         /// <inheritdoc/>
-        public async Task<Account> GetAccountAsync(string accountUuid)
+        public async Task<Account> GetAccountAsync(string accountUuid, CancellationToken cancellationToken = default)
         {
             // Check if the provided UUID is valid.
             if (string.IsNullOrEmpty(accountUuid))
@@ -46,7 +47,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
             try
             {
-                var response = await _authenticator.SendAuthenticatedRequestAsync("GET", $"/api/v3/brokerage/accounts/{accountUuid}") ?? new Dictionary<string, object>();
+                var response = await _authenticator.GetAsync($"/api/v3/brokerage/accounts/{accountUuid}", cancellationToken) ?? [];
 
                 return UtilityHelper.DeserializeJsonElement<Account>(response, "account");
             }

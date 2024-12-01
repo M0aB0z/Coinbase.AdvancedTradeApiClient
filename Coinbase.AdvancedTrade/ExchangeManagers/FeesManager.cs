@@ -3,6 +3,7 @@ using Coinbase.AdvancedTrade.Models;
 using Coinbase.AdvancedTrade.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
@@ -23,7 +24,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
             DateTime startDate,
             DateTime endDate,
             string userNativeCurrency = "USD",
-            string productType = "SPOT")
+            string productType = "SPOT",
+            CancellationToken cancellationToken = default)
         {
             // Create request parameters
             var paramsDict = new Dictionary<string, string>
@@ -38,12 +40,9 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
             {
                 // Assuming SendAuthenticatedRequest becomes asynchronous
                 if (_authenticator == null)
-                {
                     throw new InvalidOperationException("Authenticator is not initialized.");
-                }
 
-                var response = await _authenticator.SendAuthenticatedRequestAsync("GET", "/api/v3/brokerage/transaction_summary", paramsDict);
-
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/transaction_summary", paramsDict), cancellationToken);
 
                 if (response != null)
                 {

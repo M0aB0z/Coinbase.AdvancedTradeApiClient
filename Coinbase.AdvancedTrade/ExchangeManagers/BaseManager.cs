@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using RestSharp;
+using System.Net.Http;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
 {
@@ -20,7 +16,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         /// <summary>
         /// REST client for making API requests.
         /// </summary>
-        protected readonly RestClient _client;
+        protected readonly HttpClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseManager"/> class.
@@ -30,7 +26,10 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         protected BaseManager(CoinbaseAuthenticator authenticator, string baseUrl = "https://api.coinbase.com")
         {
             _authenticator = authenticator;
-            _client = new RestClient(baseUrl);
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(baseUrl)
+            };
         }
         
     }

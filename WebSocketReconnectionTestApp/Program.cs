@@ -1,8 +1,5 @@
 ﻿using Coinbase.AdvancedTrade;
 using Coinbase.AdvancedTrade.Enums;
-using System;
-using System.Threading.Tasks;
-using System.Threading;
 
 class Program
 {

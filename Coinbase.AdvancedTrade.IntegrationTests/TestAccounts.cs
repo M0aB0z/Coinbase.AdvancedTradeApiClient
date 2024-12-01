@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Coinbase.AdvancedTrade.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Coinbase.AdvancedTradeTest
+﻿namespace Coinbase.AdvancedTradeTest
 {
     [TestClass]
     public class TestAccounts : TestBase

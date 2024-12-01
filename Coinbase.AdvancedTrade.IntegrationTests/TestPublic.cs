@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+﻿using Coinbase.AdvancedTrade;
 using Coinbase.AdvancedTrade.Enums;
 
 namespace Coinbase.AdvancedTradeTest

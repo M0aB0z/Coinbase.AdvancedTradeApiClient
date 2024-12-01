@@ -1,5 +1,4 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Models;
 
 namespace Coinbase.AdvancedTradeTest
 {

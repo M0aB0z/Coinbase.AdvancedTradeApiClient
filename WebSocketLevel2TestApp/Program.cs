@@ -1,6 +1,5 @@
 ﻿using Coinbase.AdvancedTrade;
 using Coinbase.AdvancedTrade.Enums;
-using Org.BouncyCastle.Utilities;
 
 bool _isCleanupDone = false;
 
