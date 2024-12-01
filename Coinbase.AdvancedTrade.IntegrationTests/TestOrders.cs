@@ -57,7 +57,7 @@ namespace Coinbase.AdvancedTradeTest
             await ExecuteRateLimitedTest(async () =>
             {
                 string testOrderId = "75e5d09c-c0c7-4089-802e-69f6d672ec75";
-                var result = await _coinbaseClient!.Orders.GetOrderAsync(testOrderId);
+                var result = await _coinbaseClient!.Orders.GetOrderAsync(testOrderId, CancellationToken.None);
 
                 Assert.IsNotNull(result, "Result should not be null.");
                 Assert.AreEqual(testOrderId, result?.OrderId, "Returned order ID should match the test order ID.");
@@ -73,7 +73,7 @@ namespace Coinbase.AdvancedTradeTest
             await ExecuteRateLimitedTest(async () =>
             {
                 string[] testOrderIds = { "bff541d3-9991-4ec8-960a-8183a551ee57" };
-                var result = await _coinbaseClient!.Orders.CancelOrdersAsync(testOrderIds);
+                var result = await _coinbaseClient!.Orders.CancelOrdersAsync(testOrderIds, CancellationToken.None);
 
                 Assert.IsNotNull(result, "Result should not be null.");
                 Assert.IsTrue(result.Count > 0, "Should return at least one cancel order result.");
@@ -95,7 +95,7 @@ namespace Coinbase.AdvancedTradeTest
                 string? newSize = "0.0001";
 
                 // Attempt to edit the order
-                var result = await _coinbaseClient!.Orders.EditOrderAsync(existingOrderId, newPrice, newSize);
+                var result = await _coinbaseClient!.Orders.EditOrderAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
 
                 // Assert that the edit operation was reported as successful
                 Assert.IsTrue(result, "Edit operation should be reported as successful.");
@@ -114,7 +114,7 @@ namespace Coinbase.AdvancedTradeTest
                 string newPrice = "74000.00";
                 string? newSize = "0.0001";
 
-                var result = await _coinbaseClient!.Orders.EditOrderPreviewAsync(existingOrderId, newPrice, newSize);
+                var result = await _coinbaseClient!.Orders.EditOrderPreviewAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
 
                 Assert.IsNotNull(result, "Preview result should not be null.");
                 Assert.IsFalse(string.IsNullOrWhiteSpace(result.OrderTotal), "OrderTotal should have a value.");

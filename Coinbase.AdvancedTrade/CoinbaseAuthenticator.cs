@@ -75,7 +75,7 @@ namespace Coinbase.AdvancedTrade
         public async Task<Dictionary<string, object>> GetAsync(string path, CancellationToken cancellationToken = default)
         {
             // Generate headers required for the authenticated request
-            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(path);
+            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Get, path);
 
             // Execute the request and return the result
             return await ExecuteRequestAsync(HttpMethod.Get, path, null, headers, cancellationToken);
@@ -91,7 +91,7 @@ namespace Coinbase.AdvancedTrade
         public async Task<Dictionary<string, object>> PostAsync(string path, object bodyObj, CancellationToken cancellationToken = default)
         {
             // Generate headers required for the authenticated request
-            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(path);
+            var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Post, path);
 
             // Execute the request and return the result
             return await ExecuteRequestAsync(HttpMethod.Post, path, bodyObj, headers, cancellationToken);
@@ -112,11 +112,12 @@ namespace Coinbase.AdvancedTrade
         /// <summary>
         /// Generates headers for API key/secret authentication using JWT (JSON Web Token).
         /// </summary>
+        /// <param name="method">Wich HTTP method is used ? (GET / POST)</param>
         /// <param name="path">The path of the API endpoint being accessed.</param>
         /// <returns>A dictionary of headers with the Authorization header containing the JWT for authenticating the request using Coinbase Developer Platform (CDP) API keys.</returns>
-        private Dictionary<string, string> CreateJwtHeaders(string path)
+        private Dictionary<string, string> CreateJwtHeaders(HttpMethod method, string path)
         {
-            string jwtToken = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, path);
+            string jwtToken = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, $"{method} {path}");
             return new Dictionary<string, string>
             {
                 { "Authorization", $"Bearer {jwtToken}" }
