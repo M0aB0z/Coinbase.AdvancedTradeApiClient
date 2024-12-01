@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Coinbase.AdvancedTrade.Enums;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Coinbase.AdvancedTrade
 {
@@ -117,7 +114,7 @@ namespace Coinbase.AdvancedTrade
         /// <returns>A dictionary of headers with the Authorization header containing the JWT for authenticating the request using Coinbase Developer Platform (CDP) API keys.</returns>
         private Dictionary<string, string> CreateJwtHeaders(HttpMethod method, string path)
         {
-            string jwtToken = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, $"{method} {path}");
+            string jwtToken = JwtTokenGenerator.GenerateToken(_apiKey, _apiSecret, $"{method} {_apiUrl.Substring("https://".Length)}{path.Split('?').First()}");
             return new Dictionary<string, string>
             {
                 { "Authorization", $"Bearer {jwtToken}" }
