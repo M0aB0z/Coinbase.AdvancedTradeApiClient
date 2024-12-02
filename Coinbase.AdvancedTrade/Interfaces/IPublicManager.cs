@@ -28,7 +28,7 @@ public interface IPublicManager
     /// <param name="productIds">A list of specific product IDs to retrieve. Null by default.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A list of public products or an empty list if none are found.</returns>
-    Task<List<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves details for a specific public product by product ID.
@@ -67,5 +67,5 @@ public interface IPublicManager
     /// <param name="granularity">The granularity of the candlestick data.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A list of candlestick data or an empty list if none are found.</returns>
-    Task<List<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken);
+    Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken);
 }

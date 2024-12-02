@@ -17,7 +17,7 @@ public interface IProductsManager
     /// <param name="productType">The type of product. Defaults to "SPOT".</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of products or null if none are found.</returns>
-    Task<List<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves a specific product by its ID.
@@ -36,7 +36,7 @@ public interface IProductsManager
     /// <param name="granularity">The granularity of the data.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of candle data or null if none are found.</returns>
-    Task<List<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously retrieves the market trades for a specific product.
@@ -62,5 +62,5 @@ public interface IProductsManager
     /// <param name="productIds">The list of product IDs.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of product books with the best bid and ask or null if none are found.</returns>
-    Task<List<ProductBook>> GetBestBidAskAsync(List<string> productIds, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductBook>> GetBestBidAskAsync(List<string> productIds, CancellationToken cancellationToken);
 }

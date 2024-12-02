@@ -11,15 +11,6 @@ internal static class JsonExtensions
     public static T As<T>(this JsonElement elt, string propertyName)
         => elt.TryGetProperty(propertyName, out JsonElement prop) ? prop.Deserialize<T>() : default;
 
-    public static T[] AsArray<T>(this JsonElement elt) => elt.Deserialize<T[]>();
-    public static T[] AsArray<T>(this JsonDocument elt, string propertyName) => elt.RootElement.AsArray<T>(propertyName);
-    public static T[] AsArray<T>(this JsonElement elt, string propertyName)
-    {
-        if (elt.TryGetProperty(propertyName, out JsonElement prop) && prop.ValueKind == JsonValueKind.Array)
-            return prop.Deserialize<T[]>();
-        return [];
-    }
-
     /// <summary>
     /// Extracts a double value from a JSON Elt specific property - handles string representation.
     /// </summary>

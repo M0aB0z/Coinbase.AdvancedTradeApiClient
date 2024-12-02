@@ -24,7 +24,7 @@ public class ProductsManager : BaseManager, IProductsManager
     public ProductsManager(CoinbaseAuthenticator authenticator) : base(authenticator) { }
 
     /// <inheritdoc/>
-    public async Task<List<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(productType))
             throw new ArgumentException("Product type cannot be null or empty", nameof(productType));
@@ -34,7 +34,7 @@ public class ProductsManager : BaseManager, IProductsManager
             throw new InvalidOperationException("Authenticator is not initialized.");
 
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/products", new { product_type = productType }), cancellationToken);
-        return response.TryGetProperty("products", out JsonElement products) ? products.Deserialize<List<Product>>() : [];
+        return response.As<Product[]>("products");
     }
 
     /// <inheritdoc/>
@@ -44,18 +44,18 @@ public class ProductsManager : BaseManager, IProductsManager
             throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
 
         var response = await _authenticator.GetAsync("/api/v3/brokerage/products", cancellationToken);
-        return response.Deserialize<Product>();
+        return response.As<Product>();
     }
 
     /// <inheritdoc/>
-    public async Task<List<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(start) || string.IsNullOrEmpty(end))
             throw new ArgumentException("Product ID, start, and end time cannot be null or empty");
 
         var parameters = new { start, end, granularity };
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
-        return response.TryGetProperty("candles", out JsonElement candles) ? candles.Deserialize<List<Candle>>() : [];
+        return response.As<Candle[]>("candles");
     }
 
     /// <inheritdoc/>
@@ -69,10 +69,7 @@ public class ProductsManager : BaseManager, IProductsManager
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/ticker", parameters), cancellationToken);
 
         // Extract trades data from response
-        if (!response.TryGetProperty("trades", out JsonElement tradesObj) || !(tradesObj is JsonElement tradesObjElt && tradesObjElt.ValueKind == JsonValueKind.Array))
-            throw new InvalidOperationException("Invalid 'trades' data in the response");
-
-        List<Trade> trades = JsonSerializer.Deserialize<List<Trade>>(tradesObjElt.ToString());
+        var trades = response.As<Trade[]>("trades");
 
         // Extract best bid and best ask
         string bestBid = response.TryGetProperty("best_bid", out JsonElement bestBidObj) ? bestBidObj.GetString() : null;
@@ -89,11 +86,11 @@ public class ProductsManager : BaseManager, IProductsManager
 
         var parameters = new { product_id = productId, limit };
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/product_book", parameters), cancellationToken);
-        return response.TryGetProperty("pricebook", out JsonElement pricebook) ? pricebook.Deserialize<ProductBook>() : null;
+        return response.As<ProductBook>("pricebook");
     }
 
     /// <inheritdoc/>
-    public async Task<List<ProductBook>> GetBestBidAskAsync(List<string> productIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ProductBook>> GetBestBidAskAsync(List<string> productIds, CancellationToken cancellationToken)
     {
         if (productIds == null || !productIds.Any())
             throw new ArgumentException("Product IDs list cannot be null or empty", nameof(productIds));
@@ -102,9 +99,6 @@ public class ProductsManager : BaseManager, IProductsManager
         string url = "/api/v3/brokerage/best_bid_ask?" + string.Join("&", productIds.Select(pid => $"product_ids={pid}"));
         var response = await _authenticator.GetAsync(url, cancellationToken);
 
-        if (response.TryGetProperty("pricebooks", out JsonElement pricebooksObj) && pricebooksObj.ValueKind == JsonValueKind.Array)
-            return pricebooksObj.Deserialize<List<ProductBook>>();
-
-        return null;
+        return response.As<ProductBook[]>("pricebooks");
     }
 }

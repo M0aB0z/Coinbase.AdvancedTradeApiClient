@@ -66,7 +66,7 @@ public class MarketTrades
     /// Gets or sets the list of trades.
     /// </summary>
     [JsonPropertyName("trades")]
-    public List<Trade> Trades { get; set; }
+    public IReadOnlyList<Trade> Trades { get; set; }
 
     /// <summary>
     /// Gets or sets the best bid price at the time of the data collection.
