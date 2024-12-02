@@ -1,70 +1,69 @@
-﻿namespace Coinbase.AdvancedTrade.Enums
+﻿namespace Coinbase.AdvancedTrade.Enums;
+
+/// <summary>
+/// Represents the status of an order.
+/// </summary>
+public enum OrderStatus
 {
     /// <summary>
-    /// Represents the status of an order.
+    /// The order is open.
     /// </summary>
-    public enum OrderStatus
-    {
-        /// <summary>
-        /// The order is open.
-        /// </summary>
-        OPEN,
-
-        /// <summary>
-        /// The order is cancelled.
-        /// </summary>
-        CANCELLED,
-
-        /// <summary>
-        /// The order is expired.
-        /// </summary>
-        EXPIRED
-    }
+    OPEN,
 
     /// <summary>
-    /// Represents the type of an order.
+    /// The order is cancelled.
     /// </summary>
-    public enum OrderType
-    {
-        /// <summary>
-        /// A market order.
-        /// </summary>
-        MARKET,
-
-        /// <summary>
-        /// A limit order.
-        /// </summary>
-        LIMIT,
-
-        /// <summary>
-        /// A stop order.
-        /// </summary>
-        STOP,
-
-        /// <summary>
-        /// A stop limit order.
-        /// </summary>
-        STOP_LIMIT,
-
-        /// <summary>
-        /// An unknown order type.
-        /// </summary>
-        UNKNOWN_ORDER_TYPE
-    }
+    CANCELLED,
 
     /// <summary>
-    /// Represents the side of an order (buy or sell).
+    /// The order is expired.
     /// </summary>
-    public enum OrderSide
-    {
-        /// <summary>
-        /// A buy order.
-        /// </summary>
-        BUY,
+    EXPIRED
+}
 
-        /// <summary>
-        /// A sell order.
-        /// </summary>
-        SELL
-    }
+/// <summary>
+/// Represents the type of an order.
+/// </summary>
+public enum OrderType
+{
+    /// <summary>
+    /// A market order.
+    /// </summary>
+    MARKET,
+
+    /// <summary>
+    /// A limit order.
+    /// </summary>
+    LIMIT,
+
+    /// <summary>
+    /// A stop order.
+    /// </summary>
+    STOP,
+
+    /// <summary>
+    /// A stop limit order.
+    /// </summary>
+    STOP_LIMIT,
+
+    /// <summary>
+    /// An unknown order type.
+    /// </summary>
+    UNKNOWN_ORDER_TYPE
+}
+
+/// <summary>
+/// Represents the side of an order (buy or sell).
+/// </summary>
+public enum OrderSide
+{
+    /// <summary>
+    /// A buy order.
+    /// </summary>
+    BUY,
+
+    /// <summary>
+    /// A sell order.
+    /// </summary>
+    SELL
 }

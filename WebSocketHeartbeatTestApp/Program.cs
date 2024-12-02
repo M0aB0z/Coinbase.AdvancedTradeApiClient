@@ -64,7 +64,7 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing from heartbeats...");
-    await webSocketManager!.UnsubscribeAsync(new[] { "BTC-USDC" },ChannelType.Heartbeats);
+    await webSocketManager!.UnsubscribeAsync(new[] { "BTC-USDC" }, ChannelType.Heartbeats);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

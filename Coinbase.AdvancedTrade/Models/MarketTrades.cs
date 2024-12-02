@@ -1,83 +1,82 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models
+namespace Coinbase.AdvancedTrade.Models;
+
+/// <summary>
+/// Represents an individual trade on the market.
+/// </summary>
+public class Trade
 {
     /// <summary>
-    /// Represents an individual trade on the market.
+    /// Gets or sets the unique identifier for the trade.
     /// </summary>
-    public class Trade
-    {
-        /// <summary>
-        /// Gets or sets the unique identifier for the trade.
-        /// </summary>
-        [JsonProperty("trade_id")]
-        public string TradeId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product identifier associated with the trade.
-        /// </summary>
-        [JsonProperty("product_id")]
-        public string ProductId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the price at which the trade occurred.
-        /// </summary>
-        [JsonProperty("price")]
-        public string Price { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size or quantity of the asset that was traded.
-        /// </summary>
-        [JsonProperty("size")]
-        public string Size { get; set; }
-
-        /// <summary>
-        /// Gets or sets the timestamp of the trade.
-        /// </summary>
-        [JsonProperty("time")]
-        public string Time { get; set; }
-
-        /// <summary>
-        /// Gets or sets the side of the trade (e.g., "buy" or "sell").
-        /// </summary>
-        [JsonProperty("side")]
-        public string Side { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bid price at the time of the trade.
-        /// </summary>
-        [JsonProperty("bid")]
-        public string Bid { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ask price at the time of the trade.
-        /// </summary>
-        [JsonProperty("ask")]
-        public string Ask { get; set; }
-    }
+    [JsonPropertyName("trade_id")]
+    public string TradeId { get; set; }
 
     /// <summary>
-    /// Represents a collection of market trades along with the best bid and ask at the time.
+    /// Gets or sets the product identifier associated with the trade.
     /// </summary>
-    public class MarketTrades
-    {
-        /// <summary>
-        /// Gets or sets the list of trades.
-        /// </summary>
-        [JsonProperty("trades")]
-        public List<Trade> Trades { get; set; }
+    [JsonPropertyName("product_id")]
+    public string ProductId { get; set; }
 
-        /// <summary>
-        /// Gets or sets the best bid price at the time of the data collection.
-        /// </summary>
-        [JsonProperty("best_bid")]
-        public string BestBid { get; set; }
+    /// <summary>
+    /// Gets or sets the price at which the trade occurred.
+    /// </summary>
+    [JsonPropertyName("price")]
+    public string Price { get; set; }
 
-        /// <summary>
-        /// Gets or sets the best ask price at the time of the data collection.
-        /// </summary>
-        [JsonProperty("best_ask")]
-        public string BestAsk { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the size or quantity of the asset that was traded.
+    /// </summary>
+    [JsonPropertyName("size")]
+    public string Size { get; set; }
+
+    /// <summary>
+    /// Gets or sets the timestamp of the trade.
+    /// </summary>
+    [JsonPropertyName("time")]
+    public string Time { get; set; }
+
+    /// <summary>
+    /// Gets or sets the side of the trade (e.g., "buy" or "sell").
+    /// </summary>
+    [JsonPropertyName("side")]
+    public string Side { get; set; }
+
+    /// <summary>
+    /// Gets or sets the bid price at the time of the trade.
+    /// </summary>
+    [JsonPropertyName("bid")]
+    public string Bid { get; set; }
+
+    /// <summary>
+    /// Gets or sets the ask price at the time of the trade.
+    /// </summary>
+    [JsonPropertyName("ask")]
+    public string Ask { get; set; }
+}
+
+/// <summary>
+/// Represents a collection of market trades along with the best bid and ask at the time.
+/// </summary>
+public class MarketTrades
+{
+    /// <summary>
+    /// Gets or sets the list of trades.
+    /// </summary>
+    [JsonPropertyName("trades")]
+    public List<Trade> Trades { get; set; }
+
+    /// <summary>
+    /// Gets or sets the best bid price at the time of the data collection.
+    /// </summary>
+    [JsonPropertyName("best_bid")]
+    public string BestBid { get; set; }
+
+    /// <summary>
+    /// Gets or sets the best ask price at the time of the data collection.
+    /// </summary>
+    [JsonPropertyName("best_ask")]
+    public string BestAsk { get; set; }
 }

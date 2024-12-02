@@ -43,7 +43,7 @@ try
     await webSocketManager.ConnectAsync();
 
     Console.WriteLine("Subscribing to ticker...");
-    await webSocketManager.SubscribeAsync(new[] { "BTC-USDC" },ChannelType.Ticker);
+    await webSocketManager.SubscribeAsync(new[] { "BTC-USDC" }, ChannelType.Ticker);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
