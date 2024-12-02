@@ -10,10 +10,11 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that ListProducts returns a valid list of products.")]
         public async Task Test_Products_ListProductsAsync()
         {
-            await ExecuteRateLimitedTest(async () => {
+            await ExecuteRateLimitedTest(async () =>
+            {
                 try
                 {
-                    var products = await(_coinbaseClient?.Products.ListProductsAsync("SPOT") ?? Task.FromResult<List<Product>?>(null));
+                    var products = await (_coinbaseClient?.Products.ListProductsAsync("SPOT") ?? Task.FromResult<List<Product>?>(null));
                     Assert.IsNotNull(products, "Products list should not be null.");
                     Assert.IsTrue(products?.Count > 0, "Products list should not be empty.");
                     Assert.IsNotNull(products?[0].BaseCurrencyId, "BaseCurrencyId should not be null.");
@@ -30,7 +31,8 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that GetProduct returns a valid product based on a given productId.")]
         public async Task Test_Products_GetProductAsync()
         {
-            await ExecuteRateLimitedTest(async () => {
+            await ExecuteRateLimitedTest(async () =>
+            {
                 try
                 {
                     string productId = "BTC-USDC";
@@ -51,7 +53,8 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that GetProductCandles returns a valid list of candles for a given product.")]
         public async Task Test_Products_GetProductCandlesAsync()
         {
-            await ExecuteRateLimitedTest(async () => {
+            await ExecuteRateLimitedTest(async () =>
+            {
                 try
                 {
                     string productId = "BTC-USDC";
@@ -77,7 +80,8 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that GetMarketTrades returns a valid list of market trades for a given product.")]
         public async Task Test_Products_GetMarketTradesAsync()
         {
-            await ExecuteRateLimitedTest(async () => {
+            await ExecuteRateLimitedTest(async () =>
+            {
                 try
                 {
                     var productId = "BTC-USDC";

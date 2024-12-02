@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Coinbase.AdvancedTrade.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Coinbase.AdvancedTrade.Models;
 
 namespace Coinbase.AdvancedTrade.Interfaces
 {

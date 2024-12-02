@@ -31,6 +31,6 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 BaseAddress = new Uri(baseUrl)
             };
         }
-        
+
     }
 }

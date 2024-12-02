@@ -119,7 +119,7 @@ namespace Coinbase.AdvancedTradeTest
                 Assert.IsNotNull(result, "Preview result should not be null.");
                 Assert.IsFalse(string.IsNullOrWhiteSpace(result.OrderTotal), "OrderTotal should have a value.");
                 Assert.IsFalse(string.IsNullOrWhiteSpace(result.CommissionTotal), "CommissionTotal should have a value.");
-      
+
             });
         }
 

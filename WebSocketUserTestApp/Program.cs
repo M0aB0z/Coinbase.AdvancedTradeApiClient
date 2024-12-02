@@ -43,7 +43,7 @@ try
     await webSocketManager.ConnectAsync();
 
     Console.WriteLine("Subscribing to User...");
-    await webSocketManager.SubscribeAsync(Array.Empty<string>(),ChannelType.User);
+    await webSocketManager.SubscribeAsync(Array.Empty<string>(), ChannelType.User);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();

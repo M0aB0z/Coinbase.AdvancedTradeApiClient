@@ -1,14 +1,14 @@
-﻿using System.Net.WebSockets;
-using System.Text;
+﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Models.WebSocket;
-using System.Security.Cryptography;
-using Coinbase.AdvancedTrade.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Text.Json;
 
 namespace Coinbase.AdvancedTrade
 {

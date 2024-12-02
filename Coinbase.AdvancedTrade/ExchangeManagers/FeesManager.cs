@@ -57,7 +57,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                     MarginRate = response.As<MarginRate>("margin_rate"),
                     GoodsAndServicesTax = response.As<GoodsAndServicesTax>("goods_and_services_tax")
                 };
-                
+
             }
             catch (Exception ex)
             {

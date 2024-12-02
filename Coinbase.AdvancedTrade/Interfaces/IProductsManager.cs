@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Models;
-using Coinbase.AdvancedTrade.Enums;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Coinbase.AdvancedTrade.Interfaces
 {

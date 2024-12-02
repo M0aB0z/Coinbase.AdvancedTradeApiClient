@@ -101,7 +101,7 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductAsync method returns the expected product details using authenticated client.")]
         public async Task Test_Public_GetPublicProductAsync_WithAuth()
         {
-            var productId = "BTC-USDC"; 
+            var productId = "BTC-USDC";
             var product = await _coinbaseClient.Public.GetPublicProductAsync(productId, CancellationToken.None);
 
             Assert.IsNotNull(product, "Product should not be null.");
@@ -115,7 +115,7 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductAsync method returns the expected product details using public client.")]
         public async Task Test_Public_GetPublicProductAsync_WithoutAuth()
         {
-            var productId = "BTC-USDC"; 
+            var productId = "BTC-USDC";
             var product = await _coinbasePublicClient.Public.GetPublicProductAsync(productId, CancellationToken.None);
 
             Assert.IsNotNull(product, "Product should not be null.");
@@ -129,8 +129,8 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductBookAsync method returns the expected product book details using authenticated client.")]
         public async Task Test_Public_GetPublicProductBookAsync_WithAuth()
         {
-            var productId = "BTC-USDC"; 
-            var limit = 10; 
+            var productId = "BTC-USDC";
+            var limit = 10;
             var productBook = await _coinbaseClient.Public.GetPublicProductBookAsync(productId, limit);
 
             Assert.IsNotNull(productBook, "Product book should not be null.");
@@ -143,8 +143,8 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductBookAsync method returns the expected product book details using public client.")]
         public async Task Test_Public_GetPublicProductBookAsync_WithoutAuth()
         {
-            var productId = "BTC-USDC"; 
-            var limit = 10; 
+            var productId = "BTC-USDC";
+            var limit = 10;
             var productBook = await _coinbasePublicClient.Public.GetPublicProductBookAsync(productId, limit);
 
             Assert.IsNotNull(productBook, "Product book should not be null.");
@@ -157,10 +157,10 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicMarketTradesAsync method returns the expected JSON for a specific product using authenticated client.")]
         public async Task Test_Public_GetPublicMarketTradesAsync_WithAuth()
         {
-            var productId = "BTC-USDC"; 
-            var limit = 10; 
-            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds(); 
-            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
+            var productId = "BTC-USDC";
+            var limit = 10;
+            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
+            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             var marketTrades = await _coinbaseClient.Public.GetPublicMarketTradesAsync(productId, limit, start, end);
 
@@ -172,10 +172,10 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicMarketTradesAsync method returns the expected JSON for a specific product using public client.")]
         public async Task Test_Public_GetPublicMarketTradesAsync_WithoutAuth()
         {
-            var productId = "BTC-USDC"; 
-            var limit = 10; 
-            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds(); 
-            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
+            var productId = "BTC-USDC";
+            var limit = 10;
+            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
+            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             var marketTrades = await _coinbasePublicClient.Public.GetPublicMarketTradesAsync(productId, limit, start, end);
 
@@ -188,10 +188,10 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductCandlesAsync method returns the expected candle details for a specific product using authenticated client.")]
         public async Task Test_Public_GetPublicProductCandlesAsync_WithAuth()
         {
-            var productId = "BTC-USDC"; 
-            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds(); 
-            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
-            var granularity = Granularity.ONE_HOUR; 
+            var productId = "BTC-USDC";
+            var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
+            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var granularity = Granularity.ONE_HOUR;
 
             var candles = await _coinbaseClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);
 
@@ -205,10 +205,10 @@ namespace Coinbase.AdvancedTradeTest
         [Description("Test to verify that the GetPublicProductCandlesAsync method returns the expected candle details for a specific product using public client.")]
         public async Task Test_Public_GetPublicProductCandlesAsync_WithoutAuth()
         {
-            var productId = "BTC-USDC"; 
+            var productId = "BTC-USDC";
             var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
-            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds(); 
-            var granularity = Granularity.ONE_HOUR; 
+            var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var granularity = Granularity.ONE_HOUR;
 
             var candles = await _coinbasePublicClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);
 

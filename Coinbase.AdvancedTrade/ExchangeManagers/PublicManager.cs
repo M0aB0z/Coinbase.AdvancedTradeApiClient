@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models.Public;
 using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Enums;
-using System.Threading;
+using System;
+using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
 {
@@ -117,7 +117,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         {
             if (string.IsNullOrEmpty(productId))
                 throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
-   
+
             try
             {
                 var parameters = new Dictionary<string, object> { { "product_id", productId } };
