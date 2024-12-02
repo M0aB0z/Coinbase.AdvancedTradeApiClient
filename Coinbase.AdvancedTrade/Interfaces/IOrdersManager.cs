@@ -23,7 +23,7 @@ public interface IOrdersManager
     /// <param name="orderSide">Optional order side to filter the results.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains a list of orders that match the given criteria.</returns>
-    Task<List<Order>> ListOrdersAsync(
+    Task<IReadOnlyList<Order>> ListOrdersAsync(
         string productId = null,
         OrderStatus[] orderStatus = null,
         DateTime? startDate = null,
@@ -42,7 +42,7 @@ public interface IOrdersManager
     /// <param name="endSequenceTimestamp">Optional end timestamp to filter the results.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains a list of fills that match the given criteria.</returns>
-    Task<List<Fill>> ListFillsAsync(
+    Task<IReadOnlyList<Fill>> ListFillsAsync(
         string orderId = null,
         string productId = null,
         DateTime? startSequenceTimestamp = null,
@@ -64,7 +64,7 @@ public interface IOrdersManager
     /// <param name="orderIds">Array of order IDs to cancel.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains a list of results from the cancel operations.</returns>
-    Task<List<CancelOrderResult>> CancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken);
+    Task<IReadOnlyList<CancelOrderResult>> CancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a market order.

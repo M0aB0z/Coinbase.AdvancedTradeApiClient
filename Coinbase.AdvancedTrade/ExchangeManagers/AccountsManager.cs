@@ -20,13 +20,13 @@ public class AccountsManager : BaseManager, IAccountsManager
     public AccountsManager(CoinbaseAuthenticator authenticator) : base(authenticator) { }
 
     /// <inheritdoc/>
-    public async Task<List<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default)
     {
         try
         {
             var parameters = new { limit, cursor };
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/accounts", parameters));
-            return response.As<List<Account>>("accounts");
+            return response.As<Account[]>("accounts");
         }
         catch (Exception ex)
         {

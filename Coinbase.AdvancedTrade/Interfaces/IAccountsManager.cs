@@ -17,7 +17,7 @@ public interface IAccountsManager
     /// <param name="cursor">The cursor for pagination. Null by default.</param>
     /// <param name="cancellationToken">Request cancellationToken</param>
     /// <returns>A list of accounts or null if none are found.</returns>
-    Task<List<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves a specific account by its UUID.

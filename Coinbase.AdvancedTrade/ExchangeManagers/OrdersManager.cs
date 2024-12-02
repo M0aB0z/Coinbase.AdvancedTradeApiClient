@@ -24,14 +24,12 @@ public class OrdersManager : BaseManager, IOrdersManager
     public OrdersManager(CoinbaseAuthenticator authenticator) : base(authenticator)
     {
         if (authenticator == null)
-        {
             throw new ArgumentNullException(nameof(authenticator), "Authenticator cannot be null.");
-        }
     }
 
 
     /// <inheritdoc/>
-    public async Task<List<Order>> ListOrdersAsync(
+    public async Task<IReadOnlyList<Order>> ListOrdersAsync(
         string productId = null,
         OrderStatus[] orderStatus = null,
         DateTime? startDate = null,
@@ -64,7 +62,7 @@ public class OrdersManager : BaseManager, IOrdersManager
         try
         {
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj), cancellationToken);
-            return response.GetProperty("orders").Deserialize<List<Order>>();
+            return response.As<Order[]>("orders");
         }
         catch (Exception ex)
         {
@@ -82,7 +80,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<List<Fill>> ListFillsAsync(
+    public async Task<IReadOnlyList<Fill>> ListFillsAsync(
         string orderId = null,
         string productId = null,
         DateTime? startSequenceTimestamp = null,
@@ -108,7 +106,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
 
             // Deserialize response to obtain fills
-            return response.GetProperty("fills").Deserialize<List<Fill>>();
+            return response.As<Fill[]>("fills");
         }
         catch (Exception ex)
         {
@@ -116,7 +114,6 @@ public class OrdersManager : BaseManager, IOrdersManager
             throw new InvalidOperationException("Failed to list fills", ex);
         }
     }
-
 
 
     /// <inheritdoc/>
@@ -129,7 +126,7 @@ public class OrdersManager : BaseManager, IOrdersManager
         try
         {
             var response = await _authenticator.GetAsync($"/api/v3/brokerage/orders/historical/{orderId}", cancellationToken);
-            return response.GetProperty("order").Deserialize<Order>();
+            return response.As<Order>("order");
         }
         catch (Exception ex)
         {
@@ -138,10 +135,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         }
     }
 
-
-
     /// <inheritdoc/>
-    public async Task<List<CancelOrderResult>> CancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<CancelOrderResult>> CancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken)
     {
         // Validate the input parameter
         if (orderIds == null || orderIds.Length == 0)
@@ -154,15 +149,13 @@ public class OrdersManager : BaseManager, IOrdersManager
 
             // Send authenticated request to the API to cancel the orders and obtain response
             var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", requestBody, cancellationToken);
-            return response.GetProperty("results").Deserialize<List<CancelOrderResult>>();
+            return response.As<CancelOrderResult[]>("results");
         }
         catch (Exception ex)
         {
             throw new InvalidOperationException("Failed to cancel orders", ex);
         }
     }
-
-
 
 
     /// <summary>
@@ -186,9 +179,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
         // Ensure order configuration is provided
         if (orderConfiguration is null)
-        {
             throw new ArgumentNullException(nameof(orderConfiguration), "Order configuration cannot be null.");
-        }
 
         try
         {

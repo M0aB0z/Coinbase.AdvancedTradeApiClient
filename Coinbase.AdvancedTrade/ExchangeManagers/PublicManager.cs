@@ -49,7 +49,7 @@ public class PublicManager : BaseManager, IPublicManager
     }
 
     /// <inheritdoc/>
-    public async Task<List<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<PublicProduct>> ListPublicProductsAsync(int? limit = null, int? offset = null, string productType = null, List<string> productIds = null, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -76,7 +76,7 @@ public class PublicManager : BaseManager, IPublicManager
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var jsonDoc = JsonDocument.Parse(content);
-                return jsonDoc.As<List<PublicProduct>>("products");
+                return jsonDoc.As<PublicProduct[]>("products");
             }
             else
             {
@@ -174,7 +174,7 @@ public class PublicManager : BaseManager, IPublicManager
     }
 
     /// <inheritdoc/>
-    public async Task<List<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken)
     {
         try
         {
@@ -190,7 +190,7 @@ public class PublicManager : BaseManager, IPublicManager
             {
                 var content = await response.Content.ReadAsStringAsync();
                 var jsonDoc = JsonDocument.Parse(content);
-                return jsonDoc.As<List<PublicCandle>>("candles");
+                return jsonDoc.As<PublicCandle[]>("candles");
             }
             else
             {

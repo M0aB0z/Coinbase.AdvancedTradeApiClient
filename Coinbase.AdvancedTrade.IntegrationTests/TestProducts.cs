@@ -14,7 +14,7 @@ public class TestProducts : TestBase
         {
             try
             {
-                var products = await (_coinbaseClient?.Products.ListProductsAsync("SPOT") ?? Task.FromResult<List<Product>?>(null));
+                var products = await (_coinbaseClient?.Products?.ListProductsAsync("SPOT") ?? Task.FromResult<IReadOnlyList<Product>?>(null));
                 Assert.IsNotNull(products, "Products list should not be null.");
                 Assert.IsTrue(products?.Count > 0, "Products list should not be empty.");
                 Assert.IsNotNull(products?[0].BaseCurrencyId, "BaseCurrencyId should not be null.");
@@ -62,7 +62,7 @@ public class TestProducts : TestBase
                 string end = "1693612800";
                 var granularity = AdvancedTrade.Enums.Granularity.FIVE_MINUTE;
 
-                var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, start, end, granularity, CancellationToken.None) ?? Task.FromResult<List<Candle>?>(null));
+                var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, start, end, granularity, CancellationToken.None) ?? Task.FromResult<IReadOnlyList<Candle>?>(null));
 
                 Assert.IsNotNull(candles, "Candles list should not be empty.");
                 Assert.IsTrue(candles?.Count > 0, "Candles list should have at least one item.");
