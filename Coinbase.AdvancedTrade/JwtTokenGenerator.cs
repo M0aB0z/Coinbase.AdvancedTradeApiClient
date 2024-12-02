@@ -1,8 +1,9 @@
-﻿using Jose;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 
 
 /*
@@ -30,29 +31,49 @@ public static class JwtTokenGenerator
     {
         string base64Key = ParseKey(cbPrivateKey.Replace("\\n", "\n"));
 
+        // Charger la clé privée
         var privateKeyBytes = Convert.FromBase64String(base64Key); // Assuming PEM is base64 encoded
-        using var key = ECDsa.Create();
-        key.ImportECPrivateKey(privateKeyBytes, out _);
+        using var ecdsa = ECDsa.Create();
+        ecdsa.ImportECPrivateKey(privateKeyBytes, out _);
 
+        // Créer le header JWT
+        var header = new Dictionary<string, object>
+        {
+            { "alg", "ES256" },
+            { "kid", appKey },
+            { "nonce", RandomHex(10) }, // Ajoute une protection contre les attaques de rejeu
+            { "typ", "JWT" }
+        };
+
+        // Créer le payload JWT
         var payload = new Dictionary<string, object>
-             {
-                 { "sub", appKey },
-                 { "iss", "coinbase-cloud" },
-                 { "nbf", Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds) },
-                 { "exp", Convert.ToInt64((DateTime.UtcNow.AddMinutes(1) - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds) },
-                 { "uri", uri }
-             };
+        {
+            { "sub", appKey },
+            { "iss", "coinbase-cloud" },
+            { "nbf", Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds) },
+            { "exp", Convert.ToInt64((DateTime.UtcNow.AddMinutes(1) - new DateTime(1970, 1, 1)).TotalSeconds) },
+            { "uri", uri }
+        };
 
-        var extraHeaders = new Dictionary<string, object>
-             {
-                 { "kid", appKey },
-                 // add nonce to prevent replay attacks with a random 10 digit number
-                 { "nonce", RandomHex(10) },
-                 { "typ", "JWT"}
-             };
+        // Encoder le header et le payload en Base64Url
+        string headerBase64Url = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(header));
+        string payloadBase64Url = Base64UrlEncode(JsonSerializer.SerializeToUtf8Bytes(payload));
 
-        return JWT.Encode(payload, key, JwsAlgorithm.ES256, extraHeaders);
+        // Construire la chaîne à signer
+        string dataToSign = $"{headerBase64Url}.{payloadBase64Url}";
+
+        // Signer la chaîne
+        byte[] dataToSignBytes = Encoding.UTF8.GetBytes(dataToSign);
+        byte[] signature = ecdsa.SignData(dataToSignBytes, HashAlgorithmName.SHA256);
+
+        // Encoder la signature en Base64Url
+        string signatureBase64Url = Base64UrlEncode(signature);
+
+        // Retourner le JWT complet
+        return $"{dataToSign}.{signatureBase64Url}";
     }
+    private static string Base64UrlEncode(byte[] input)
+        => Convert.ToBase64String(input).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
     static string ParseKey(string key)
     {
@@ -61,7 +82,7 @@ public static class JwtTokenGenerator
         keyLines.RemoveAt(0);
         keyLines.RemoveAt(keyLines.Count - 1);
 
-        return String.Join("", keyLines);
+        return string.Join("", keyLines);
     }
 
     static string RandomHex(int digits)
