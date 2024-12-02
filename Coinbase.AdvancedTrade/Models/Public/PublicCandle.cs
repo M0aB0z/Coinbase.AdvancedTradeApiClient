@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models.Public
 {
@@ -10,37 +10,37 @@ namespace Coinbase.AdvancedTrade.Models.Public
         /// <summary>
         /// Gets or sets the start time of the candle in UNIX time.
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public string Start { get; set; }
 
         /// <summary>
         /// Gets or sets the lowest price during the candle's time period.
         /// </summary>
-        [JsonProperty("low")]
+        [JsonPropertyName("low")]
         public string Low { get; set; }
 
         /// <summary>
         /// Gets or sets the highest price during the candle's time period.
         /// </summary>
-        [JsonProperty("high")]
+        [JsonPropertyName("high")]
         public string High { get; set; }
 
         /// <summary>
         /// Gets or sets the opening price at the start of the candle's time period.
         /// </summary>
-        [JsonProperty("open")]
+        [JsonPropertyName("open")]
         public string Open { get; set; }
 
         /// <summary>
         /// Gets or sets the closing price at the end of the candle's time period.
         /// </summary>
-        [JsonProperty("close")]
+        [JsonPropertyName("close")]
         public string Close { get; set; }
 
         /// <summary>
         /// Gets or sets the trading volume during the candle's time period.
         /// </summary>
-        [JsonProperty("volume")]
+        [JsonPropertyName("volume")]
         public string Volume { get; set; }
     }
 }

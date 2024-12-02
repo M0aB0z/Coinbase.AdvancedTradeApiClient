@@ -44,30 +44,26 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
                 var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/transaction_summary", paramsDict), cancellationToken);
 
-                if (response != null)
+                return new TransactionsSummary
                 {
-                    return new TransactionsSummary
-                    {
-                        TotalVolume = UtilityHelper.ExtractDoubleValue(response, "total_volume") ?? 0.0,
-                        TotalFees = UtilityHelper.ExtractDoubleValue(response, "total_fees") ?? 0.0,
-                        AdvancedTradeOnlyVolume = UtilityHelper.ExtractDoubleValue(response, "advanced_trade_only_volume") ?? 0.0,
-                        AdvancedTradeOnlyFees = UtilityHelper.ExtractDoubleValue(response, "advanced_trade_only_fees") ?? 0.0,
-                        CoinbaseProVolume = UtilityHelper.ExtractDoubleValue(response, "coinbase_pro_volume") ?? 0.0,
-                        CoinbaseProFees = UtilityHelper.ExtractDoubleValue(response, "coinbase_pro_fees") ?? 0.0,
-                        Low = UtilityHelper.ExtractDoubleValue(response, "low") ?? 0.0,
-                        FeeTier = UtilityHelper.DeserializeJsonElement<FeeTier>(response, "fee_tier"),
-                        MarginRate = UtilityHelper.DeserializeJsonElement<MarginRate>(response, "margin_rate"),
-                        GoodsAndServicesTax = UtilityHelper.DeserializeJsonElement<GoodsAndServicesTax>(response, "goods_and_services_tax")
-                    };
-                }
+                    TotalVolume = response.ExtractDoubleValue("total_volume") ?? 0.0,
+                    TotalFees = response.ExtractDoubleValue("total_fees") ?? 0.0,
+                    AdvancedTradeOnlyVolume = response.ExtractDoubleValue("advanced_trade_only_volume") ?? 0.0,
+                    AdvancedTradeOnlyFees = response.ExtractDoubleValue("advanced_trade_only_fees") ?? 0.0,
+                    CoinbaseProVolume = response.ExtractDoubleValue("coinbase_pro_volume") ?? 0.0,
+                    CoinbaseProFees = response.ExtractDoubleValue("coinbase_pro_fees") ?? 0.0,
+                    Low = response.ExtractDoubleValue("low") ?? 0.0,
+                    FeeTier = response.As<FeeTier>("fee_tier"),
+                    MarginRate = response.As<MarginRate>("margin_rate"),
+                    GoodsAndServicesTax = response.As<GoodsAndServicesTax>("goods_and_services_tax")
+                };
+                
             }
             catch (Exception ex)
             {
                 // Wrap and rethrow exceptions to provide context.
                 throw new InvalidOperationException("Failed to get transactions summary", ex);
             }
-
-            return null;
         }
     }
 }

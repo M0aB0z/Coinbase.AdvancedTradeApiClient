@@ -23,6 +23,7 @@ namespace Coinbase.AdvancedTrade.Interfaces
         /// Asynchronously retrieves a specific product by its ID.
         /// </summary>
         /// <param name="productId">The ID of the product.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the product corresponding to the given ID or null if not found.</returns>
         Task<Product> GetProductAsync(string productId, CancellationToken cancellationToken);
 

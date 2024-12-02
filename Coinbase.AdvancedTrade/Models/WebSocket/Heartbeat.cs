@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -12,31 +12,31 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the channel for the heartbeat message.
         /// </summary>
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         public string Channel { get; set; }
 
         /// <summary>
         /// Gets or sets the client ID associated with the heartbeat message.
         /// </summary>
-        [JsonProperty("client_id")]
+        [JsonPropertyName("client_id")]
         public string ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp when the heartbeat message was sent.
         /// </summary>
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the sequence number for the heartbeat message.
         /// </summary>
-        [JsonProperty("sequence_num")]
+        [JsonPropertyName("sequence_num")]
         public int SequenceNum { get; set; }
 
         /// <summary>
         /// Gets or sets the list of heartbeat events.
         /// </summary>
-        [JsonProperty("events")]
+        [JsonPropertyName("events")]
         public List<HeartbeatEvent> Events { get; set; }
     }
 
@@ -48,13 +48,13 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the current time for the heartbeat event.
         /// </summary>
-        [JsonProperty("current_time")]
+        [JsonPropertyName("current_time")]
         public string CurrentTime { get; set; }
 
         /// <summary>
         /// Gets or sets the counter for the heartbeat event.
         /// </summary>
-        [JsonProperty("heartbeat_counter")]
+        [JsonPropertyName("heartbeat_counter")]
         public int? HeartbeatCounter { get; set; }
     }
 }

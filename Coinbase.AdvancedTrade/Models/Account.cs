@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
+
 
 namespace Coinbase.AdvancedTrade.Models
 {
@@ -11,73 +12,73 @@ namespace Coinbase.AdvancedTrade.Models
         /// <summary>
         /// Gets or sets the unique identifier for the account.
         /// </summary>
-        [JsonProperty("uuid")]
+        [JsonPropertyName("uuid")]
         public string Uuid { get; set; }
 
         /// <summary>
         /// Gets or sets the name associated with the account.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the currency code for the account.
         /// </summary>
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the available balance within the account.
         /// </summary>
-        [JsonProperty("available_balance")]
+        [JsonPropertyName("available_balance")]
         public Balance AvailableBalance { get; set; }
 
         /// <summary>
         /// Indicates if this account is the default one for the user.
         /// </summary>
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public bool Default { get; set; }
 
         /// <summary>
         /// Indicates if this account is active.
         /// </summary>
-        [JsonProperty("active")]
+        [JsonPropertyName("active")]
         public bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the account was created.
         /// </summary>
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the account was last updated.
         /// </summary>
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time when the account was deleted, if applicable.
         /// </summary>
-        [JsonProperty("deleted_at")]
+        [JsonPropertyName("deleted_at")]
         public DateTime? DeletedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the account.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Indicates if this account is ready for transactions.
         /// </summary>
-        [JsonProperty("ready")]
+        [JsonPropertyName("ready")]
         public bool Ready { get; set; }
 
         /// <summary>
         /// Gets or sets the funds on hold within the account.
         /// </summary>
-        [JsonProperty("hold")]
+        [JsonPropertyName("hold")]
         public Balance Hold { get; set; }
     }
 
@@ -89,13 +90,13 @@ namespace Coinbase.AdvancedTrade.Models
         /// <summary>
         /// Gets or sets the value of the balance.
         /// </summary>
-        [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public string Value { get; set; }  // Consider converting to Decimal if working with financial data
 
         /// <summary>
         /// Gets or sets the currency code associated with the balance.
         /// </summary>
-        [JsonProperty("currency")]
+        [JsonPropertyName("currency")]
         public string Currency { get; set; }
     }
 }

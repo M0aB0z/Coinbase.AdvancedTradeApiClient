@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models.Public;
 using Coinbase.AdvancedTrade.Utilities;
-using Newtonsoft.Json;
-using System.Linq;
 using Coinbase.AdvancedTrade.Enums;
 using System.Threading;
+using System.Text.Json;
 
 namespace Coinbase.AdvancedTrade.ExchangeManagers
 {
@@ -36,7 +35,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<ServerTime>(content);
+                    return JsonSerializer.Deserialize<ServerTime>(content);
                 }
                 else
                 {
@@ -76,8 +75,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                    return UtilityHelper.DeserializeJsonElement<List<PublicProduct>>(responseDict, "products");
+                    var jsonDoc = JsonDocument.Parse(content);
+                    return jsonDoc.As<List<PublicProduct>>("products");
                 }
                 else
                 {
@@ -101,7 +100,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var publicProduct = JsonConvert.DeserializeObject<PublicProduct>(content);
+                    var publicProduct = JsonSerializer.Deserialize<PublicProduct>(content);
                     return publicProduct;
                 }
                 else
@@ -129,8 +128,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                    return UtilityHelper.DeserializeJsonElement<PublicProductBook>(responseDict, "pricebook");
+                    var jsonDoc = JsonDocument.Parse(content);
+                    return jsonDoc.As<PublicProductBook>("pricebook");
                 }
                 else
                     throw new InvalidOperationException($"Failed to get public product book. Status: {response.StatusCode}, Content: {response.Content}");
@@ -161,7 +160,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<PublicMarketTrades>(content);
+                    return JsonSerializer.Deserialize<PublicMarketTrades>(content);
                 }
                 else
                 {
@@ -190,8 +189,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var responseDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                    return UtilityHelper.DeserializeJsonElement<List<PublicCandle>>(responseDict, "candles");
+                    var jsonDoc = JsonDocument.Parse(content);
+                    return jsonDoc.As<List<PublicCandle>>("candles");
                 }
                 else
                 {

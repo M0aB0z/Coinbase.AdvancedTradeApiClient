@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 
 namespace Coinbase.AdvancedTrade.Models
@@ -11,7 +11,7 @@ namespace Coinbase.AdvancedTrade.Models
         /// <summary>
         /// Gets or sets the start time of the candlestick in UNIX timestamp format.
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public string StartUnix { get; set; }
 
         /// <summary>
@@ -23,31 +23,31 @@ namespace Coinbase.AdvancedTrade.Models
         /// <summary>
         /// Gets or sets the lowest traded price of the asset during the time interval represented by the candlestick.
         /// </summary>
-        [JsonProperty("low")]
+        [JsonPropertyName("low")]
         public string Low { get; set; }
 
         /// <summary>
         /// Gets or sets the highest traded price of the asset during the time interval represented by the candlestick.
         /// </summary>
-        [JsonProperty("high")]
+        [JsonPropertyName("high")]
         public string High { get; set; }
 
         /// <summary>
         /// Gets or sets the opening price of the asset at the beginning of the time interval represented by the candlestick.
         /// </summary>
-        [JsonProperty("open")]
+        [JsonPropertyName("open")]
         public string Open { get; set; }
 
         /// <summary>
         /// Gets or sets the closing price of the asset at the end of the time interval represented by the candlestick.
         /// </summary>
-        [JsonProperty("close")]
+        [JsonPropertyName("close")]
         public string Close { get; set; }
 
         /// <summary>
         /// Gets or sets the trading volume of the asset during the time interval represented by the candlestick.
         /// </summary>
-        [JsonProperty("volume")]
+        [JsonPropertyName("volume")]
         public string Volume { get; set; }
 
         /// <summary>

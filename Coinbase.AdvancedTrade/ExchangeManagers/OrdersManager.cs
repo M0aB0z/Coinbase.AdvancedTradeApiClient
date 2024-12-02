@@ -2,11 +2,10 @@
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
 using Coinbase.AdvancedTrade.Utilities;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,10 +63,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
             try
             {
-                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj), cancellationToken)
-                    ?? [];
-
-                return UtilityHelper.DeserializeJsonElement<List<Order>>(response, "orders");
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj), cancellationToken);
+                return response.GetProperty("orders").Deserialize<List<Order>>();
             }
             catch (Exception ex)
             {
@@ -108,11 +105,10 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
             try
             {
                 // Send authenticated request to the API and obtain response
-                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken)
-                ?? [];
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
 
                 // Deserialize response to obtain fills
-                return UtilityHelper.DeserializeJsonElement<List<Fill>>(response, "fills");
+                return response.GetProperty("fills").Deserialize<List<Fill>>();
             }
             catch (Exception ex)
             {
@@ -132,11 +128,8 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
             try
             {
-
-                var response = await _authenticator.GetAsync($"/api/v3/brokerage/orders/historical/{orderId}", cancellationToken) ?? [];
-
-                // Deserialize response to obtain the order details
-                return UtilityHelper.DeserializeJsonElement<Order>(response, "order");
+                var response = await _authenticator.GetAsync($"/api/v3/brokerage/orders/historical/{orderId}", cancellationToken);
+                return response.GetProperty("order").Deserialize<Order>();
             }
             catch (Exception ex)
             {
@@ -160,14 +153,11 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 var requestBody = new { order_ids = orderIds };
 
                 // Send authenticated request to the API to cancel the orders and obtain response
-                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", requestBody, cancellationToken) ?? [];
-
-                // Deserialize the response to obtain the cancel order results
-                return UtilityHelper.DeserializeJsonElement<List<CancelOrderResult>>(response, "results");
+                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", requestBody, cancellationToken);
+                return response.GetProperty("results").Deserialize<List<CancelOrderResult>>();
             }
             catch (Exception ex)
             {
-                // Rethrow exception with additional context
                 throw new InvalidOperationException("Failed to cancel orders", ex);
             }
         }
@@ -215,57 +205,32 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 };
 
                 // Send a POST request to create the order
-                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", orderRequest, cancellationToken) ?? [];
-
+                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", orderRequest, cancellationToken);
 
                 // Check if we have a 'success_response' in the received response
-                if (response.TryGetValue("success_response", out var successResponse))
+                if (response.TryGetProperty("success_response", out var successResponse))
                 {
-                    var successResponseStr = successResponse?.ToString();
-                    if (!string.IsNullOrEmpty(successResponseStr))
-                    {
-                        var successResponseDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(successResponseStr);
-
-                        // If 'order_id' is present in the success response, return it
-                        if (successResponseDict?.TryGetValue("order_id", out var orderId) == true)
-                        {
-                            return orderId;
-                        }
-                    }
+                    // If 'order_id' is present in the success response, return it
+                    if (successResponse.TryGetProperty("order_id", out var orderId) == true)
+                        return orderId.GetString();
                 }
 
                 // If there's an 'error_response', handle it
-                else if (response.ContainsKey("error_response"))
+                else if (response.TryGetProperty("error_response", out var errorResponseObj))
                 {
-                    // Extract the error message from the response
-                    var errorResponseObj = response["error_response"];
-
                     // Assuming errorResponseObj is a JsonElement
-                    if (errorResponseObj is JObject errorResponseObject) // Check if the errorResponseObj is a JSON object
+                    if (errorResponseObj is JsonElement errorResponseObject) // Check if the errorResponseObj is a JSON object
                     {
-                        var errorResponseValue = errorResponseObject.ToString(); // Get the raw JSON text of the object
+                        var error = errorResponseObject.TryGetProperty("error", out var errorValue) ? errorValue.GetString() : "Unknown Error";
+                        var message = errorResponseObject.TryGetProperty("message", out var messageValue) ? messageValue.GetString() : "No Message";
+                        var errorDetails = errorResponseObject.TryGetProperty("error_details", out var errorDetailsValue) ? errorDetailsValue.GetString() : "No Details";
 
-                        if (!string.IsNullOrEmpty(errorResponseValue))
-                        {
-                            // Deserialize the error response from the raw text
-                            var errorResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(errorResponseValue);
-
-                            if (errorResponse != null)
-                            {
-                                // Construct an error message using the provided details
-                                var error = errorResponse.ContainsKey("error") ? errorResponse["error"] : "Unknown Error";
-                                var message = errorResponse.ContainsKey("message") ? errorResponse["message"] : "No Message";
-                                var errorDetails = errorResponse.ContainsKey("error_details") ? errorResponse["error_details"] : "No Details";
-
-                                throw new Exception($"Order creation failed. Error: {error}. Message: {message}. Details: {errorDetails}");
-                            }
-                        }
+                        throw new Exception($"Order creation failed. Error: {error}. Message: {message}. Details: {errorDetails}");
                     }
 
-                    // If error response is not in the expected format or is empty, return null (or handle as needed)
-                    return null;
+                    // If error response is not in the expected format or is empty, return string representation
+                    return errorResponseObj.ToString();
                 }
-
 
                 // If we reach here, the order creation was not successful
                 return null;
@@ -639,22 +604,19 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
             try
             {
-                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/edit", requestBody, cancellationToken) ?? [];
-                var responseObject = UtilityHelper.DeserializeDictionary<Dictionary<string, JToken>>(response);
-
-                if (responseObject != null && responseObject.TryGetValue("success", out var successValue) && successValue.ToObject<bool>())
-                    return true; // Operation was successful
+                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/edit", requestBody, cancellationToken);
+                if (response.TryGetProperty("success", out var successValue) && successValue.GetBoolean())// Operation was successful
+                    return true;
 
                 // Start constructing the error message
                 var errorMessage = "Failed to edit order.";
 
-                if (responseObject?.TryGetValue("errors", out var errorsValue) == true && errorsValue is JArray errorsArray && errorsArray.Any())
+                if (response.TryGetProperty("errors", out var errorsValue) && errorsValue.ValueKind == JsonValueKind.Array && errorsValue.GetArrayLength() > 0)
                 {
-                    var errorDetails = errorsArray.FirstOrDefault();
-                    if (errorDetails != null && errorDetails["edit_failure_reason"] != null)
-                    {
-                        errorMessage += $" Reason: {errorDetails["edit_failure_reason"]}";
-                    }
+                    var errorDetails = errorsValue.EnumerateArray().First();
+
+                    if (errorDetails.TryGetProperty("edit_failure_reason", out var editFailureReason))
+                        errorMessage += $" Reason: {editFailureReason}";
                 }
 
                 throw new InvalidOperationException(errorMessage);
@@ -689,52 +651,44 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
 
             try
             {
-                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/edit_preview", requestBody, cancellationToken) ?? [];
-                var responseObject = UtilityHelper.DeserializeDictionary<Dictionary<string, JToken>>(response);
+                var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/edit_preview", requestBody, cancellationToken);
+                //var responseObject = UtilityHelper.DeserializeDictionary<Dictionary<string, JsonElement>>(response);
 
                 // Check if there are errors
-                if (responseObject != null && responseObject.TryGetValue("errors", out var errorsValue) && errorsValue is JArray errorsArray && errorsArray.Any())
+                if (response.TryGetProperty("errors", out var errorsValue) && errorsValue.ValueKind == JsonValueKind.Array && errorsValue.GetArrayLength() > 0)
                 {
                     // Convert errorsValue to a JArray and check if it's not empty
-                    var errorsList = errorsArray.ToList();
+                    var errorsList = errorsValue.EnumerateArray().ToList();
 
-                    if (errorsList.Any())
+                    var errorMessage = "Failed to preview order edit.";
+
+                    // Iterate through error objects
+                    foreach (var errorObj in errorsList)
                     {
-                        var errorMessage = "Failed to preview order edit.";
-
-                        // Iterate through error objects
-                        foreach (var errorObj in errorsList)
+                        if (errorObj is JsonElement errorObject)
                         {
-                            if (errorObj is JObject errorObject)
-                            {
-                                // Check for specific properties within each error object
-                                if (errorObject.TryGetValue("edit_failure_reason", out var editFailureReason))
-                                {
-                                    errorMessage += $" Edit Failure Reason: {editFailureReason.ToString()}.";
-                                }
-
-                                if (errorObject.TryGetValue("preview_failure_reason", out var previewFailureReason))
-                                {
-                                    errorMessage += $" Preview Failure Reason: {previewFailureReason.ToString()}.";
-                                }
-                            }
+                            // Check for specific properties within each error object
+                            if (errorObject.TryGetProperty("edit_failure_reason", out var editFailureReason))
+                                errorMessage += $" Edit Failure Reason: {editFailureReason.ToString()}.";
+                            if (errorObject.TryGetProperty("preview_failure_reason", out var previewFailureReason))
+                                errorMessage += $" Preview Failure Reason: {previewFailureReason.ToString()}.";
                         }
-
-                        throw new InvalidOperationException(errorMessage);
                     }
+
+                    throw new InvalidOperationException(errorMessage);
                 }
 
                 // Assuming no errors or empty error array, populate the EditOrderPreviewResult from responseObject
                 var result = new EditOrderPreviewResult
                 {
-                    Slippage = responseObject.TryGetValue("slippage", out var tempValue) ? tempValue.ToString() : string.Empty,
-                    OrderTotal = responseObject.TryGetValue("order_total", out tempValue) ? tempValue.ToString() : string.Empty,
-                    CommissionTotal = responseObject.TryGetValue("commission_total", out tempValue) ? tempValue.ToString() : string.Empty,
-                    QuoteSize = responseObject.TryGetValue("quote_size", out tempValue) ? tempValue.ToString() : string.Empty,
-                    BaseSize = responseObject.TryGetValue("base_size", out tempValue) ? tempValue.ToString() : string.Empty,
-                    BestBid = responseObject.TryGetValue("best_bid", out tempValue) ? tempValue.ToString() : string.Empty,
-                    BestAsk = responseObject.TryGetValue("best_ask", out tempValue) ? tempValue.ToString() : string.Empty,
-                    AverageFilledPrice = responseObject.TryGetValue("average_filled_price", out tempValue) ? tempValue.ToString() : string.Empty
+                    Slippage = response.TryGetProperty("slippage", out var tempValue) ? tempValue.GetString() : string.Empty,
+                    OrderTotal = response.TryGetProperty("order_total", out tempValue) ? tempValue.GetString() : string.Empty,
+                    CommissionTotal = response.TryGetProperty("commission_total", out tempValue) ? tempValue.GetString() : string.Empty,
+                    QuoteSize = response.TryGetProperty("quote_size", out tempValue) ? tempValue.GetString() : string.Empty,
+                    BaseSize = response.TryGetProperty("base_size", out tempValue) ? tempValue.GetString() : string.Empty,
+                    BestBid = response.TryGetProperty("best_bid", out tempValue) ? tempValue.GetString() : string.Empty,
+                    BestAsk = response.TryGetProperty("best_ask", out tempValue) ? tempValue.GetString() : string.Empty,
+                    AverageFilledPrice = response.TryGetProperty("average_filled_price", out tempValue) ? tempValue.GetString() : string.Empty
                 };
 
 
@@ -746,8 +700,5 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
                 throw new InvalidOperationException("Failed to preview order edit due to an exception.", ex);
             }
         }
-
-
-
     }
 }

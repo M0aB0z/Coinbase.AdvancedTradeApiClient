@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -12,31 +12,31 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the channel for the ticker message.
         /// </summary>
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         public string Channel { get; set; }
 
         /// <summary>
         /// Gets or sets the client ID associated with the ticker message.
         /// </summary>
-        [JsonProperty("client_id")]
+        [JsonPropertyName("client_id")]
         public string ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp when the ticker message was sent.
         /// </summary>
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the sequence number for the ticker message.
         /// </summary>
-        [JsonProperty("sequence_num")]
+        [JsonPropertyName("sequence_num")]
         public int SequenceNum { get; set; }
 
         /// <summary>
         /// Gets or sets the list of ticker events.
         /// </summary>
-        [JsonProperty("events")]
+        [JsonPropertyName("events")]
         public List<TickerEvent> Events { get; set; }
     }
 
@@ -48,13 +48,13 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the type of the ticker event.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the list of tickers associated with the ticker event.
         /// </summary>
-        [JsonProperty("tickers")]
+        [JsonPropertyName("tickers")]
         public List<Ticker> Tickers { get; set; }
     }
 
@@ -66,55 +66,55 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the type of the ticker.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the product associated with the ticker.
         /// </summary>
-        [JsonProperty("product_id")]
+        [JsonPropertyName("product_id")]
         public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the price of the ticker.
         /// </summary>
-        [JsonProperty("price")]
+        [JsonPropertyName("price")]
         public string Price { get; set; }
 
         /// <summary>
         /// Gets or sets the volume of the product over the last 24 hours.
         /// </summary>
-        [JsonProperty("volume_24_h")]
+        [JsonPropertyName("volume_24_h")]
         public string Volume24H { get; set; }
 
         /// <summary>
         /// Gets or sets the lowest price of the product over the last 24 hours.
         /// </summary>
-        [JsonProperty("low_24_h")]
+        [JsonPropertyName("low_24_h")]
         public string Low24H { get; set; }
 
         /// <summary>
         /// Gets or sets the highest price of the product over the last 24 hours.
         /// </summary>
-        [JsonProperty("high_24_h")]
+        [JsonPropertyName("high_24_h")]
         public string High24H { get; set; }
 
         /// <summary>
         /// Gets or sets the lowest price of the product over the last 52 weeks.
         /// </summary>
-        [JsonProperty("low_52_w")]
+        [JsonPropertyName("low_52_w")]
         public string Low52W { get; set; }
 
         /// <summary>
         /// Gets or sets the highest price of the product over the last 52 weeks.
         /// </summary>
-        [JsonProperty("high_52_w")]
+        [JsonPropertyName("high_52_w")]
         public string High52W { get; set; }
 
         /// <summary>
         /// Gets or sets the percentage change in price of the product over the last 24 hours.
         /// </summary>
-        [JsonProperty("price_percent_chg_24_h")]
+        [JsonPropertyName("price_percent_chg_24_h")]
         public string PricePercentChg24H { get; set; }
     }
 }

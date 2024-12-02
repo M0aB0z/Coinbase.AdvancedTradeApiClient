@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -12,31 +12,31 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the channel for the message.
         /// </summary>
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         public string Channel { get; set; }
 
         /// <summary>
         /// Gets or sets the client identifier.
         /// </summary>
-        [JsonProperty("client_id")]
+        [JsonPropertyName("client_id")]
         public string ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp of the message.
         /// </summary>
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public string Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the sequence number of the message.
         /// </summary>
-        [JsonProperty("sequence_num")]
+        [JsonPropertyName("sequence_num")]
         public long SequenceNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the list of events contained in the message.
         /// </summary>
-        [JsonProperty("events")]
+        [JsonPropertyName("events")]
         public List<Event> Events { get; set; }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
             /// <summary>
             /// Gets or sets the type of the event.
             /// </summary>
-            [JsonProperty("type")]
+            [JsonPropertyName("type")]
             public string Type { get; set; }
 
             /// <summary>
             /// Gets or sets the list of candles in the event.
             /// </summary>
-            [JsonProperty("candles")]
+            [JsonPropertyName("candles")]
             public List<Candle> Candles { get; set; }
         }
     }
@@ -66,43 +66,43 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the start time of the candle in Unix timestamp format.
         /// </summary>
-        [JsonProperty("start")]
+        [JsonPropertyName("start")]
         public string StartUnix { get; set; }
 
         /// <summary>
         /// Gets or sets the highest price during the candle period.
         /// </summary>
-        [JsonProperty("high")]
+        [JsonPropertyName("high")]
         public string High { get; set; }
 
         /// <summary>
         /// Gets or sets the lowest price during the candle period.
         /// </summary>
-        [JsonProperty("low")]
+        [JsonPropertyName("low")]
         public string Low { get; set; }
 
         /// <summary>
         /// Gets or sets the opening price of the candle.
         /// </summary>
-        [JsonProperty("open")]
+        [JsonPropertyName("open")]
         public string Open { get; set; }
 
         /// <summary>
         /// Gets or sets the closing price of the candle.
         /// </summary>
-        [JsonProperty("close")]
+        [JsonPropertyName("close")]
         public string Close { get; set; }
 
         /// <summary>
         /// Gets or sets the volume of the asset traded during the candle period.
         /// </summary>
-        [JsonProperty("volume")]
+        [JsonPropertyName("volume")]
         public string Volume { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier.
         /// </summary>
-        [JsonProperty("product_id")]
+        [JsonPropertyName("product_id")]
         public string ProductId { get; set; }
 
         /// <summary>

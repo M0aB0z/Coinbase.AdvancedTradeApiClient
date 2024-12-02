@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models.Public
 {
@@ -10,19 +10,19 @@ namespace Coinbase.AdvancedTrade.Models.Public
         /// <summary>
         /// Gets or sets the ISO 8601 formatted date and time.
         /// </summary>
-        [JsonProperty("iso")]
+        [JsonPropertyName("iso")]
         public string Iso { get; set; }
 
         /// <summary>
         /// Gets or sets the number of seconds since the Unix epoch as a string.
         /// </summary>
-        [JsonProperty("epochSeconds")]
+        [JsonPropertyName("epochSeconds")]
         public string EpochSeconds { get; set; }
 
         /// <summary>
         /// Gets or sets the number of milliseconds since the Unix epoch as a string.
         /// </summary>
-        [JsonProperty("epochMillis")]
+        [JsonPropertyName("epochMillis")]
         public string EpochMillis { get; set; }
     }
 }

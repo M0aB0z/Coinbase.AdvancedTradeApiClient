@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Coinbase.AdvancedTrade
 {
@@ -69,7 +69,7 @@ namespace Coinbase.AdvancedTrade
         /// <param name="path"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Dictionary<string, object>> GetAsync(string path, CancellationToken cancellationToken = default)
+        public async Task<JsonElement> GetAsync(string path, CancellationToken cancellationToken = default)
         {
             // Generate headers required for the authenticated request
             var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Get, path);
@@ -85,7 +85,7 @@ namespace Coinbase.AdvancedTrade
         /// <param name="bodyObj"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<Dictionary<string, object>> PostAsync(string path, object bodyObj, CancellationToken cancellationToken = default)
+        public async Task<JsonElement> PostAsync(string path, object bodyObj, CancellationToken cancellationToken = default)
         {
             // Generate headers required for the authenticated request
             var headers = _useOAuth ? CreateOAuth2Headers() : CreateJwtHeaders(HttpMethod.Post, path);
@@ -130,7 +130,7 @@ namespace Coinbase.AdvancedTrade
         /// <param name="headers">Headers to be added to the request.</param>
         /// <param name="cancellationToken">Http request cancellation token</param>
         /// <returns>A Task representing the asynchronous operation, which upon completion returns a dictionary representation of the response content, or null if the content is empty or only consists of white-space characters.</returns>
-        private async Task<Dictionary<string, object>> ExecuteRequestAsync(HttpMethod method, string path, object bodyObj, Dictionary<string, string> headers, CancellationToken cancellationToken)
+        private async Task<JsonElement> ExecuteRequestAsync(HttpMethod method, string path, object bodyObj, Dictionary<string, string> headers, CancellationToken cancellationToken)
         {
             try
             {
@@ -144,17 +144,17 @@ namespace Coinbase.AdvancedTrade
                         requestMessage.Headers.Add(header.Key, header.Value);
 
                     if (bodyObj != null)
-                        requestMessage.Content = new StringContent(JsonConvert.SerializeObject(bodyObj), Encoding.UTF8, "application/json");
+                        requestMessage.Content = new StringContent(JsonSerializer.Serialize(bodyObj), Encoding.UTF8, "application/json");
 
                     var response = await httpClient.SendAsync(requestMessage, cancellationToken);
                     var responseContent = await response.Content.ReadAsStringAsync();
 
                     // Check if the response content is empty or just white-space
                     if (string.IsNullOrWhiteSpace(responseContent))
-                        return null;
+                        return default;
 
                     // Deserialize the content into a dictionary
-                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(responseContent);
+                    return JsonDocument.Parse(responseContent).RootElement;
                 }
             }
             catch (Exception ex)
@@ -178,7 +178,7 @@ namespace Coinbase.AdvancedTrade
         private Dictionary<string, string> CreateLegacyHeaders(string method, string path, object bodyObj)
         {
             // Serialize body object if present, otherwise set to null
-            var body = bodyObj != null ? JsonConvert.SerializeObject(bodyObj) : null;
+            var body = bodyObj != null ? JsonSerializer.Serialize(bodyObj) : null;
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
             var message = $"{timestamp}{method.ToUpper()}{path}{body}";
             var signature = GenerateSignature(message);

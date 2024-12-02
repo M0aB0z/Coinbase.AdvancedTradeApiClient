@@ -26,8 +26,7 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
             {
                 var parameters = new { limit, cursor };
                 var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/accounts", parameters));
-
-                return UtilityHelper.DeserializeJsonElement<List<Account>>(response, "accounts");
+                return response.As<List<Account>>("accounts");
             }
             catch (Exception ex)
             {
@@ -41,15 +40,12 @@ namespace Coinbase.AdvancedTrade.ExchangeManagers
         {
             // Check if the provided UUID is valid.
             if (string.IsNullOrEmpty(accountUuid))
-            {
                 throw new ArgumentException("Account UUID cannot be null or empty", nameof(accountUuid));
-            }
 
             try
             {
-                var response = await _authenticator.GetAsync($"/api/v3/brokerage/accounts/{accountUuid}", cancellationToken) ?? [];
-
-                return UtilityHelper.DeserializeJsonElement<Account>(response, "account");
+                var response = await _authenticator.GetAsync($"/api/v3/brokerage/accounts/{accountUuid}", cancellationToken);
+                return response.As<Account>("account");
             }
             catch (Exception ex)
             {

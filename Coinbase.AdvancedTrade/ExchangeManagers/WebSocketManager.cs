@@ -1,16 +1,14 @@
 ﻿using System.Net.WebSockets;
 using System.Text;
 using Coinbase.AdvancedTrade.Models.WebSocket;
-using Newtonsoft.Json;
 using System.Security.Cryptography;
 using Coinbase.AdvancedTrade.Enums;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text.Json;
 
 namespace Coinbase.AdvancedTrade
 {
@@ -44,12 +42,9 @@ namespace Coinbase.AdvancedTrade
         private bool IsWebSocketOpen => _webSocket.State == System.Net.WebSockets.WebSocketState.Open;
 
         // JSON serialization options for WebSocket messages.
-        private static readonly JsonSerializerSettings JsonOptions = new JsonSerializerSettings
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
         {
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            }
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
         // Tracks the subscriptions
@@ -282,7 +277,7 @@ namespace Coinbase.AdvancedTrade
             var message = CreateSubscriptionMessage(products, channelName, "subscribe");
 
             // Serialize the message to JSON format.
-            var jsonString = JsonConvert.SerializeObject(message, JsonOptions);
+            var jsonString = JsonSerializer.Serialize(message, JsonOptions);
 
             // Convert the JSON message to a byte array for sending over the WebSocket.
             var byteData = Encoding.UTF8.GetBytes(jsonString);
@@ -314,7 +309,7 @@ namespace Coinbase.AdvancedTrade
             var message = CreateSubscriptionMessage(products, channelName, "unsubscribe");
 
             // Serialize the message to JSON format.
-            var jsonString = JsonConvert.SerializeObject(message, JsonOptions);
+            var jsonString = JsonSerializer.Serialize(message, JsonOptions);
 
             // Convert the JSON message to a byte array for sending over the WebSocket.
             var byteData = Encoding.UTF8.GetBytes(jsonString);
@@ -375,7 +370,7 @@ namespace Coinbase.AdvancedTrade
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message));
 
             // Deserialize the WebSocket message into the specified type.
-            var deserializedMessage = JsonConvert.DeserializeObject<T>(message);
+            var deserializedMessage = JsonSerializer.Deserialize<T>(message);
 
             // Check if the deserialized message is not null and if an event handler is provided.
             if (deserializedMessage != null && eventInvoker != null)
@@ -394,13 +389,11 @@ namespace Coinbase.AdvancedTrade
             // Check if the message is null or empty and throw an exception if it is.
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message));
 
-            // Deserialize the WebSocket message into a JSON element.
-            var jsonObject = JsonConvert.DeserializeObject<JObject>(message);
+            var jsonObject = JsonSerializer.Deserialize<JsonElement>(message);
 
-            // Check if the JSON element contains a "channel" property and if its value is a string.
-            if (jsonObject.TryGetValue("channel", out JToken channelToken)
-                && channelToken.Type == JTokenType.String
-                && _messageMap.TryGetValue((string)channelToken, out var processor))
+            if (jsonObject.TryGetProperty("channel", out var channelToken)
+                && channelToken.ValueKind == JsonValueKind.String
+                && _messageMap.TryGetValue(channelToken.GetString(), out var processor))
             {
                 // If a message processor is found for the channel, invoke it with the original message.
                 processor(message);

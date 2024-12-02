@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -12,31 +12,31 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the channel for the market trades message.
         /// </summary>
-        [JsonProperty("channel")]
+        [JsonPropertyName("channel")]
         public string Channel { get; set; }
 
         /// <summary>
         /// Gets or sets the client ID associated with the market trades message.
         /// </summary>
-        [JsonProperty("client_id")]
+        [JsonPropertyName("client_id")]
         public string ClientId { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp when the market trades message was sent.
         /// </summary>
-        [JsonProperty("timestamp")]
+        [JsonPropertyName("timestamp")]
         public string Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the sequence number for the market trades message.
         /// </summary>
-        [JsonProperty("sequence_num")]
+        [JsonPropertyName("sequence_num")]
         public long SequenceNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the list of market trade events.
         /// </summary>
-        [JsonProperty("events")]
+        [JsonPropertyName("events")]
         public List<MarketTradeEvent> Events { get; set; }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
             /// <summary>
             /// Gets or sets the type of the market trade event.
             /// </summary>
-            [JsonProperty("type")]
+            [JsonPropertyName("type")]
             public string Type { get; set; }
 
             /// <summary>
             /// Gets or sets the list of trades associated with the market trade event.
             /// </summary>
-            [JsonProperty("trades")]
+            [JsonPropertyName("trades")]
             public List<Trade> Trades { get; set; }
         }
     }
@@ -66,37 +66,37 @@ namespace Coinbase.AdvancedTrade.Models.WebSocket
         /// <summary>
         /// Gets or sets the ID of the trade.
         /// </summary>
-        [JsonProperty("trade_id")]
+        [JsonPropertyName("trade_id")]
         public string TradeId { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the product associated with the trade.
         /// </summary>
-        [JsonProperty("product_id")]
+        [JsonPropertyName("product_id")]
         public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the price of the trade.
         /// </summary>
-        [JsonProperty("price")]
+        [JsonPropertyName("price")]
         public string Price { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the trade.
         /// </summary>
-        [JsonProperty("size")]
+        [JsonPropertyName("size")]
         public string Size { get; set; }
 
         /// <summary>
         /// Gets or sets the side of the trade (e.g., "buy" or "sell").
         /// </summary>
-        [JsonProperty("side")]
+        [JsonPropertyName("side")]
         public string Side { get; set; }
 
         /// <summary>
         /// Gets or sets the timestamp of the trade.
         /// </summary>
-        [JsonProperty("time")]
+        [JsonPropertyName("time")]
         public string Time { get; set; }
 
         /// <summary>
