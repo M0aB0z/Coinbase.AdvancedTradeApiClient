@@ -2,6 +2,9 @@
 
 namespace Coinbase.AdvancedTrade.Enums;
 
+/// <summary>
+/// Order stop directions enumeration
+/// </summary>
 public enum OrderDirection
 {
     /// <summary>

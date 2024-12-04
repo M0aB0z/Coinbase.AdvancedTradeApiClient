@@ -314,6 +314,10 @@ public class InternalMarketIoc : IModelMapper<MarketIoc>
     [JsonPropertyName("base_size")]
     public string BaseSize { get; set; }
 
+    /// <summary>
+    /// public model convert
+    /// </summary>
+    /// <returns></returns>
     public MarketIoc ToModel()
     {
         return new MarketIoc
@@ -372,8 +376,9 @@ public class InternalLimitGtd : InternalLimitGtc, IModelMapper<LimitGtd>
     /// </summary>
     [JsonPropertyName("end_time")]
     public DateTime EndTime { get; set; }
+
     /// <inheritdoc/>
-    public LimitGtd ToModel()
+    public new LimitGtd ToModel()
     {
         return new LimitGtd
         {
@@ -439,7 +444,7 @@ public class InternalStopLimitGtd : InternalStopLimitGtc, IModelMapper<StopLimit
     public DateTime EndTime { get; set; }
 
     /// <inheritdoc/>
-    public StopLimitGtd ToModel()
+    public new StopLimitGtd ToModel()
     {
         return new StopLimitGtd
         {
@@ -469,6 +474,10 @@ public class InternalSorLimitIoc : IModelMapper<SorLimitIoc>
     [JsonPropertyName("limit_price")]
     public string LimitPrice { get; set; }
 
+    /// <summary>
+    /// public model convert
+    /// </summary>
+    /// <returns></returns>
     public SorLimitIoc ToModel()
     {
         return new SorLimitIoc
@@ -502,6 +511,10 @@ public class InternalEditHistoryEntry : IModelMapper<EditHistoryEntry>
     [JsonPropertyName("replace_accept_timestamp")]
     public DateTime? ReplaceAcceptTimestamp { get; set; }
 
+    /// <summary>
+    /// public model convert
+    /// </summary>
+    /// <returns></returns>
     public EditHistoryEntry ToModel()
     {
         return new EditHistoryEntry
