@@ -1,7 +1,9 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
+using Coinbase.AdvancedTrade.Models.Internal.Orders;
 using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,8 +47,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         string[] orderStatusStrings = UtilityHelper.EnumToStringArray(orderStatus);
         string startDateString = UtilityHelper.FormatDateToISO8601(startDate);
         string endDateString = UtilityHelper.FormatDateToISO8601(endDate);
-        string orderTypeString = orderType?.ToString();
-        string orderSideString = orderSide?.ToString();
+        string orderTypeString = orderType?.GetDescription();
+        string orderSideString = orderSide?.GetDescription();
 
         // Create an anonymous object with the parameters
         var paramsObj = new
@@ -62,7 +64,7 @@ public class OrdersManager : BaseManager, IOrdersManager
         try
         {
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj), cancellationToken);
-            return response.As<Order[]>("orders");
+            return response.As<InternalOrder[]>("orders").ToModel();
         }
         catch (Exception ex)
         {
@@ -126,7 +128,7 @@ public class OrdersManager : BaseManager, IOrdersManager
         try
         {
             var response = await _authenticator.GetAsync($"/api/v3/brokerage/orders/historical/{orderId}", cancellationToken);
-            return response.As<Order>("order");
+            return response.As<InternalOrder>("order").ToModel();
         }
         catch (Exception ex)
         {
@@ -166,15 +168,11 @@ public class OrdersManager : BaseManager, IOrdersManager
     /// <param name="orderConfiguration">Configuration details for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Order ID upon successful order creation; otherwise, null.</returns>
-    private async Task<string> CreateOrderAsync(string productId, OrderSide side, OrderConfiguration orderConfiguration, CancellationToken cancellationToken)
+    private async Task<string> CreateOrderAsync(string productId, OrderSide side, InternalOrderConfiguration orderConfiguration, CancellationToken cancellationToken)
     {
         // Validate the provided product ID
         if (string.IsNullOrWhiteSpace(productId))
             throw new ArgumentException("Product ID cannot be null, empty, or consist only of white-space characters.", nameof(productId));
-
-        // Validate the order side
-        if (side != OrderSide.BUY && side != OrderSide.SELL)
-            throw new ArgumentException("Invalid side value provided.", nameof(side));
 
 
         // Ensure order configuration is provided
@@ -191,7 +189,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             {
                 client_order_id = clientOrderId,
                 product_id = productId,
-                side = side.ToString(),
+                side = side.GetDescription(),
                 order_configuration = orderConfiguration
             };
 
@@ -239,7 +237,7 @@ public class OrdersManager : BaseManager, IOrdersManager
     /// <param name="orderId">The ID of the order to retrieve.</param>
     /// <param name="maxRetries">The maximum number of retry attempts. Default is 20.</param>
     /// <param name="delay">The delay in milliseconds between retries. Default is 500ms.</param>
-    /// <returns>The <see cref="Order"/> object if successfully retrieved; otherwise, null.</returns>
+    /// <returns>The <see cref="InternalOrder"/> object if successfully retrieved; otherwise, null.</returns>
     /// <exception cref="ArgumentException">Thrown when the order ID is null.</exception>
     private async Task<Order> GetOrderWithRetryAsync(string orderId, int maxRetries = 20, int delay = 500)
     {
@@ -273,29 +271,23 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, string amount, CancellationToken cancellationToken)
+    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, double amount, CancellationToken cancellationToken)
     {
         // Ensure the product ID is provided and not empty
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
 
         // Determine the market order details based on the side (BUY or SELL)
-        MarketIoc marketDetails;
-        switch (side)
+        InternalMarketIoc marketDetails = side switch
         {
-            case OrderSide.BUY:
-                marketDetails = new MarketIoc { QuoteSize = amount }; // Buy orders use the QuoteSize
-                break;
-            case OrderSide.SELL:
-                marketDetails = new MarketIoc { BaseSize = amount };  // Sell orders use the BaseSize
-                break;
-            default:
-                throw new ArgumentException($"Invalid order side provided: {side}.");
-        }
+            OrderSide.Buy => new InternalMarketIoc { QuoteSize = amount.ToString() }, // Buy orders use the QuoteSize
+            OrderSide.Sell => new InternalMarketIoc { BaseSize = amount.ToString() }, // Sell orders use the BaseSize
+            _ => throw new ArgumentException($"Invalid order side provided: {side}.")
+        };
 
 
         // Create the order configuration using the determined market details
-        var orderConfiguration = new OrderConfiguration
+        var orderConfiguration = new InternalOrderConfiguration
         {
             MarketIoc = marketDetails
         };
@@ -305,7 +297,7 @@ public class OrdersManager : BaseManager, IOrdersManager
     }
 
     /// <inheritdoc/>
-    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, string amount, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, double amount, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -317,28 +309,22 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool postOnly, CancellationToken cancellationToken)
+    public async Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly, CancellationToken cancellationToken)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
 
-        if (string.IsNullOrEmpty(baseSize))
-            throw new ArgumentException("Base size cannot be null or empty.", nameof(baseSize));
-
-        if (string.IsNullOrEmpty(limitPrice))
-            throw new ArgumentException("Limit price cannot be null or empty.", nameof(limitPrice));
-
         // Prepare the order configuration for a Limit Order with GTC (Good Till Cancel)
         // This defines the parameters of the limit order, such as the amount (baseSize),
         // the price at which it's willing to trade (limitPrice), and whether it should only
         // post this order to the order book (postOnly).
-        var orderConfiguration = new OrderConfiguration
+        var orderConfiguration = new InternalOrderConfiguration
         {
-            LimitGtc = new LimitGtc
+            LimitGtc = new InternalLimitGtc
             {
-                BaseSize = baseSize,
-                LimitPrice = limitPrice,
+                BaseSize = baseSize.ToString(),
+                LimitPrice = limitPrice.ToString(),
                 PostOnly = postOnly
             }
         };
@@ -350,7 +336,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -362,17 +348,11 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default)
+    public async Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
-
-        if (string.IsNullOrEmpty(baseSize))
-            throw new ArgumentException("Base size cannot be null or empty.", nameof(baseSize));
-
-        if (string.IsNullOrEmpty(limitPrice))
-            throw new ArgumentException("Limit price cannot be null or empty.", nameof(limitPrice));
 
         if (endTime <= DateTime.UtcNow)
             throw new ArgumentException("End time should be in the future.", nameof(endTime));
@@ -380,12 +360,12 @@ public class OrdersManager : BaseManager, IOrdersManager
         // Construct the order configuration for a Limit Order with GTD (Good Till Date)
         // This sets the parameters like the size of the order (baseSize), the desired trade price (limitPrice),
         // the time until the order remains active (endTime), and if the order should only be posted to the order book (postOnly).
-        var orderConfig = new OrderConfiguration
+        var orderConfig = new InternalOrderConfiguration
         {
-            LimitGtd = new LimitGtd
+            LimitGtd = new InternalLimitGtd
             {
-                BaseSize = baseSize,
-                LimitPrice = limitPrice,
+                BaseSize = baseSize.ToString(),
+                LimitPrice = limitPrice.ToString(),
                 EndTime = endTime,
                 PostOnly = postOnly
             }
@@ -397,7 +377,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -409,45 +389,29 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, CancellationToken cancellationToken)
+    public async Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, CancellationToken cancellationToken)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
 
-        if (string.IsNullOrEmpty(baseSize))
-            throw new ArgumentException("Base size cannot be null or empty.", nameof(baseSize));
-
-        if (string.IsNullOrEmpty(limitPrice))
-            throw new ArgumentException("Limit price cannot be null or empty.", nameof(limitPrice));
-
-        if (string.IsNullOrEmpty(stopPrice))
-            throw new ArgumentException("Stop price cannot be null or empty.", nameof(stopPrice));
-
         // Determine stop direction based on the side of the order (BUY or SELL)
-        string stopDirection;
-        switch (side)
+        OrderDirection stopDirection = side switch
         {
-            case OrderSide.BUY:
-                stopDirection = "STOP_DIRECTION_STOP_UP";
-                break;
-            case OrderSide.SELL:
-                stopDirection = "STOP_DIRECTION_STOP_DOWN";
-                break;
-            default:
-                throw new ArgumentException($"Invalid order side provided: {side}.");
-        }
-
+            OrderSide.Buy => OrderDirection.StopDirectionStopUp,
+            OrderSide.Sell => OrderDirection.StopDirectionStopDown,
+            _ => throw new ArgumentException($"Invalid order side provided: {side}.")
+        };
 
         // Construct the order configuration for a Stop Limit Order with GTC (Good Till Cancel)
-        var orderConfig = new OrderConfiguration
+        var orderConfig = new InternalOrderConfiguration
         {
-            StopLimitGtc = new StopLimitGtc
+            StopLimitGtc = new InternalStopLimitGtc
             {
-                BaseSize = baseSize,
-                LimitPrice = limitPrice,
-                StopPrice = stopPrice,
-                StopDirection = stopDirection
+                BaseSize = baseSize.ToString(),
+                LimitPrice = limitPrice.ToString(),
+                StopPrice = stopPrice.ToString(),
+                StopDirection = stopDirection.GetDescription()
             }
         };
 
@@ -457,7 +421,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -470,48 +434,28 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, DateTime endTime, CancellationToken cancellationToken)
+    public async Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, CancellationToken cancellationToken)
     {
-        // Validate input parameters
-        if (string.IsNullOrEmpty(productId))
-            throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
-
-        if (string.IsNullOrEmpty(baseSize))
-            throw new ArgumentException("Base size cannot be null or empty.", nameof(baseSize));
-
-        if (string.IsNullOrEmpty(limitPrice))
-            throw new ArgumentException("Limit price cannot be null or empty.", nameof(limitPrice));
-
-        if (string.IsNullOrEmpty(stopPrice))
-            throw new ArgumentException("Stop price cannot be null or empty.", nameof(stopPrice));
-
         if (endTime <= DateTime.UtcNow)
             throw new ArgumentException("End time should be in the future.", nameof(endTime));
 
         // Determine stop direction based on the side of the order (BUY or SELL)
-        string stopDirection;
-        switch (side)
+        OrderDirection stopDirection = side switch
         {
-            case OrderSide.BUY:
-                stopDirection = "STOP_DIRECTION_STOP_UP";
-                break;
-            case OrderSide.SELL:
-                stopDirection = "STOP_DIRECTION_STOP_DOWN";
-                break;
-            default:
-                throw new ArgumentException($"Invalid order side provided: {side}.");
-        }
-
+            OrderSide.Buy => OrderDirection.StopDirectionStopUp,
+            OrderSide.Sell => OrderDirection.StopDirectionStopDown,
+            _ => throw new ArgumentException($"Invalid order side provided: {side}.")
+        };
 
         // Construct the order configuration for a Stop Limit Order with GTD (Good Till Date)
-        var orderConfig = new OrderConfiguration
+        var orderConfig = new InternalOrderConfiguration
         {
-            StopLimitGtd = new StopLimitGtd
+            StopLimitGtd = new InternalStopLimitGtd
             {
-                BaseSize = baseSize,
-                LimitPrice = limitPrice,
-                StopPrice = stopPrice,
-                StopDirection = stopDirection,
+                BaseSize = baseSize.ToString(),
+                LimitPrice = limitPrice.ToString(),
+                StopPrice = stopPrice.ToString(),
+                StopDirection = stopDirection.GetDescription(),
                 EndTime = endTime
             }
         };
@@ -522,7 +466,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -534,25 +478,15 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, string baseSize, string limitPrice, CancellationToken cancellationToken)
+    public async Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, CancellationToken cancellationToken)
     {
-        // Validate input parameters
-        if (string.IsNullOrEmpty(productId))
-            throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
-
-        if (string.IsNullOrEmpty(baseSize))
-            throw new ArgumentException("Base size cannot be null or empty.", nameof(baseSize));
-
-        if (string.IsNullOrEmpty(limitPrice))
-            throw new ArgumentException("Limit price cannot be null or empty.", nameof(limitPrice));
-
         // Prepare the order configuration for a SOR Limit IOC order
-        var orderConfiguration = new OrderConfiguration
+        var orderConfiguration = new InternalOrderConfiguration
         {
-            SorLimitIoc = new SorLimitIoc
+            SorLimitIoc = new InternalSorLimitIoc
             {
-                BaseSize = baseSize,
-                LimitPrice = limitPrice
+                BaseSize = baseSize.ToString(),
+                LimitPrice = limitPrice.ToString()
             }
         };
 
@@ -562,7 +496,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -575,16 +509,10 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<bool> EditOrderAsync(string orderId, string price = null, string size = null, CancellationToken cancellationToken = default)
+    public async Task<bool> EditOrderAsync(string orderId, double? price = null, double? size = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(orderId))
             throw new ArgumentException("Order ID cannot be null or empty.", nameof(orderId));
-
-        if (string.IsNullOrEmpty(price))
-            throw new ArgumentException("Price cannot be null or empty.", nameof(price));
-
-        if (string.IsNullOrEmpty(size))
-            throw new ArgumentException("Size cannot be null or empty.", nameof(size));
 
         var requestBody = new
         {
@@ -621,17 +549,11 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, string price, string size, CancellationToken cancellationToken)
+    public async Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, double? price, double? size, CancellationToken cancellationToken)
     {
         // Validation of input parameters
         if (string.IsNullOrEmpty(orderId))
             throw new ArgumentException("Order ID cannot be null or empty.", nameof(orderId));
-
-        if (string.IsNullOrEmpty(price))
-            throw new ArgumentException("Price cannot be null or empty.", nameof(price));
-
-        if (string.IsNullOrEmpty(size))
-            throw new ArgumentException("Size cannot be null or empty.", nameof(size));
 
         var requestBody = new
         {

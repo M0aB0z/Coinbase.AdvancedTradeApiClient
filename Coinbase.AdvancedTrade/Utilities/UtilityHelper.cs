@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coinbase.AdvancedTrade.Utilities.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace Coinbase.AdvancedTrade.Utilities;
 /// <summary>
 /// Provides various utility functions for data manipulation and conversion.
 /// </summary>
-public static class UtilityHelper
+internal static class UtilityHelper
 {
 
 
@@ -55,7 +56,7 @@ public static class UtilityHelper
     /// <param name="enums">The array of enums.</param>
     /// <typeparam name="TEnum">The type of enum.</typeparam>
     /// <returns>An array of strings.</returns>
-    public static string[] EnumToStringArray<TEnum>(TEnum[] enums) where TEnum : struct
+    internal static string[] EnumToStringArray<TEnum>(TEnum[] enums) where TEnum : struct
     {
         if (enums == null)
             return null;
@@ -68,8 +69,15 @@ public static class UtilityHelper
     /// </summary>
     /// <param name="dateTime">The DateTime instance to format.</param>
     /// <returns>The ISO 8601 formatted string.</returns>
-    public static string FormatDateToISO8601(DateTime? dateTime)
+    internal static string FormatDateToISO8601(DateTime? dateTime)
     {
         return dateTime?.ToUniversalTime().ToString("o");
+    }
+
+    internal static double? ToNullableDouble(string value)
+    {
+        if (string.IsNullOrEmpty(value?.Trim()))
+            return null;
+        return value.ToDouble();
     }
 }

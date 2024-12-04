@@ -74,7 +74,7 @@ public interface IOrdersManager
     /// <param name="size">Size of the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateMarketOrderAsync(string productId, OrderSide side, string size, CancellationToken cancellationToken);
+    Task<string> CreateMarketOrderAsync(string productId, OrderSide side, double size, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a market order and optionally returns the full order details.
@@ -86,7 +86,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, string amount, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, double amount, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit order with good-till-canceled (GTC) duration.
@@ -98,7 +98,7 @@ public interface IOrdersManager
     /// <param name="postOnly">Indicates if the order should only be posted.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool postOnly = true, CancellationToken cancellationToken = default);
+    Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit order with good-till-canceled (GTC) duration and optionally returns the full order details.
@@ -112,7 +112,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit order with good-till-date (GTD) duration.
@@ -125,7 +125,7 @@ public interface IOrdersManager
     /// <param name="postOnly">Indicates if the order should only be posted.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default);
+    Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit order with good-till-date (GTD) duration and optionally returns the full order details.
@@ -140,7 +140,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a stop limit order with good-till-canceled (GTC) duration.
@@ -152,7 +152,7 @@ public interface IOrdersManager
     /// <param name="stopPrice">Stop price for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, CancellationToken cancellationToken);
+    Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a stop limit order with good-till-canceled (GTC) duration and optionally returns the full order details.
@@ -166,7 +166,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a stop limit order with good-till-date (GTD) duration.
@@ -179,7 +179,7 @@ public interface IOrdersManager
     /// <param name="endTime">Expiration time for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, DateTime endTime, CancellationToken cancellationToken);
+    Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a stop limit order with good-till-date (GTD) duration and optionally returns the full order details.
@@ -194,7 +194,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, string baseSize, string limitPrice, string stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit IOC order with Smart Order Routing (SOR).
@@ -205,7 +205,7 @@ public interface IOrdersManager
     /// <param name="limitPrice">Limit price for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, string baseSize, string limitPrice, CancellationToken cancellationToken);
+    Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a limit IOC order with Smart Order Routing (SOR) and optionally returns the full order details.
@@ -218,7 +218,7 @@ public interface IOrdersManager
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, string baseSize, string limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously edits an existing order with a specified new size or new price.
@@ -230,7 +230,7 @@ public interface IOrdersManager
     /// <param name="size">New size for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation, returning true if the edit was successful, false otherwise.</returns>
-    Task<bool> EditOrderAsync(string orderId, string price, string size, CancellationToken cancellationToken);
+    Task<bool> EditOrderAsync(string orderId, double? price, double? size, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously simulates an edit of an existing order with a specified new size or new price to preview the result.
@@ -243,6 +243,6 @@ public interface IOrdersManager
     /// <param name="size">New size for the order.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation, returning true if the preview was successful, false otherwise.</returns>
-    Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, string price, string size, CancellationToken cancellationToken);
+    Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, double? price, double? size, CancellationToken cancellationToken);
 
 }

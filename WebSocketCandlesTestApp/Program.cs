@@ -36,7 +36,7 @@ try
     await webSocketManager.ConnectAsync();
 
     Console.WriteLine("Subscribing to candles...");
-    await webSocketManager.SubscribeAsync(new[] { "BTC-USDC" }, ChannelType.Candles);
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -58,7 +58,7 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing...");
-    await webSocketManager!.UnsubscribeAsync(new[] { "BTC-USDC" }, ChannelType.Candles);
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

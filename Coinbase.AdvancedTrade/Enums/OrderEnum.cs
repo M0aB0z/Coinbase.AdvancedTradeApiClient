@@ -1,4 +1,6 @@
-﻿namespace Coinbase.AdvancedTrade.Enums;
+﻿using System.ComponentModel;
+
+namespace Coinbase.AdvancedTrade.Enums;
 
 /// <summary>
 /// Represents the status of an order.
@@ -29,27 +31,26 @@ public enum OrderType
     /// <summary>
     /// A market order.
     /// </summary>
-    MARKET,
+    [Description("MARKET")]
+    Market,
 
     /// <summary>
     /// A limit order.
     /// </summary>
-    LIMIT,
+    [Description("LIMIT")]
+    Limit,
 
     /// <summary>
     /// A stop order.
     /// </summary>
-    STOP,
+    [Description("STOP")]
+    Stop,
 
     /// <summary>
     /// A stop limit order.
     /// </summary>
-    STOP_LIMIT,
-
-    /// <summary>
-    /// An unknown order type.
-    /// </summary>
-    UNKNOWN_ORDER_TYPE
+    [Description("STOP_LIMIT")]
+    StopLimit,
 }
 
 /// <summary>
@@ -60,10 +61,12 @@ public enum OrderSide
     /// <summary>
     /// A buy order.
     /// </summary>
-    BUY,
+    [Description("BUY")]
+    Buy,
 
     /// <summary>
     /// A sell order.
     /// </summary>
-    SELL
+    [Description("SELL")]
+    Sell
 }

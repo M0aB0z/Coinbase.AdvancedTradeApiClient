@@ -13,17 +13,17 @@ public class TestOrders : TestBase
         {
             var result = await _coinbaseClient!.Orders.ListOrdersAsync(
                 "BTC-USDC",
-                new OrderStatus[] { OrderStatus.CANCELLED },
+                [OrderStatus.CANCELLED],
                 new(2023, 10, 1),
                 new(2023, 10, 31),
-                OrderType.LIMIT,
-                OrderSide.BUY
+                OrderType.Limit,
+                OrderSide.Buy
             );
 
             Assert.IsNotNull(result, "Result should not be null.");
             Assert.IsTrue(result.Count > 0, "Should return at least one order.");
-            Assert.IsTrue(result.All(r => r.OrderType == "LIMIT"), "All orders should be of type LIMIT.");
-            Assert.IsTrue(result.All(r => r.Side == "BUY"), "All orders should be of side BUY.");
+            Assert.IsTrue(result.All(r => r.OrderType == OrderType.Limit), "All orders should be of type LIMIT.");
+            Assert.IsTrue(result.All(r => r.Side == OrderSide.Buy), "All orders should be of side BUY.");
         });
     }
 
@@ -72,7 +72,7 @@ public class TestOrders : TestBase
     {
         await ExecuteRateLimitedTest(async () =>
         {
-            string[] testOrderIds = { "bff541d3-9991-4ec8-960a-8183a551ee57" };
+            string[] testOrderIds = ["bff541d3-9991-4ec8-960a-8183a551ee57"];
             var result = await _coinbaseClient!.Orders.CancelOrdersAsync(testOrderIds, CancellationToken.None);
 
             Assert.IsNotNull(result, "Result should not be null.");
@@ -91,8 +91,8 @@ public class TestOrders : TestBase
         {
             string existingOrderId = "4a4445ef-3203-43f9-b5dd-933eeb145417";
 
-            string newPrice = "74000.00";
-            string? newSize = "0.0001";
+            double newPrice = 74000.00;
+            double? newSize = 0.0001;
 
             // Attempt to edit the order
             var result = await _coinbaseClient!.Orders.EditOrderAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
@@ -111,8 +111,8 @@ public class TestOrders : TestBase
         {
             string existingOrderId = "4a4445ef-3203-43f9-b5dd-933eeb145417";
 
-            string newPrice = "74000.00";
-            string? newSize = "0.0001";
+            double newPrice = 74000.00;
+            double? newSize = 0.0001;
 
             var result = await _coinbaseClient!.Orders.EditOrderPreviewAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
 
