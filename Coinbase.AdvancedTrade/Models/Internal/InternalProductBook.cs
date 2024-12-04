@@ -9,7 +9,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents the order book for a specific product on Coinbase.
 /// </summary>
-public class InternalProductBook : IModelMapper<ProductBook>
+internal class InternalProductBook : IModelMapper<ProductBook>
 {
     /// <summary>
     /// Gets or sets the product identifier associated with the order book.
@@ -54,7 +54,7 @@ public class InternalProductBook : IModelMapper<ProductBook>
 /// <summary>
 /// Represents an individual offer (bid or ask) in the order book.
 /// </summary>
-public class InternalOffer : IModelMapper<Offer>
+internal class InternalOffer : IModelMapper<Offer>
 {
     /// <summary>
     /// Gets or sets the price at which the offer is made.

@@ -202,46 +202,54 @@ internal class InternalOrder : IModelMapper<Order>
 
     public Order ToModel()
     {
-        return new Order
+        try
         {
-            CreatedTime = CreatedTime,
-            EditHistory = EditHistory,
-            CancelMessage = CancelMessage,
-            ClientOrderId = ClientOrderId,
-            AverageFilledPrice = UtilityHelper.ToNullableDouble(AverageFilledPrice),
-            CompletionPercentage = UtilityHelper.ToNullableDouble(CompletionPercentage),
-            Fee = UtilityHelper.ToNullableDouble(Fee),
-            TotalFees = UtilityHelper.ToNullableDouble(TotalFees),
-            TotalValueAfterFees = UtilityHelper.ToNullableDouble(TotalValueAfterFees),
-            FilledSize = UtilityHelper.ToNullableDouble(FilledSize),
-            FilledValue = UtilityHelper.ToNullableDouble(FilledValue),
-            NumberOfFills = UtilityHelper.ToNullableDouble(NumberOfFills),
-            OrderConfiguration = OrderConfiguration?.ToModel(),
-            Side = Side.ToLower() switch
+            return new Order
             {
-                "buy" => OrderSide.Buy,
-                "sell" => OrderSide.Sell,
-                _ => throw new NotImplementedException($"Unexpected 'Side' [{Side}]")
-            },
+                CreatedTime = CreatedTime,
+                EditHistory = EditHistory,
+                CancelMessage = CancelMessage,
+                ClientOrderId = ClientOrderId,
+                AverageFilledPrice = UtilityHelper.ToNullableDouble(AverageFilledPrice),
+                CompletionPercentage = UtilityHelper.ToNullableDouble(CompletionPercentage),
+                Fee = UtilityHelper.ToNullableDouble(Fee),
+                TotalFees = UtilityHelper.ToNullableDouble(TotalFees),
+                TotalValueAfterFees = UtilityHelper.ToNullableDouble(TotalValueAfterFees),
+                FilledSize = UtilityHelper.ToNullableDouble(FilledSize),
+                FilledValue = UtilityHelper.ToNullableDouble(FilledValue),
+                NumberOfFills = UtilityHelper.ToNullableDouble(NumberOfFills),
+                OrderConfiguration = OrderConfiguration?.ToModel(),
+                Side = Side.ToLower() switch
+                {
+                    "buy" => OrderSide.Buy,
+                    "sell" => OrderSide.Sell,
+                    _ => throw new NotImplementedException($"Unexpected 'Side' [{Side}]")
+                },
 
-            IsLiquidation = IsLiquidation,
-            OrderId = OrderId,
-            OrderPlacementSource = OrderPlacementSource,
-            OrderType = OrderType.FromDescriptionToEnum<OrderType>(),
-            OutstandingHoldAmount = OutstandingHoldAmount,
-            PendingCancel = PendingCancel,
-            ProductId = ProductId,
-            ProductType = ProductType,
-            RejectMessage = RejectMessage,
-            RejectReason = RejectReason,
-            Settled = Settled,
-            SizeInQuote = SizeInQuote,
-            SizeInclusiveOfFees = SizeInclusiveOfFees,
-            Status = Status,
-            TimeInForce = TimeInForce,
-            TriggerStatus = TriggerStatus,
-            UserId = UserId,
-        };
+                IsLiquidation = IsLiquidation,
+                OrderId = OrderId,
+                OrderPlacementSource = OrderPlacementSource,
+                OrderType = OrderType.FromDescriptionToEnum<OrderType>(),
+                OutstandingHoldAmount = OutstandingHoldAmount,
+                PendingCancel = PendingCancel,
+                ProductId = ProductId,
+                ProductType = ProductType,
+                RejectMessage = RejectMessage,
+                RejectReason = RejectReason,
+                Settled = Settled,
+                SizeInQuote = SizeInQuote,
+                SizeInclusiveOfFees = SizeInclusiveOfFees,
+                Status = Status,
+                TimeInForce = TimeInForce,
+                TriggerStatus = TriggerStatus,
+                UserId = UserId,
+            };
+        }
+        catch(Exception er)
+        {
+            throw;
+        }
+
     }
 }
 

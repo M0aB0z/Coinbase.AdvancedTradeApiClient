@@ -26,6 +26,6 @@ internal static class EnumExtensions
     public static T FromDescriptionToEnum<T>(this string description) where T : IConvertible
     {
         var enumValues = Enum.GetValues(typeof(T)).Cast<T>();
-        return enumValues.First(x => x.ToString() == description);
+        return enumValues.First(x => x.GetDescription() == description);
     }
 }

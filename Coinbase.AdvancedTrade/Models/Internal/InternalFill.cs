@@ -8,7 +8,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents a fill, which is a completed trade on the exchange. A fill is created for each side of the trade.
 /// </summary>
-public class InternalFill : IModelMapper<Fill>
+internal class InternalFill : IModelMapper<Fill>
 {
     /// <summary>
     /// Gets or sets the unique identifier for this fill entry.
@@ -107,9 +107,9 @@ public class InternalFill : IModelMapper<Fill>
             OrderId = OrderId,
             TradeTime = TradeTime,
             TradeType = TradeType,
-            Price = double.Parse(Price),
-            Size = double.Parse(Size),
-            Commission = double.Parse(Commission),
+            Price = Price.ToDouble(),
+            Size = Size.ToDouble(),
+            Commission = Commission.ToDouble(),
             ProductId = ProductId,
             SequenceTimestamp = SequenceTimestamp,
             LiquidityIndicator = LiquidityIndicator,

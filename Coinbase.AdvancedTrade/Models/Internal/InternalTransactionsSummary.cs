@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models.Internal;
@@ -6,7 +7,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents a tiered fee structure based on trade volume.
 /// </summary>
-public class InternalFeeTier : IModelMapper<FeeTier>
+internal class InternalFeeTier : IModelMapper<FeeTier>
 {
     /// <summary>
     /// Gets or sets the pricing tier identifier.
@@ -46,11 +47,11 @@ public class InternalFeeTier : IModelMapper<FeeTier>
     {
         return new FeeTier
         {
-            PricingTier = double.Parse(PricingTier),
-            UsdFrom = double.Parse(UsdFrom),
-            UsdTo = double.Parse(UsdTo),
-            TakerFeeRate = double.Parse(TakerFeeRate),
-            MakerFeeRate = double.Parse(MakerFeeRate)
+            PricingTier = PricingTier.ToDouble(),
+            UsdFrom = UsdFrom.ToDouble(),
+            UsdTo = UsdTo.ToDouble(),
+            TakerFeeRate = TakerFeeRate.ToDouble(),
+            MakerFeeRate = MakerFeeRate.ToDouble()
         };
     }
 }
@@ -58,7 +59,7 @@ public class InternalFeeTier : IModelMapper<FeeTier>
 /// <summary>
 /// Represents the rate at which margin is applied.
 /// </summary>
-public class InternalMarginRate : IModelMapper<MarginRate>
+internal class InternalMarginRate : IModelMapper<MarginRate>
 {
     /// <summary>
     /// Gets or sets the value of the margin rate.
@@ -74,7 +75,7 @@ public class InternalMarginRate : IModelMapper<MarginRate>
     {
         return new MarginRate
         {
-            Value = double.Parse(Value)
+            Value = Value.ToDouble()
         };
     }
 }
@@ -82,7 +83,7 @@ public class InternalMarginRate : IModelMapper<MarginRate>
 /// <summary>
 /// Represents the tax rate for goods and services.
 /// </summary>
-public class InternalGoodsAndServicesTax : IModelMapper<GoodsAndServicesTax>
+internal class InternalGoodsAndServicesTax : IModelMapper<GoodsAndServicesTax>
 {
     /// <summary>
     /// Gets or sets the tax rate value.
@@ -104,7 +105,7 @@ public class InternalGoodsAndServicesTax : IModelMapper<GoodsAndServicesTax>
     {
         return new GoodsAndServicesTax
         {
-            Rate = double.Parse(Rate),
+            Rate = Rate.ToDouble(),
             Type = Type
         };
     }
@@ -113,7 +114,7 @@ public class InternalGoodsAndServicesTax : IModelMapper<GoodsAndServicesTax>
 /// <summary>
 /// Represents a summary of trading transactions.
 /// </summary>
-public class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
+internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
 {
     /// <summary>
     /// Gets or sets the total trade volume.

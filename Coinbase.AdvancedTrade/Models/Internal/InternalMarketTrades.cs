@@ -9,7 +9,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents an individual trade on the market.
 /// </summary>
-public class InternalTrade : IModelMapper<Trade>
+internal class InternalTrade : IModelMapper<Trade>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the trade.
@@ -69,12 +69,12 @@ public class InternalTrade : IModelMapper<Trade>
         {
             TradeId = TradeId,
             ProductId = ProductId,
-            Price = double.Parse(Price),
-            Size = double.Parse(Size),
+            Price = Price.ToDouble(),
+            Size = Size.ToDouble(),
             Time = Time,
             Side = Side.FromDescriptionToEnum<OrderSide>(),
-            Bid = double.Parse(Bid),
-            Ask = double.Parse(Ask)
+            Bid = Bid.ToDouble(),
+            Ask = Ask.ToDouble()
         };
     }
 }
@@ -82,7 +82,7 @@ public class InternalTrade : IModelMapper<Trade>
 /// <summary>
 /// Represents a collection of market trades along with the best bid and ask at the time.
 /// </summary>
-public class InternalMarketTrades
+internal class InternalMarketTrades
 {
     /// <summary>
     /// Gets or sets the list of trades.

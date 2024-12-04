@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models.Internal;
@@ -6,7 +7,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents a candlestick data point for a specific time frame in a trading chart.
 /// </summary>
-public class InternalCandle : IModelMapper<Candle>
+internal class InternalCandle : IModelMapper<Candle>
 
 {
     /// <summary>
@@ -54,11 +55,11 @@ public class InternalCandle : IModelMapper<Candle>
         return new Candle
         {
             StartUnix = StartUnix,
-            Low = double.Parse(Low),
-            High = double.Parse(High),
-            Open = double.Parse(Open),
-            Close = double.Parse(Close),
-            Volume = double.Parse(Volume)
+            Low = Low.ToDouble(),
+            High = High.ToDouble(),
+            Open = Open.ToDouble(),
+            Close = Close.ToDouble(),
+            Volume = Volume.ToDouble(),
         };
     }
 }

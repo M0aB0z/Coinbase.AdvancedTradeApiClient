@@ -9,7 +9,10 @@ var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_S
                ?? throw new InvalidOperationException("API Secret not found");
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
+var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow, Granularity.ONE_MINUTE, CancellationToken.None);
+var accounts = await coinbaseClient.Accounts.ListAccountsAsync();
 var orders = await coinbaseClient.Orders.ListOrdersAsync();
+var products = await coinbaseClient.Products.ListProductsAsync();
 
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 

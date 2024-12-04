@@ -7,7 +7,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Provides details about the trading session status in Coinbase's Futures Commission Merchant (FCM) environment.
 /// </summary>
-public class InternalFcmTradingSessionDetails : IModelMapper<FcmTradingSessionDetails>
+internal class InternalFcmTradingSessionDetails : IModelMapper<FcmTradingSessionDetails>
 {
     /// <summary>
     /// Gets or sets a value indicating whether the FCM trading session is currently open.
@@ -45,7 +45,7 @@ public class InternalFcmTradingSessionDetails : IModelMapper<FcmTradingSessionDe
 /// <summary>
 /// Represents product-specific details within the Coinbase trading environment.
 /// </summary>
-public class InternalProduct : IModelMapper<Product>
+internal class InternalProduct : IModelMapper<Product>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the product.
@@ -201,7 +201,7 @@ public class InternalProduct : IModelMapper<Product>
         {
             ProductId = ProductId,
             Alias = Alias,
-            FcmTradingSessionDetails = FcmTradingSessionDetails.ToModel(),
+            FcmTradingSessionDetails = FcmTradingSessionDetails?.ToModel(),
             AliasTo = AliasTo,
             BaseCurrencyId = BaseCurrencyId,
             BaseDisplaySymbol = BaseDisplaySymbol,

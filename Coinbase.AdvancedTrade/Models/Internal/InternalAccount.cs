@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System;
 using System.Text.Json.Serialization;
 
@@ -8,31 +9,25 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents an account within the Coinbase system.
 /// </summary>
-public class InternalAccount : IModelMapper<Account>
+internal class InternalAccount : IModelMapper<Account>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the account.
     /// </summary>
-    public string Uuid
-    {
-        get; internal set;
-    }
+    [JsonPropertyName("uuid")]
+    public string Uuid { get; set; }
 
     /// <summary>
     /// Gets or sets the name associated with the account.
     /// </summary>
-    public string Name
-    {
-        get; internal set;
-    }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the currency code for the account.
     /// </summary>
-    public string Currency
-    {
-        get; internal set;
-    }
+    [JsonPropertyName("currency")]
+    public string Currency { get; set; }
 
     /// <summary>
     /// Gets or sets the available balance within the account.
@@ -73,10 +68,8 @@ public class InternalAccount : IModelMapper<Account>
     /// <summary>
     /// Gets or sets the type of the account.
     /// </summary>
-    public string Type
-    {
-        get; internal set;
-    }
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
 
     /// <summary>
     /// Indicates if this account is ready for transactions.
@@ -101,7 +94,7 @@ public class InternalAccount : IModelMapper<Account>
             Uuid = Uuid,
             Name = Name,
             Currency = Currency,
-            AvailableBalance = AvailableBalance.ToModel(),
+            AvailableBalance = AvailableBalance?.ToModel(),
             Default = Default,
             Active = Active,
             CreatedAt = CreatedAt,
@@ -109,7 +102,7 @@ public class InternalAccount : IModelMapper<Account>
             DeletedAt = DeletedAt,
             Type = Type,
             Ready = Ready,
-            Hold = Hold.ToModel()
+            Hold = Hold?.ToModel()
         };
     }
 }
@@ -117,23 +110,19 @@ public class InternalAccount : IModelMapper<Account>
 /// <summary>
 /// Represents a balance value and its associated currency.
 /// </summary>
-public class InternalBalance : IModelMapper<Balance>
+internal class InternalBalance : IModelMapper<Balance>
 {
     /// <summary>
     /// Gets or sets the value of the balance.
     /// </summary>
-    public string Value
-    {
-        get; internal set;
-    }  // Consider converting to Decimal if working with financial data
+    [JsonPropertyName("value")]
+    public string Value { get; set; }
 
     /// <summary>
     /// Gets or sets the currency code associated with the balance.
     /// </summary>
-    public string Currency
-    {
-        get; internal set;
-    }
+    [JsonPropertyName("currency")]
+    public string Currency { get; set; }
 
     /// <summary>
     /// Maps the internal model to the public model.
@@ -144,7 +133,7 @@ public class InternalBalance : IModelMapper<Balance>
     {
         return new Balance
         {
-            Value = double.Parse(Value),
+            Value = Value.ToDouble(),
             Currency = Currency
         };
     }

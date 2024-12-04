@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models.Internal;
@@ -6,7 +7,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents the result from previewing an order edit within the Coinbase system.
 /// </summary>
-public class InternalEditOrderPreviewResult : IModelMapper<EditOrderPreviewResult>
+internal class InternalEditOrderPreviewResult : IModelMapper<EditOrderPreviewResult>
 {
     /// <summary>
     /// Gets or sets the estimated slippage for the edited order.
@@ -65,14 +66,14 @@ public class InternalEditOrderPreviewResult : IModelMapper<EditOrderPreviewResul
     {
         return new EditOrderPreviewResult
         {
-            Slippage = double.Parse(Slippage),
-            OrderTotal = double.Parse(OrderTotal),
-            CommissionTotal = double.Parse(CommissionTotal),
-            QuoteSize = double.Parse(QuoteSize),
-            BaseSize = double.Parse(BaseSize),
-            BestBid = double.Parse(BestBid),
-            BestAsk = double.Parse(BestAsk),
-            AverageFilledPrice = double.Parse(AverageFilledPrice)
+            Slippage = Slippage.ToDouble(),
+            OrderTotal = OrderTotal.ToDouble(),
+            CommissionTotal = CommissionTotal.ToDouble(),
+            QuoteSize = QuoteSize.ToDouble(),
+            BaseSize = BaseSize.ToDouble(),
+            BestBid = BestBid.ToDouble(),
+            BestAsk = BestAsk.ToDouble(),
+            AverageFilledPrice = AverageFilledPrice.ToDouble()
         };
     }
 }

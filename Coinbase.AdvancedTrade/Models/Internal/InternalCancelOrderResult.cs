@@ -6,7 +6,7 @@ namespace Coinbase.AdvancedTrade.Models.Internal;
 /// <summary>
 /// Represents the result of an order cancellation request.
 /// </summary>
-public class InternalCancelOrderResult : IModelMapper<CancelOrderResult>
+internal class InternalCancelOrderResult : IModelMapper<CancelOrderResult>
 {
     /// <summary>
     /// Gets or sets a value indicating whether the order cancellation was successful.
