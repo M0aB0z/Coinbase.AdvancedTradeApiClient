@@ -1,5 +1,6 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ public interface IProductsManager
     /// <param name="granularity">The granularity of the data.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of candle data or null if none are found.</returns>
-    Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, DateTime start, DateTime end, Granularity granularity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously retrieves the market trades for a specific product.

@@ -1,59 +1,64 @@
-﻿using System;
+﻿using Coinbase.AdvancedTrade.Utilities;
+using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTrade.Models.Internal;
 
 /// <summary>
 /// Represents a candlestick data point for a specific time frame in a trading chart.
 /// </summary>
-public class Candle
+public class InternalCandle : IModelMapper<Candle>
 
 {
     /// <summary>
     /// Gets or sets the start time of the candlestick in UNIX timestamp format.
     /// </summary>
+    [JsonPropertyName("start")]
     public string StartUnix { get; set; }
-
-    /// <summary>
-    /// Gets the start date and time of the candlestick.
-    /// </summary>
-    public DateTime StartDate => !string.IsNullOrEmpty(StartUnix) ? UnixTimeStampToDateTime(StartUnix) : DateTime.MinValue;
 
     /// <summary>
     /// Gets or sets the lowest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Low { get; set; }
+    [JsonPropertyName("low")]
+    public string Low { get; set; }
 
     /// <summary>
     /// Gets or sets the highest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double High { get; set; }
+    [JsonPropertyName("high")]
+    public string High { get; set; }
 
     /// <summary>
     /// Gets or sets the opening price of the asset at the beginning of the time interval represented by the candlestick.
     /// </summary>
-    public double Open { get; set; }
+    [JsonPropertyName("open")]
+    public string Open { get; set; }
 
     /// <summary>
     /// Gets or sets the closing price of the asset at the end of the time interval represented by the candlestick.
     /// </summary>
-    public double Close { get; set; }
+    [JsonPropertyName("close")]
+    public string Close { get; set; }
 
     /// <summary>
     /// Gets or sets the trading volume of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Volume { get; set; }
+    [JsonPropertyName("volume")]
+    public string Volume { get; set; }
 
     /// <summary>
-    /// Converts a UNIX timestamp string to its corresponding DateTime value.
+    /// Maps the internal model to the public model.
     /// </summary>
-    /// <param name="unixTimeStamp">The UNIX timestamp string.</param>
-    /// <returns>The converted DateTime value, or DateTime.MinValue if the conversion fails.</returns>
-    private static DateTime UnixTimeStampToDateTime(string unixTimeStamp)
+    /// <returns></returns>
+    public Candle ToModel()
     {
-        if (long.TryParse(unixTimeStamp, out long parsedUnixTime))
+        return new Candle
         {
-            return DateTimeOffset.FromUnixTimeSeconds(parsedUnixTime).UtcDateTime;
-        }
-        return DateTime.MinValue;
+            StartUnix = StartUnix,
+            Low = double.Parse(Low),
+            High = double.Parse(High),
+            Open = double.Parse(Open),
+            Close = double.Parse(Close),
+            Volume = double.Parse(Volume)
+        };
     }
 }

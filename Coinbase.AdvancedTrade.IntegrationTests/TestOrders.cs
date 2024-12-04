@@ -45,8 +45,6 @@ public class TestOrders : TestBase
 
             Assert.IsNotNull(result, "Result should not be null.");
             Assert.IsTrue(result.Count > 0, "Should return at least one fill.");
-            Assert.IsTrue(result.All(r => r.Price != null), "All fills should have a price.");
-            Assert.IsTrue(result.All(r => r.Size != null), "All fills should have a size.");
         });
     }
 
@@ -117,13 +115,7 @@ public class TestOrders : TestBase
             var result = await _coinbaseClient!.Orders.EditOrderPreviewAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
 
             Assert.IsNotNull(result, "Preview result should not be null.");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.OrderTotal), "OrderTotal should have a value.");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.CommissionTotal), "CommissionTotal should have a value.");
-
         });
     }
-
-
-
 
 }

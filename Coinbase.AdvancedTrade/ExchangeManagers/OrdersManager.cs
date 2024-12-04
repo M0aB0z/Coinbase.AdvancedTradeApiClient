@@ -1,6 +1,7 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
+using Coinbase.AdvancedTrade.Models.Internal;
 using Coinbase.AdvancedTrade.Models.Internal.Orders;
 using Coinbase.AdvancedTrade.Utilities;
 using Coinbase.AdvancedTrade.Utilities.Extensions;
@@ -108,7 +109,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
 
             // Deserialize response to obtain fills
-            return response.As<Fill[]>("fills");
+            return response.As<InternalFill[]>("fills").ToModel();
         }
         catch (Exception ex)
         {
@@ -151,7 +152,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
             // Send authenticated request to the API to cancel the orders and obtain response
             var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", requestBody, cancellationToken);
-            return response.As<CancelOrderResult[]>("results");
+            return response.As<InternalCancelOrderResult[]>("results").ToModel();
         }
         catch (Exception ex)
         {
@@ -592,20 +593,20 @@ public class OrdersManager : BaseManager, IOrdersManager
             }
 
             // Assuming no errors or empty error array, populate the EditOrderPreviewResult from responseObject
-            var result = new EditOrderPreviewResult
+            var result = new InternalEditOrderPreviewResult
             {
-                Slippage = response.TryGetProperty("slippage", out var tempValue) ? tempValue.GetString() : string.Empty,
-                OrderTotal = response.TryGetProperty("order_total", out tempValue) ? tempValue.GetString() : string.Empty,
-                CommissionTotal = response.TryGetProperty("commission_total", out tempValue) ? tempValue.GetString() : string.Empty,
-                QuoteSize = response.TryGetProperty("quote_size", out tempValue) ? tempValue.GetString() : string.Empty,
-                BaseSize = response.TryGetProperty("base_size", out tempValue) ? tempValue.GetString() : string.Empty,
-                BestBid = response.TryGetProperty("best_bid", out tempValue) ? tempValue.GetString() : string.Empty,
-                BestAsk = response.TryGetProperty("best_ask", out tempValue) ? tempValue.GetString() : string.Empty,
-                AverageFilledPrice = response.TryGetProperty("average_filled_price", out tempValue) ? tempValue.GetString() : string.Empty
+                Slippage = response.As<string>("slippage"),
+                OrderTotal = response.As<string>("order_total"),
+                CommissionTotal = response.As<string>("commission_total"),
+                QuoteSize = response.As<string>("quote_size"),
+                BaseSize = response.As<string>("base_size"),
+                BestBid = response.As<string>("best_bid"),
+                BestAsk = response.As<string>("best_ask"),
+                AverageFilledPrice = response.As<string>("average_filled_price"),
             };
 
 
-            return result;
+            return result.ToModel();
         }
         catch (Exception ex)
         {

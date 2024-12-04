@@ -1,6 +1,8 @@
 ﻿using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
+using Coinbase.AdvancedTrade.Models.Internal;
 using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -26,7 +28,7 @@ public class AccountsManager : BaseManager, IAccountsManager
         {
             var parameters = new { limit, cursor };
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/accounts", parameters));
-            return response.As<Account[]>("accounts");
+            return response.As<InternalAccount[]>("accounts").ToModel();
         }
         catch (Exception ex)
         {
@@ -45,7 +47,7 @@ public class AccountsManager : BaseManager, IAccountsManager
         try
         {
             var response = await _authenticator.GetAsync($"/api/v3/brokerage/accounts/{accountUuid}", cancellationToken);
-            return response.As<Account>("account");
+            return response.As<InternalAccount>("account").ToModel();
         }
         catch (Exception ex)
         {

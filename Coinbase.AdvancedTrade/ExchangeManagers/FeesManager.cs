@@ -1,5 +1,6 @@
 ﻿using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
+using Coinbase.AdvancedTrade.Models.Internal;
 using Coinbase.AdvancedTrade.Utilities;
 using System;
 using System.Collections.Generic;
@@ -44,19 +45,19 @@ public class FeesManager : BaseManager, IFeesManager
 
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/transaction_summary", paramsDict), cancellationToken);
 
-            return new TransactionsSummary
+            return new InternalTransactionsSummary
             {
-                TotalVolume = response.ExtractDoubleValue("total_volume") ?? 0.0,
-                TotalFees = response.ExtractDoubleValue("total_fees") ?? 0.0,
-                AdvancedTradeOnlyVolume = response.ExtractDoubleValue("advanced_trade_only_volume") ?? 0.0,
-                AdvancedTradeOnlyFees = response.ExtractDoubleValue("advanced_trade_only_fees") ?? 0.0,
-                CoinbaseProVolume = response.ExtractDoubleValue("coinbase_pro_volume") ?? 0.0,
-                CoinbaseProFees = response.ExtractDoubleValue("coinbase_pro_fees") ?? 0.0,
-                Low = response.ExtractDoubleValue("low") ?? 0.0,
-                FeeTier = response.As<FeeTier>("fee_tier"),
-                MarginRate = response.As<MarginRate>("margin_rate"),
-                GoodsAndServicesTax = response.As<GoodsAndServicesTax>("goods_and_services_tax")
-            };
+                TotalVolume = response.As<double>("total_volume"),
+                TotalFees = response.As<double>("total_fees"),
+                AdvancedTradeOnlyVolume = response.As<double>("advanced_trade_only_volume"),
+                AdvancedTradeOnlyFees = response.As<double>("advanced_trade_only_fees"),
+                CoinbaseProVolume = response.As<double>("coinbase_pro_volume"),
+                CoinbaseProFees = response.As<double>("coinbase_pro_fees"),
+                Low = response.As<double>("low"),
+                FeeTier = response.As<InternalFeeTier>("fee_tier"),
+                MarginRate = response.As<InternalMarginRate>("margin_rate"),
+                GoodsAndServicesTax = response.As<InternalGoodsAndServicesTax>("goods_and_services_tax")
+            }.ToModel();
 
         }
         catch (Exception ex)
