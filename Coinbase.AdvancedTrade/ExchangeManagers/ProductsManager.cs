@@ -1,11 +1,12 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Interfaces;
 using Coinbase.AdvancedTrade.Models;
+using Coinbase.AdvancedTrade.Models.Internal;
 using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ public class ProductsManager : BaseManager, IProductsManager
             throw new InvalidOperationException("Authenticator is not initialized.");
 
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/products", new { product_type = productType }), cancellationToken);
-        return response.As<Product[]>("products");
+        return response.As<InternalProduct[]>("products").ToModel();
     }
 
     /// <inheritdoc/>
@@ -44,18 +45,24 @@ public class ProductsManager : BaseManager, IProductsManager
             throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
 
         var response = await _authenticator.GetAsync("/api/v3/brokerage/products", cancellationToken);
-        return response.As<Product>();
+        return response.As<InternalProduct>().ToModel();
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, string start, string end, Granularity granularity, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Candle>> GetProductCandlesAsync(string productId, DateTime startTimeUtc, DateTime endTimeUtc, Granularity granularity, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(productId) || string.IsNullOrEmpty(start) || string.IsNullOrEmpty(end))
-            throw new ArgumentException("Product ID, start, and end time cannot be null or empty");
+        if (string.IsNullOrEmpty(productId))
+            throw new ArgumentException("Product ID cannot be null or empty");
 
-        var parameters = new { start, end, granularity };
+        if (startTimeUtc > endTimeUtc)
+            throw new ArgumentException("Start date must be before end date");
+
+        var candleFrom = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var candleTo = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+
+        var parameters = new { candleFrom, candleTo, granularity };
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
-        return response.As<Candle[]>("candles");
+        return response.As<InternalCandle[]>("candles").ToModel();
     }
 
     /// <inheritdoc/>
@@ -69,11 +76,11 @@ public class ProductsManager : BaseManager, IProductsManager
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/ticker", parameters), cancellationToken);
 
         // Extract trades data from response
-        var trades = response.As<Trade[]>("trades");
+        var trades = response.As<InternalTrade[]>("trades").ToModel();
 
-        // Extract best bid and best ask
-        string bestBid = response.TryGetProperty("best_bid", out JsonElement bestBidObj) ? bestBidObj.GetString() : null;
-        string bestAsk = response.TryGetProperty("best_ask", out JsonElement bestAskObj) ? bestAskObj.GetString() : null;
+        // Extract best bid and ask
+        double bestBid = response.As<double>("best_bid");
+        double bestAsk = response.As<double>("best_ask");
 
         return new MarketTrades { Trades = trades, BestBid = bestBid, BestAsk = bestAsk };
     }
@@ -86,7 +93,7 @@ public class ProductsManager : BaseManager, IProductsManager
 
         var parameters = new { product_id = productId, limit };
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/product_book", parameters), cancellationToken);
-        return response.As<ProductBook>("pricebook");
+        return response.As<InternalProductBook>("pricebook").ToModel();
     }
 
     /// <inheritdoc/>
@@ -99,6 +106,6 @@ public class ProductsManager : BaseManager, IProductsManager
         string url = "/api/v3/brokerage/best_bid_ask?" + string.Join("&", productIds.Select(pid => $"product_ids={pid}"));
         var response = await _authenticator.GetAsync(url, cancellationToken);
 
-        return response.As<ProductBook[]>("pricebooks");
+        return response.As<InternalProductBook[]>("pricebooks").ToModel();
     }
 }

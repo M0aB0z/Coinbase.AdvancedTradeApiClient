@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Coinbase.AdvancedTrade.Enums;
+using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models;
 
@@ -13,188 +13,157 @@ public class Order
     /// <summary>
     /// The unique identifier for the order.
     /// </summary>
-    [JsonPropertyName("order_id")]
-    public string OrderId { get; set; }
+    public string OrderId { get; internal set; }
 
     /// <summary>
     /// The identifier for the product associated with the order.
     /// </summary>
-    [JsonPropertyName("product_id")]
-    public string ProductId { get; set; }
+    public string ProductId { get; internal set; }
 
     /// <summary>
     /// The user identifier who created the order.
     /// </summary>
-    [JsonPropertyName("user_id")]
-    public string UserId { get; set; }
+    public string UserId { get; internal set; }
 
     /// <summary>
     /// Configuration details for the order.
     /// </summary>
-    [JsonPropertyName("order_configuration")]
-    public OrderConfiguration OrderConfiguration { get; set; }
+    public OrderConfiguration OrderConfiguration { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is a buy or sell.
     /// </summary>
-    [JsonPropertyName("side")]
-    public string Side { get; set; }
+    public OrderSide Side { get; internal set; }
 
     /// <summary>
     /// The client's custom identifier for the order.
     /// </summary>
-    [JsonPropertyName("client_order_id")]
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; internal set; }
 
     /// <summary>
     /// The current status of the order.
     /// </summary>
-    [JsonPropertyName("status")]
-    public string Status { get; set; }
+    public string Status { get; internal set; }
 
     /// <summary>
     /// How long the order will remain active.
     /// </summary>
-    [JsonPropertyName("time_in_force")]
-    public string TimeInForce { get; set; }
+    public string TimeInForce { get; internal set; }
 
     /// <summary>
     /// The timestamp when the order was created.
     /// </summary>
-    [JsonPropertyName("created_time")]
-    public DateTime? CreatedTime { get; set; }
+    public DateTime? CreatedTime { get; internal set; }
 
     /// <summary>
     /// The percentage of the order that has been completed.
     /// </summary>
-    [JsonPropertyName("completion_percentage")]
-    public string CompletionPercentage { get; set; }
+    public double? CompletionPercentage { get; internal set; }
 
     /// <summary>
     /// The quantity of the product that has been filled in the order.
     /// </summary>
-    [JsonPropertyName("filled_size")]
-    public string FilledSize { get; set; }
+    public double? FilledSize { get; internal set; }
 
     /// <summary>
     /// The average price at which the order has been filled.
     /// </summary>
-    [JsonPropertyName("average_filled_price")]
-    public string AverageFilledPrice { get; set; }
+    public double? AverageFilledPrice { get; internal set; }
 
     /// <summary>
     /// The fee associated with the order.
     /// </summary>
-    [JsonPropertyName("fee")]
-    public string Fee { get; set; }
+    public double? Fee { get; internal set; }
 
     /// <summary>
     /// The number of times the order has been filled.
     /// </summary>
-    [JsonPropertyName("number_of_fills")]
-    public string NumberOfFills { get; set; }
+    public double? NumberOfFills { get; internal set; }
 
     /// <summary>
     /// The total value of the filled portions of the order.
     /// </summary>
-    [JsonPropertyName("filled_value")]
-    public string FilledValue { get; set; }
+    public double? FilledValue { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is pending cancellation.
     /// </summary>
-    [JsonPropertyName("pending_cancel")]
-    public bool? PendingCancel { get; set; }
+    public bool? PendingCancel { get; internal set; }
 
     /// <summary>
     /// If true, the size of the order is specified in the quote currency.
     /// </summary>
-    [JsonPropertyName("size_in_quote")]
-    public bool? SizeInQuote { get; set; }
+    public bool? SizeInQuote { get; internal set; }
 
     /// <summary>
     /// The total fees associated with the order.
     /// </summary>
-    [JsonPropertyName("total_fees")]
-    public string TotalFees { get; set; }
+    public double? TotalFees { get; internal set; }
 
     /// <summary>
     /// If true, the size of the order includes fees.
     /// </summary>
-    [JsonPropertyName("size_inclusive_of_fees")]
-    public bool? SizeInclusiveOfFees { get; set; }
+    public bool? SizeInclusiveOfFees { get; internal set; }
 
     /// <summary>
     /// The total value of the order after fees have been deducted.
     /// </summary>
-    [JsonPropertyName("total_value_after_fees")]
-    public string TotalValueAfterFees { get; set; }
+    public double? TotalValueAfterFees { get; internal set; }
 
     /// <summary>
     /// The status of the order's trigger if applicable.
     /// </summary>
-    [JsonPropertyName("trigger_status")]
-    public string TriggerStatus { get; set; }
+    public string TriggerStatus { get; internal set; }
 
     /// <summary>
     /// The type of order (e.g. market, limit, stop).
     /// </summary>
-    [JsonPropertyName("order_type")]
-    public string OrderType { get; set; }
+    public OrderType OrderType { get; internal set; }
 
     /// <summary>
     /// Reason for order rejection, if applicable.
     /// </summary>
-    [JsonPropertyName("reject_reason")]
-    public string RejectReason { get; set; }
+    public string RejectReason { get; internal set; }
 
     /// <summary>
     /// Indicates if the order has been settled.
     /// </summary>
-    [JsonPropertyName("settled")]
-    public bool? Settled { get; set; }
+    public bool? Settled { get; internal set; }
 
     /// <summary>
     /// The type of product associated with the order.
     /// </summary>
-    [JsonPropertyName("product_type")]
-    public string ProductType { get; set; }
+    public string ProductType { get; internal set; }
 
     /// <summary>
     /// A message providing more details about the rejection reason.
     /// </summary>
-    [JsonPropertyName("reject_message")]
-    public string RejectMessage { get; set; }
+    public string RejectMessage { get; internal set; }
 
     /// <summary>
     /// A message providing more details if the order was canceled.
     /// </summary>
-    [JsonPropertyName("cancel_message")]
-    public string CancelMessage { get; set; }
+    public string CancelMessage { get; internal set; }
 
     /// <summary>
     /// The source from which the order was placed (e.g. web, API).
     /// </summary>
-    [JsonPropertyName("order_placement_source")]
-    public string OrderPlacementSource { get; set; }
+    public string OrderPlacementSource { get; internal set; }
 
     /// <summary>
     /// The amount of the order that is currently on hold.
     /// </summary>
-    [JsonPropertyName("outstanding_hold_amount")]
-    public string OutstandingHoldAmount { get; set; }
+    public string OutstandingHoldAmount { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is a liquidation order.
     /// </summary>
-    [JsonPropertyName("is_liquidation")]
-    public bool? IsLiquidation { get; set; }
+    public bool? IsLiquidation { get; internal set; }
 
     /// <summary>
     /// An array of the latest 5 edits per order.
     /// </summary>
-    [JsonPropertyName("edit_history")]
-    public List<EditHistoryEntry> EditHistory { get; set; }
+    public List<EditHistoryEntry> EditHistory { get; internal set; }
 }
 
 
@@ -206,38 +175,32 @@ public class OrderConfiguration
     /// <summary>
     /// Configuration details for market-market IOC orders.
     /// </summary>
-    [JsonPropertyName("market_market_ioc")]
-    public MarketIoc MarketIoc { get; set; }
+    public MarketIoc MarketIoc { get; internal set; }
 
     /// <summary>
     /// Configuration details for limit-limit GTC orders.
     /// </summary>
-    [JsonPropertyName("limit_limit_gtc")]
-    public LimitGtc LimitGtc { get; set; }
+    public LimitGtc LimitGtc { get; internal set; }
 
     /// <summary>
     /// Configuration details for limit-limit GTD orders.
     /// </summary>
-    [JsonPropertyName("limit_limit_gtd")]
-    public LimitGtd LimitGtd { get; set; }
+    public LimitGtd LimitGtd { get; internal set; }
 
     /// <summary>
     /// Configuration details for stop-limit-stop-limit GTC orders.
     /// </summary>
-    [JsonPropertyName("stop_limit_stop_limit_gtc")]
-    public StopLimitGtc StopLimitGtc { get; set; }
+    public StopLimitGtc StopLimitGtc { get; internal set; }
 
     /// <summary>
     /// Configuration details for stop-limit-stop-limit GTD orders.
     /// </summary>
-    [JsonPropertyName("stop_limit_stop_limit_gtd")]
-    public StopLimitGtd StopLimitGtd { get; set; }
+    public StopLimitGtd StopLimitGtd { get; internal set; }
 
     /// <summary>
     /// Configuration details for sor-limit-ioc orders.
     /// </summary>
-    [JsonPropertyName("sor_limit_ioc")]
-    public SorLimitIoc SorLimitIoc { get; set; }
+    public SorLimitIoc SorLimitIoc { get; internal set; }
 }
 
 /// <summary>
@@ -248,14 +211,12 @@ public class MarketIoc
     /// <summary>
     /// The size of the order in the quote currency.
     /// </summary>
-    [JsonPropertyName("quote_size")]
-    public string QuoteSize { get; set; }
+    public double? QuoteSize { get; internal set; }
 
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    [JsonPropertyName("base_size")]
-    public string BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 }
 
 /// <summary>
@@ -266,20 +227,17 @@ public class LimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    [JsonPropertyName("base_size")]
-    public string BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    [JsonPropertyName("limit_price")]
-    public string LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 
     /// <summary>
     /// Indicates if the order can only be posted to the order book.
     /// </summary>
-    [JsonPropertyName("post_only")]
-    public bool? PostOnly { get; set; }
+    public bool? PostOnly { get; internal set; }
 }
 
 /// <summary>
@@ -290,8 +248,7 @@ public class LimitGtd : LimitGtc
     /// <summary>
     /// The time when the order will expire.
     /// </summary>
-    [JsonPropertyName("end_time")]
-    public DateTime EndTime { get; set; }
+    public DateTime EndTime { get; internal set; }
 }
 
 /// <summary>
@@ -302,26 +259,22 @@ public class StopLimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    [JsonPropertyName("base_size")]
-    public string BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    [JsonPropertyName("limit_price")]
-    public string LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 
     /// <summary>
     /// The stop price for the order.
     /// </summary>
-    [JsonPropertyName("stop_price")]
-    public string StopPrice { get; set; }
+    public double? StopPrice { get; internal set; }
 
     /// <summary>
     /// The direction in which the stop price is triggered (e.g. 'above', 'below').
     /// </summary>
-    [JsonPropertyName("stop_direction")]
-    public string StopDirection { get; set; }
+    public OrderDirection StopDirection { get; internal set; }
 }
 
 /// <summary>
@@ -332,8 +285,7 @@ public class StopLimitGtd : StopLimitGtc
     /// <summary>
     /// The time when the order will expire.
     /// </summary>
-    [JsonPropertyName("end_time")]
-    public DateTime EndTime { get; set; }
+    public DateTime EndTime { get; internal set; }
 }
 
 /// <summary>
@@ -344,14 +296,12 @@ public class SorLimitIoc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    [JsonPropertyName("base_size")]
-    public string BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    [JsonPropertyName("limit_price")]
-    public string LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 }
 
 /// <summary>
@@ -362,18 +312,15 @@ public class EditHistoryEntry
     /// <summary>
     /// The price associated with the edit.
     /// </summary>
-    [JsonPropertyName("price")]
-    public string Price { get; set; }
+    public double? Price { get; internal set; }
 
     /// <summary>
     /// The size associated with the edit.
     /// </summary>
-    [JsonPropertyName("size")]
-    public string Size { get; set; }
+    public double? Size { get; internal set; }
 
     /// <summary>
     /// The timestamp when the edit was accepted.
     /// </summary>
-    [JsonPropertyName("replace_accept_timestamp")]
-    public DateTime? ReplaceAcceptTimestamp { get; set; }
+    public DateTime? ReplaceAcceptTimestamp { get; internal set; }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Coinbase.AdvancedTrade.Enums;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Coinbase.AdvancedTrade.Models;
@@ -9,52 +10,45 @@ namespace Coinbase.AdvancedTrade.Models;
 public class Trade
 {
     /// <summary>
-    /// Gets or sets the unique identifier for the trade.
+    /// Gets the unique identifier for the trade.
     /// </summary>
-    [JsonPropertyName("trade_id")]
-    public string TradeId { get; set; }
+    public string TradeId { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the product identifier associated with the trade.
+    /// Gets the product identifier associated with the trade.
     /// </summary>
-    [JsonPropertyName("product_id")]
-    public string ProductId { get; set; }
+    public string ProductId { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the price at which the trade occurred.
+    /// Gets the price at which the trade occurred.
     /// </summary>
-    [JsonPropertyName("price")]
-    public string Price { get; set; }
+    public double Price { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the size or quantity of the asset that was traded.
+    /// Gets the size or quantity of the asset that was traded.
     /// </summary>
     [JsonPropertyName("size")]
-    public string Size { get; set; }
+    public double Size { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the timestamp of the trade.
+    /// Gets the timestamp of the trade.
     /// </summary>
-    [JsonPropertyName("time")]
-    public string Time { get; set; }
+    public string Time { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the side of the trade (e.g., "buy" or "sell").
+    /// Gets the side of the trade (e.g., "buy" or "sell").
     /// </summary>
-    [JsonPropertyName("side")]
-    public string Side { get; set; }
+    public OrderSide Side { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the bid price at the time of the trade.
+    /// Gets the bid price at the time of the trade.
     /// </summary>
-    [JsonPropertyName("bid")]
-    public string Bid { get; set; }
+    public double Bid { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the ask price at the time of the trade.
+    /// Gets the ask price at the time of the trade.
     /// </summary>
-    [JsonPropertyName("ask")]
-    public string Ask { get; set; }
+    public double Ask { get; internal set; }
 }
 
 /// <summary>
@@ -63,20 +57,17 @@ public class Trade
 public class MarketTrades
 {
     /// <summary>
-    /// Gets or sets the list of trades.
+    /// Gets the list of trades.
     /// </summary>
-    [JsonPropertyName("trades")]
-    public IReadOnlyList<Trade> Trades { get; set; }
+    public IReadOnlyList<Trade> Trades { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the best bid price at the time of the data collection.
+    /// Gets the best bid price at the time of the data collection.
     /// </summary>
-    [JsonPropertyName("best_bid")]
-    public string BestBid { get; set; }
+    public double BestBid { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the best ask price at the time of the data collection.
+    /// Gets the best ask price at the time of the data collection.
     /// </summary>
-    [JsonPropertyName("best_ask")]
-    public string BestAsk { get; set; }
+    public double BestAsk { get; internal set; }
 }

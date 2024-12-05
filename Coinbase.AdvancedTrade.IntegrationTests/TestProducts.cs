@@ -1,5 +1,4 @@
-﻿
-using Coinbase.AdvancedTrade.Models;
+﻿using Coinbase.AdvancedTrade.Models;
 
 namespace Coinbase.AdvancedTradeTest;
 
@@ -58,11 +57,10 @@ public class TestProducts : TestBase
             try
             {
                 string productId = "BTC-USDC";
-                string start = "1693526400";
-                string end = "1693612800";
+
                 var granularity = AdvancedTrade.Enums.Granularity.FIVE_MINUTE;
 
-                var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, start, end, granularity, CancellationToken.None) ?? Task.FromResult<IReadOnlyList<Candle>?>(null));
+                var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, DateTime.UtcNow.AddMinutes(-25), DateTime.UtcNow.AddMinutes(-5), granularity, CancellationToken.None) ?? Task.FromResult<IReadOnlyList<Candle>?>(null));
 
                 Assert.IsNotNull(candles, "Candles list should not be empty.");
                 Assert.IsTrue(candles?.Count > 0, "Candles list should have at least one item.");
@@ -90,7 +88,6 @@ public class TestProducts : TestBase
                 var result = await (_coinbaseClient?.Products.GetMarketTradesAsync(productId, limit, CancellationToken.None) ?? Task.FromResult<MarketTrades?>(null));
 
                 Assert.IsNotNull(result, "Result should not be null.");
-                Assert.IsFalse(string.IsNullOrEmpty(result?.BestBid), "BestBid should not be empty.");
                 Assert.IsTrue(result?.Trades?.Count > 0, "Trades list should have at least one item.");
             }
             catch (Exception e)

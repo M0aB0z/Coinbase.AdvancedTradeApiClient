@@ -58,7 +58,7 @@ public class TestOauth2Authentication
     [Description("Test to verify Oauth2 authentication works to place a Market Buy order.")]
     public async Task Test_Oauth2_CreateMarketOrderBuy()
     {
-        var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.BUY, "1");
+        var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.Buy, 1);
         Assert.IsNotNull(orderNumber, "Order Number should not be null.");
     }
 
