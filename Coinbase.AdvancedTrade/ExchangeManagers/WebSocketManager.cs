@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -463,40 +462,6 @@ public sealed class WebSocketManager : IDisposable
                 // Clear the message segments list to prepare for the next message.
                 messageSegments.Clear();
             }
-        }
-    }
-
-
-
-    /// <summary>
-    /// Computes an HMACSHA256 signature for the provided data using the given secret key.
-    /// </summary>
-    /// <param name="data">The data to be signed.</param>
-    /// <param name="secret">The secret key used for HMACSHA256 signing.</param>
-    /// <returns>The hexadecimal representation of the computed signature.</returns>
-    private static string ComputeSignature(string data, string secret)
-    {
-        // Check if the data or secret is null or empty and throw exceptions if they are.
-        if (string.IsNullOrWhiteSpace(data)) throw new ArgumentNullException(nameof(data));
-        if (string.IsNullOrWhiteSpace(secret)) throw new ArgumentNullException(nameof(secret));
-
-        // Create an instance of HMACSHA256 with the secret key as the key.
-        using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret)))
-        {
-            // Compute the hash of the data using HMACSHA256.
-            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
-
-            // Create a StringBuilder to store the hexadecimal representation of the hash.
-            var sb = new StringBuilder(hash.Length * 2);
-
-            // Convert each byte of the hash to a two-character lowercase hexadecimal string and append it to the StringBuilder.
-            foreach (byte b in hash)
-            {
-                sb.Append(b.ToString("x2")); // x2 formats the byte as a two-character lowercase hexadecimal string
-            }
-
-            // Return the hexadecimal representation of the computed signature.
-            return sb.ToString();
         }
     }
 

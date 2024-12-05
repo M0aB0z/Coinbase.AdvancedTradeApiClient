@@ -69,9 +69,7 @@ public class PublicManager : BaseManager, IPublicManager
                     parameters.Add("product_ids", productId);
             }
 
-            var uri = UtilityHelper.BuildParamUri("/api/v3/brokerage/market/products", parameters);
-
-            var response = await _client.GetAsync(uri, cancellationToken);
+            var response = await _client.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/market/products", parameters), cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -185,7 +183,7 @@ public class PublicManager : BaseManager, IPublicManager
                 { "granularity", granularity }
             };
 
-            var response = await _client.GetAsync($"/api/v3/brokerage/market/products/{productId}/candles", cancellationToken);
+            var response = await _client.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/market/products/{productId}/candles", parameters), cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();

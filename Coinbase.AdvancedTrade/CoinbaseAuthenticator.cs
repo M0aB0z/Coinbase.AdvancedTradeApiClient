@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -22,16 +21,6 @@ public sealed class CoinbaseAuthenticator
     private readonly string _oAuth2AccessToken;
     private readonly bool _useOAuth;
     private const string _apiUrl = "https://api.coinbase.com";
-
-    /// <summary>
-    /// Gets the API key used for Coinbase authentication.
-    /// </summary>
-    private string Key => _apiKey;
-
-    /// <summary>
-    /// Gets the API secret used for Coinbase authentication.
-    /// </summary>
-    private string Secret => _apiSecret;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CoinbaseAuthenticator"/> class using API key and secret.
@@ -160,66 +149,6 @@ public sealed class CoinbaseAuthenticator
         catch (Exception ex)
         {
             throw new InvalidOperationException("An error occurred while executing the request.", ex);
-        }
-    }
-
-    /// <summary>
-    /// Generates headers for legacy API key authentication.
-    /// This method creates a signature using the HMACSHA256 algorithm based on a combination of
-    /// the timestamp, HTTP method, request path, and the serialized request body (if present).
-    /// The headers include the API key ('CB-ACCESS-KEY'), the generated signature ('CB-ACCESS-SIGN'),
-    /// and the timestamp ('CB-ACCESS-TIMESTAMP') used in the signature.
-    /// </summary>
-    /// <param name="method">The HTTP method being used for the request (e.g., 'GET', 'POST').</param>
-    /// <param name="path">The path of the API endpoint being accessed.</param>
-    /// <param name="bodyObj">The request body object. This is serialized to JSON and included in the signature calculation. If null, it is omitted from the signature.</param>
-    /// <returns>A dictionary of headers needed for authenticating the request using legacy API keys.</returns>
-    [Obsolete("Legacy API key authentication is deprecated and will be removed in future versions.")]
-    private Dictionary<string, string> CreateLegacyHeaders(string method, string path, object bodyObj)
-    {
-        // Serialize body object if present, otherwise set to null
-        var body = bodyObj != null ? JsonSerializer.Serialize(bodyObj) : null;
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-        var message = $"{timestamp}{method.ToUpper()}{path}{body}";
-        var signature = GenerateSignature(message);
-
-        return new Dictionary<string, string>
-        {
-            { "CB-ACCESS-KEY", Key },
-            { "CB-ACCESS-SIGN", signature },
-            { "CB-ACCESS-TIMESTAMP", timestamp }
-        };
-    }
-
-    /// <summary>
-    /// Generates a signature using HMACSHA256 for the provided message.
-    /// </summary>
-    /// <param name="message">The message for which the signature will be generated.</param>
-    /// <returns>The generated signature in lowercase.</returns>
-    [Obsolete("Legacy API key authentication is deprecated and will be removed in future versions.")]
-    private string GenerateSignature(string message)
-    {
-        // Remove the query string from the message, if present
-        message = RemoveQueryString(message);
-
-        // Compute the signature for the refined message
-        return ComputeHmacSignature(message);
-
-        // Local function to remove the query string from the message
-        string RemoveQueryString(string msg)
-        {
-            int queryStringIndex = msg.IndexOf('?');
-            return queryStringIndex != -1 ? msg.Substring(0, queryStringIndex) : msg;
-        }
-
-        // Local function to compute the HMACSHA256 signature
-        string ComputeHmacSignature(string msg)
-        {
-            using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(Secret)))
-            {
-                byte[] signatureBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(msg));
-                return BitConverter.ToString(signatureBytes).Replace("-", "").ToLower();
-            }
         }
     }
 }
