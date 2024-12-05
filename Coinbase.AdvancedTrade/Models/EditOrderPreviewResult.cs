@@ -6,42 +6,42 @@
 public class EditOrderPreviewResult
 {
     /// <summary>
-    /// Gets or sets the estimated slippage for the edited order.
+    /// Gets the estimated slippage for the edited order.
     /// </summary>
-    public double Slippage { get; set; }
+    public double Slippage { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the total order value after the edit.
+    /// Gets the total order value after the edit.
     /// </summary>
-    public double OrderTotal { get; set; }
+    public double OrderTotal { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the total commission for the edited order.
+    /// Gets the total commission for the edited order.
     /// </summary>
-    public double CommissionTotal { get; set; }
+    public double CommissionTotal { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the size of the order in quote currency after the edit.
+    /// Gets the size of the order in quote currency after the edit.
     /// </summary>
-    public double QuoteSize { get; set; }
+    public double QuoteSize { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the size of the order in base currency after the edit.
+    /// Gets the size of the order in base currency after the edit.
     /// </summary>
-    public double BaseSize { get; set; }
+    public double BaseSize { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the best bid price available for the order after the edit.
+    /// Gets the best bid price available for the order after the edit.
     /// </summary>
-    public double BestBid { get; set; }
+    public double BestBid { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the best ask price available for the order after the edit.
+    /// Gets the best ask price available for the order after the edit.
     /// </summary>
-    public double BestAsk { get; set; }
+    public double BestAsk { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the average price at which the order was filled after the edit.
+    /// Gets the average price at which the order was filled after the edit.
     /// </summary>
-    public double AverageFilledPrice { get; set; }
+    public double AverageFilledPrice { get; internal set; }
 }

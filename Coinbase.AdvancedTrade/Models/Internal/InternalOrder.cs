@@ -202,54 +202,40 @@ internal class InternalOrder : IModelMapper<Order>
 
     public Order ToModel()
     {
-        try
+        return new Order
         {
-            return new Order
-            {
-                CreatedTime = CreatedTime,
-                EditHistory = EditHistory,
-                CancelMessage = CancelMessage,
-                ClientOrderId = ClientOrderId,
-                AverageFilledPrice = UtilityHelper.ToNullableDouble(AverageFilledPrice),
-                CompletionPercentage = UtilityHelper.ToNullableDouble(CompletionPercentage),
-                Fee = UtilityHelper.ToNullableDouble(Fee),
-                TotalFees = UtilityHelper.ToNullableDouble(TotalFees),
-                TotalValueAfterFees = UtilityHelper.ToNullableDouble(TotalValueAfterFees),
-                FilledSize = UtilityHelper.ToNullableDouble(FilledSize),
-                FilledValue = UtilityHelper.ToNullableDouble(FilledValue),
-                NumberOfFills = UtilityHelper.ToNullableDouble(NumberOfFills),
-                OrderConfiguration = OrderConfiguration?.ToModel(),
-                Side = Side.ToLower() switch
-                {
-                    "buy" => OrderSide.Buy,
-                    "sell" => OrderSide.Sell,
-                    _ => throw new NotImplementedException($"Unexpected 'Side' [{Side}]")
-                },
-
-                IsLiquidation = IsLiquidation,
-                OrderId = OrderId,
-                OrderPlacementSource = OrderPlacementSource,
-                OrderType = OrderType.FromDescriptionToEnum<OrderType>(),
-                OutstandingHoldAmount = OutstandingHoldAmount,
-                PendingCancel = PendingCancel,
-                ProductId = ProductId,
-                ProductType = ProductType,
-                RejectMessage = RejectMessage,
-                RejectReason = RejectReason,
-                Settled = Settled,
-                SizeInQuote = SizeInQuote,
-                SizeInclusiveOfFees = SizeInclusiveOfFees,
-                Status = Status,
-                TimeInForce = TimeInForce,
-                TriggerStatus = TriggerStatus,
-                UserId = UserId,
-            };
-        }
-        catch(Exception er)
-        {
-            throw;
-        }
-
+            CreatedTime = CreatedTime,
+            EditHistory = EditHistory,
+            CancelMessage = CancelMessage,
+            ClientOrderId = ClientOrderId,
+            AverageFilledPrice = AverageFilledPrice?.ToNullableDouble(),
+            CompletionPercentage = CompletionPercentage?.ToNullableDouble(),
+            Fee = Fee?.ToNullableDouble(),
+            TotalFees = TotalFees?.ToNullableDouble(),
+            TotalValueAfterFees = TotalValueAfterFees?.ToNullableDouble(),
+            FilledSize = FilledSize?.ToNullableDouble(),
+            FilledValue = FilledValue?.ToNullableDouble(),
+            NumberOfFills = NumberOfFills?.ToNullableDouble(),
+            OrderConfiguration = OrderConfiguration?.ToModel(),
+            Side = Side.FromDescriptionToEnum<OrderSide>(),
+            IsLiquidation = IsLiquidation,
+            OrderId = OrderId,
+            OrderPlacementSource = OrderPlacementSource,
+            OrderType = OrderType.FromDescriptionToEnum<OrderType>(),
+            OutstandingHoldAmount = OutstandingHoldAmount,
+            PendingCancel = PendingCancel,
+            ProductId = ProductId,
+            ProductType = ProductType,
+            RejectMessage = RejectMessage,
+            RejectReason = RejectReason,
+            Settled = Settled,
+            SizeInQuote = SizeInQuote,
+            SizeInclusiveOfFees = SizeInclusiveOfFees,
+            Status = Status,
+            TimeInForce = TimeInForce,
+            TriggerStatus = TriggerStatus,
+            UserId = UserId,
+        };
     }
 }
 
@@ -330,8 +316,8 @@ public class InternalMarketIoc : IModelMapper<MarketIoc>
     {
         return new MarketIoc
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            QuoteSize = UtilityHelper.ToNullableDouble(QuoteSize)
+            BaseSize = BaseSize?.ToNullableDouble(),
+            QuoteSize = QuoteSize?.ToNullableDouble(),
         };
     }
 }
@@ -367,8 +353,8 @@ public class InternalLimitGtc : IModelMapper<LimitGtc>
     {
         return new LimitGtc
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            LimitPrice = UtilityHelper.ToNullableDouble(LimitPrice),
+            BaseSize = BaseSize?.ToNullableDouble(),
+            LimitPrice = LimitPrice?.ToNullableDouble(),
             PostOnly = PostOnly,
         };
     }
@@ -390,8 +376,8 @@ public class InternalLimitGtd : InternalLimitGtc, IModelMapper<LimitGtd>
     {
         return new LimitGtd
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            LimitPrice = UtilityHelper.ToNullableDouble(LimitPrice),
+            BaseSize = BaseSize?.ToNullableDouble(),
+            LimitPrice = LimitPrice?.ToNullableDouble(),
             PostOnly = PostOnly,
             EndTime = EndTime
         };
@@ -432,9 +418,9 @@ public class InternalStopLimitGtc : IModelMapper<StopLimitGtc>
     {
         return new StopLimitGtc
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            LimitPrice = UtilityHelper.ToNullableDouble(LimitPrice),
-            StopPrice = UtilityHelper.ToNullableDouble(StopPrice),
+            BaseSize = BaseSize?.ToNullableDouble(),
+            LimitPrice = LimitPrice?.ToNullableDouble(),
+            StopPrice = StopPrice?.ToNullableDouble(),
             StopDirection = Enum.GetValues(typeof(OrderDirection)).Cast<OrderDirection>().FirstOrDefault(x => x.GetDescription().Equals(StopDirection, StringComparison.OrdinalIgnoreCase))
         };
     }
@@ -456,9 +442,9 @@ public class InternalStopLimitGtd : InternalStopLimitGtc, IModelMapper<StopLimit
     {
         return new StopLimitGtd
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            LimitPrice = UtilityHelper.ToNullableDouble(LimitPrice),
-            StopPrice = UtilityHelper.ToNullableDouble(StopPrice),
+            BaseSize = BaseSize?.ToNullableDouble(),
+            LimitPrice = LimitPrice?.ToNullableDouble(),
+            StopPrice = StopPrice?.ToNullableDouble(),
             StopDirection = StopDirection.FromDescriptionToEnum<OrderDirection>(),
             EndTime = EndTime
         };
@@ -490,8 +476,8 @@ public class InternalSorLimitIoc : IModelMapper<SorLimitIoc>
     {
         return new SorLimitIoc
         {
-            BaseSize = UtilityHelper.ToNullableDouble(BaseSize),
-            LimitPrice = UtilityHelper.ToNullableDouble(LimitPrice)
+            BaseSize = BaseSize?.ToNullableDouble(),
+            LimitPrice = LimitPrice?.ToNullableDouble(),
         };
     }
 }
@@ -527,8 +513,8 @@ public class InternalEditHistoryEntry : IModelMapper<EditHistoryEntry>
     {
         return new EditHistoryEntry
         {
-            Price = UtilityHelper.ToNullableDouble(Price),
-            Size = UtilityHelper.ToNullableDouble(Size),
+            Price = Price?.ToNullableDouble(),
+            Size = Size?.ToNullableDouble(),
             ReplaceAcceptTimestamp = ReplaceAcceptTimestamp
         };
     }

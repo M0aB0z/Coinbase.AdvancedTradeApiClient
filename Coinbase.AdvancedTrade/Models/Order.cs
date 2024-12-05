@@ -13,157 +13,157 @@ public class Order
     /// <summary>
     /// The unique identifier for the order.
     /// </summary>
-    public string OrderId { get; set; }
+    public string OrderId { get; internal set; }
 
     /// <summary>
     /// The identifier for the product associated with the order.
     /// </summary>
-    public string ProductId { get; set; }
+    public string ProductId { get; internal set; }
 
     /// <summary>
     /// The user identifier who created the order.
     /// </summary>
-    public string UserId { get; set; }
+    public string UserId { get; internal set; }
 
     /// <summary>
     /// Configuration details for the order.
     /// </summary>
-    public OrderConfiguration OrderConfiguration { get; set; }
+    public OrderConfiguration OrderConfiguration { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is a buy or sell.
     /// </summary>
-    public OrderSide Side { get; set; }
+    public OrderSide Side { get; internal set; }
 
     /// <summary>
     /// The client's custom identifier for the order.
     /// </summary>
-    public string ClientOrderId { get; set; }
+    public string ClientOrderId { get; internal set; }
 
     /// <summary>
     /// The current status of the order.
     /// </summary>
-    public string Status { get; set; }
+    public string Status { get; internal set; }
 
     /// <summary>
     /// How long the order will remain active.
     /// </summary>
-    public string TimeInForce { get; set; }
+    public string TimeInForce { get; internal set; }
 
     /// <summary>
     /// The timestamp when the order was created.
     /// </summary>
-    public DateTime? CreatedTime { get; set; }
+    public DateTime? CreatedTime { get; internal set; }
 
     /// <summary>
     /// The percentage of the order that has been completed.
     /// </summary>
-    public double? CompletionPercentage { get; set; }
+    public double? CompletionPercentage { get; internal set; }
 
     /// <summary>
     /// The quantity of the product that has been filled in the order.
     /// </summary>
-    public double? FilledSize { get; set; }
+    public double? FilledSize { get; internal set; }
 
     /// <summary>
     /// The average price at which the order has been filled.
     /// </summary>
-    public double? AverageFilledPrice { get; set; }
+    public double? AverageFilledPrice { get; internal set; }
 
     /// <summary>
     /// The fee associated with the order.
     /// </summary>
-    public double? Fee { get; set; }
+    public double? Fee { get; internal set; }
 
     /// <summary>
     /// The number of times the order has been filled.
     /// </summary>
-    public double? NumberOfFills { get; set; }
+    public double? NumberOfFills { get; internal set; }
 
     /// <summary>
     /// The total value of the filled portions of the order.
     /// </summary>
-    public double? FilledValue { get; set; }
+    public double? FilledValue { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is pending cancellation.
     /// </summary>
-    public bool? PendingCancel { get; set; }
+    public bool? PendingCancel { get; internal set; }
 
     /// <summary>
     /// If true, the size of the order is specified in the quote currency.
     /// </summary>
-    public bool? SizeInQuote { get; set; }
+    public bool? SizeInQuote { get; internal set; }
 
     /// <summary>
     /// The total fees associated with the order.
     /// </summary>
-    public double? TotalFees { get; set; }
+    public double? TotalFees { get; internal set; }
 
     /// <summary>
     /// If true, the size of the order includes fees.
     /// </summary>
-    public bool? SizeInclusiveOfFees { get; set; }
+    public bool? SizeInclusiveOfFees { get; internal set; }
 
     /// <summary>
     /// The total value of the order after fees have been deducted.
     /// </summary>
-    public double? TotalValueAfterFees { get; set; }
+    public double? TotalValueAfterFees { get; internal set; }
 
     /// <summary>
     /// The status of the order's trigger if applicable.
     /// </summary>
-    public string TriggerStatus { get; set; }
+    public string TriggerStatus { get; internal set; }
 
     /// <summary>
     /// The type of order (e.g. market, limit, stop).
     /// </summary>
-    public OrderType OrderType { get; set; }
+    public OrderType OrderType { get; internal set; }
 
     /// <summary>
     /// Reason for order rejection, if applicable.
     /// </summary>
-    public string RejectReason { get; set; }
+    public string RejectReason { get; internal set; }
 
     /// <summary>
     /// Indicates if the order has been settled.
     /// </summary>
-    public bool? Settled { get; set; }
+    public bool? Settled { get; internal set; }
 
     /// <summary>
     /// The type of product associated with the order.
     /// </summary>
-    public string ProductType { get; set; }
+    public string ProductType { get; internal set; }
 
     /// <summary>
     /// A message providing more details about the rejection reason.
     /// </summary>
-    public string RejectMessage { get; set; }
+    public string RejectMessage { get; internal set; }
 
     /// <summary>
     /// A message providing more details if the order was canceled.
     /// </summary>
-    public string CancelMessage { get; set; }
+    public string CancelMessage { get; internal set; }
 
     /// <summary>
     /// The source from which the order was placed (e.g. web, API).
     /// </summary>
-    public string OrderPlacementSource { get; set; }
+    public string OrderPlacementSource { get; internal set; }
 
     /// <summary>
     /// The amount of the order that is currently on hold.
     /// </summary>
-    public string OutstandingHoldAmount { get; set; }
+    public string OutstandingHoldAmount { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is a liquidation order.
     /// </summary>
-    public bool? IsLiquidation { get; set; }
+    public bool? IsLiquidation { get; internal set; }
 
     /// <summary>
     /// An array of the latest 5 edits per order.
     /// </summary>
-    public List<EditHistoryEntry> EditHistory { get; set; }
+    public List<EditHistoryEntry> EditHistory { get; internal set; }
 }
 
 
@@ -175,32 +175,32 @@ public class OrderConfiguration
     /// <summary>
     /// Configuration details for market-market IOC orders.
     /// </summary>
-    public MarketIoc MarketIoc { get; set; }
+    public MarketIoc MarketIoc { get; internal set; }
 
     /// <summary>
     /// Configuration details for limit-limit GTC orders.
     /// </summary>
-    public LimitGtc LimitGtc { get; set; }
+    public LimitGtc LimitGtc { get; internal set; }
 
     /// <summary>
     /// Configuration details for limit-limit GTD orders.
     /// </summary>
-    public LimitGtd LimitGtd { get; set; }
+    public LimitGtd LimitGtd { get; internal set; }
 
     /// <summary>
     /// Configuration details for stop-limit-stop-limit GTC orders.
     /// </summary>
-    public StopLimitGtc StopLimitGtc { get; set; }
+    public StopLimitGtc StopLimitGtc { get; internal set; }
 
     /// <summary>
     /// Configuration details for stop-limit-stop-limit GTD orders.
     /// </summary>
-    public StopLimitGtd StopLimitGtd { get; set; }
+    public StopLimitGtd StopLimitGtd { get; internal set; }
 
     /// <summary>
     /// Configuration details for sor-limit-ioc orders.
     /// </summary>
-    public SorLimitIoc SorLimitIoc { get; set; }
+    public SorLimitIoc SorLimitIoc { get; internal set; }
 }
 
 /// <summary>
@@ -211,12 +211,12 @@ public class MarketIoc
     /// <summary>
     /// The size of the order in the quote currency.
     /// </summary>
-    public double? QuoteSize { get; set; }
+    public double? QuoteSize { get; internal set; }
 
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 }
 
 /// <summary>
@@ -227,17 +227,17 @@ public class LimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 
     /// <summary>
     /// Indicates if the order can only be posted to the order book.
     /// </summary>
-    public bool? PostOnly { get; set; }
+    public bool? PostOnly { get; internal set; }
 }
 
 /// <summary>
@@ -248,7 +248,7 @@ public class LimitGtd : LimitGtc
     /// <summary>
     /// The time when the order will expire.
     /// </summary>
-    public DateTime EndTime { get; set; }
+    public DateTime EndTime { get; internal set; }
 }
 
 /// <summary>
@@ -259,22 +259,22 @@ public class StopLimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 
     /// <summary>
     /// The stop price for the order.
     /// </summary>
-    public double? StopPrice { get; set; }
+    public double? StopPrice { get; internal set; }
 
     /// <summary>
     /// The direction in which the stop price is triggered (e.g. 'above', 'below').
     /// </summary>
-    public OrderDirection StopDirection { get; set; }
+    public OrderDirection StopDirection { get; internal set; }
 }
 
 /// <summary>
@@ -285,7 +285,7 @@ public class StopLimitGtd : StopLimitGtc
     /// <summary>
     /// The time when the order will expire.
     /// </summary>
-    public DateTime EndTime { get; set; }
+    public DateTime EndTime { get; internal set; }
 }
 
 /// <summary>
@@ -296,12 +296,12 @@ public class SorLimitIoc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; set; }
+    public double? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; set; }
+    public double? LimitPrice { get; internal set; }
 }
 
 /// <summary>
@@ -312,15 +312,15 @@ public class EditHistoryEntry
     /// <summary>
     /// The price associated with the edit.
     /// </summary>
-    public double? Price { get; set; }
+    public double? Price { get; internal set; }
 
     /// <summary>
     /// The size associated with the edit.
     /// </summary>
-    public double? Size { get; set; }
+    public double? Size { get; internal set; }
 
     /// <summary>
     /// The timestamp when the edit was accepted.
     /// </summary>
-    public DateTime? ReplaceAcceptTimestamp { get; set; }
+    public DateTime? ReplaceAcceptTimestamp { get; internal set; }
 }

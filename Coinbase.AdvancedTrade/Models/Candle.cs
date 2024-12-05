@@ -9,9 +9,9 @@ public class Candle
 
 {
     /// <summary>
-    /// Gets or sets the start time of the candlestick in UNIX timestamp format.
+    /// Gets the start time of the candlestick in UNIX timestamp format.
     /// </summary>
-    public string StartUnix { get; set; }
+    public string StartUnix { get; internal set; }
 
     /// <summary>
     /// Gets the start date and time of the candlestick.
@@ -19,29 +19,29 @@ public class Candle
     public DateTime StartDate => !string.IsNullOrEmpty(StartUnix) ? UnixTimeStampToDateTime(StartUnix) : DateTime.MinValue;
 
     /// <summary>
-    /// Gets or sets the lowest traded price of the asset during the time interval represented by the candlestick.
+    /// Gets the lowest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Low { get; set; }
+    public double Low { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the highest traded price of the asset during the time interval represented by the candlestick.
+    /// Gets the highest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double High { get; set; }
+    public double High { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the opening price of the asset at the beginning of the time interval represented by the candlestick.
+    /// Gets the opening price of the asset at the beginning of the time interval represented by the candlestick.
     /// </summary>
-    public double Open { get; set; }
+    public double Open { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the closing price of the asset at the end of the time interval represented by the candlestick.
+    /// Gets the closing price of the asset at the end of the time interval represented by the candlestick.
     /// </summary>
-    public double Close { get; set; }
+    public double Close { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the trading volume of the asset during the time interval represented by the candlestick.
+    /// Gets the trading volume of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Volume { get; set; }
+    public double Volume { get; internal set; }
 
     /// <summary>
     /// Converts a UNIX timestamp string to its corresponding DateTime value.

@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -206,18 +207,18 @@ internal class InternalProduct : IModelMapper<Product>
             BaseCurrencyId = BaseCurrencyId,
             BaseDisplaySymbol = BaseDisplaySymbol,
             QuoteDisplaySymbol = QuoteDisplaySymbol,
-            BaseIncrement = UtilityHelper.ToNullableDouble(BaseIncrement),
-            BaseMaxSize = UtilityHelper.ToNullableDouble(BaseMaxSize),
-            BaseMinSize = UtilityHelper.ToNullableDouble(BaseMinSize),
-            MidMarketPrice = UtilityHelper.ToNullableDouble(MidMarketPrice),
-            PricePercentageChange24h = UtilityHelper.ToNullableDouble(PricePercentageChange24h),
-            PriceIncrement = UtilityHelper.ToNullableDouble(PriceIncrement),
-            QuoteMaxSize = UtilityHelper.ToNullableDouble(QuoteMaxSize),
-            QuoteMinSize = UtilityHelper.ToNullableDouble(QuoteMinSize),
-            Volume24h = UtilityHelper.ToNullableDouble(Volume24h),
-            QuoteIncrement = UtilityHelper.ToNullableDouble(QuoteIncrement),
-            VolumePercentageChange24h = UtilityHelper.ToNullableDouble(VolumePercentageChange24h),
-            Price = UtilityHelper.ToNullableDouble(Price),
+            BaseIncrement = BaseIncrement?.ToNullableDouble(),
+            BaseMaxSize = BaseMaxSize?.ToNullableDouble(),
+            BaseMinSize = BaseMinSize?.ToNullableDouble(),
+            MidMarketPrice = MidMarketPrice?.ToNullableDouble(),
+            PricePercentageChange24h = PricePercentageChange24h?.ToNullableDouble(),
+            PriceIncrement = PriceIncrement?.ToNullableDouble(),
+            QuoteMaxSize = QuoteMaxSize?.ToNullableDouble(),
+            QuoteMinSize = QuoteMinSize?.ToNullableDouble(),
+            Volume24h = Volume24h?.ToNullableDouble(),
+            QuoteIncrement = QuoteIncrement?.ToNullableDouble(),
+            VolumePercentageChange24h = VolumePercentageChange24h?.ToNullableDouble(),
+            Price = Price?.ToNullableDouble(),
             BaseName = BaseName,
             ProductType = ProductType,
             QuoteCurrencyId = QuoteCurrencyId,

@@ -46,8 +46,8 @@ public class OrdersManager : BaseManager, IOrdersManager
 
         // Use utility methods for conversion
         string[] orderStatusStrings = UtilityHelper.EnumToStringArray(orderStatus);
-        string startDateString = UtilityHelper.FormatDateToISO8601(startDate);
-        string endDateString = UtilityHelper.FormatDateToISO8601(endDate);
+        string startDateString = startDate?.FormatDateToISO8601();
+        string endDateString = endDate?.FormatDateToISO8601();
         string orderTypeString = orderType?.GetDescription();
         string orderSideString = orderSide?.GetDescription();
 
@@ -91,8 +91,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         CancellationToken cancellationToken = default)
     {
         // Convert DateTime to the desired ISO8601 format
-        string startSequenceTimestampString = UtilityHelper.FormatDateToISO8601(startSequenceTimestamp);
-        string endSequenceTimestampString = UtilityHelper.FormatDateToISO8601(endSequenceTimestamp);
+        string startSequenceTimestampString = startSequenceTimestamp?.FormatDateToISO8601();
+        string endSequenceTimestampString = endSequenceTimestamp?.FormatDateToISO8601();
 
         // Prepare request parameters using anonymous type
         var paramsObj = new

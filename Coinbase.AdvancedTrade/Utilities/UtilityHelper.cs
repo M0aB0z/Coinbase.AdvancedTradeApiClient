@@ -1,5 +1,4 @@
-﻿using Coinbase.AdvancedTrade.Utilities.Extensions;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,7 @@ internal static class UtilityHelper
     /// </summary>
     /// <param name="obj">The object to convert.</param>
     /// <returns>A dictionary representation of the object's properties.</returns>
-    private static Dictionary<string, string> ConvertToDictionary(object obj)
+    private static Dictionary<string, string> ConvertToPropertiesDictionary(this object obj)
     {
         return obj.GetType().GetProperties()
             .Where(prop => prop.GetValue(obj) != null) // Simplified null check
@@ -45,7 +44,7 @@ internal static class UtilityHelper
     /// <returns></returns>
     public static string BuildParamUri(string uri, object paramsObj)
     {
-        var parameters = ConvertToDictionary(paramsObj);
+        var parameters = paramsObj.ConvertToPropertiesDictionary();
         var queryString = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
         return $"{uri}?{queryString}";
     }
@@ -62,22 +61,5 @@ internal static class UtilityHelper
             return null;
 
         return enums.Select(e => e.ToString()).ToArray();
-    }
-
-    /// <summary>
-    /// Formats a DateTime instance to the ISO 8601 format.
-    /// </summary>
-    /// <param name="dateTime">The DateTime instance to format.</param>
-    /// <returns>The ISO 8601 formatted string.</returns>
-    internal static string FormatDateToISO8601(DateTime? dateTime)
-    {
-        return dateTime?.ToUniversalTime().ToString("o");
-    }
-
-    internal static double? ToNullableDouble(string value)
-    {
-        if (string.IsNullOrEmpty(value?.Trim()))
-            return null;
-        return value.ToDouble();
     }
 }

@@ -9,24 +9,24 @@ namespace Coinbase.AdvancedTrade.Models;
 public class ProductBook
 {
     /// <summary>
-    /// Gets or sets the product identifier associated with the order book.
+    /// Gets the product identifier associated with the order book.
     /// </summary>
-    public string ProductId { get; set; }
+    public string ProductId { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the list of buy orders for the product.
+    /// Gets the list of buy orders for the product.
     /// </summary>
-    public List<Offer> Bids { get; set; }
+    public List<Offer> Bids { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the list of sell orders for the product.
+    /// Gets the list of sell orders for the product.
     /// </summary>
-    public List<Offer> Asks { get; set; }
+    public List<Offer> Asks { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the timestamp when the order book was captured.
+    /// Gets the timestamp when the order book was captured.
     /// </summary>
-    public DateTime Time { get; set; }
+    public DateTime Time { get; internal set; }
 }
 
 /// <summary>
@@ -35,12 +35,12 @@ public class ProductBook
 public class Offer
 {
     /// <summary>
-    /// Gets or sets the price at which the offer is made.
+    /// Gets the price at which the offer is made.
     /// </summary>
-    public double? Price { get; set; }
+    public double? Price { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the size or quantity of the offer.
+    /// Gets the size or quantity of the offer.
     /// </summary>
-    public double? Size { get; set; }
+    public double? Size { get; internal set; }
 }

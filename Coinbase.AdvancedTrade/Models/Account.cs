@@ -9,22 +9,22 @@ namespace Coinbase.AdvancedTrade.Models;
 public class Account
 {
     /// <summary>
-    /// Gets or sets the unique identifier for the account.
+    /// Gets the unique identifier for the account.
     /// </summary>
     public string Uuid { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the name associated with the account.
+    /// Gets the name associated with the account.
     /// </summary>
     public string Name { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the currency code for the account.
+    /// Gets the currency code for the account.
     /// </summary>
     public string Currency { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the available balance within the account.
+    /// Gets the available balance within the account.
     /// </summary>
     public Balance AvailableBalance { get; internal set; }
 
@@ -39,22 +39,22 @@ public class Account
     public bool Active { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the account was created.
+    /// Gets the date and time when the account was created.
     /// </summary>
     public DateTime CreatedAt { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the account was last updated.
+    /// Gets the date and time when the account was last updated.
     /// </summary>
     public DateTime UpdatedAt { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the account was deleted, if applicable.
+    /// Gets the date and time when the account was deleted, if applicable.
     /// </summary>
     public DateTime? DeletedAt { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the type of the account.
+    /// Gets the type of the account.
     /// </summary>
     public string Type { get; internal set; }
 
@@ -64,7 +64,7 @@ public class Account
     public bool Ready { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the funds on hold within the account.
+    /// Gets the funds on hold within the account.
     /// </summary>
     public Balance Hold { get; internal set; }
 }
@@ -75,12 +75,12 @@ public class Account
 public class Balance
 {
     /// <summary>
-    /// Gets or sets the value of the balance.
+    /// Gets the value of the balance.
     /// </summary>
     public double Value { get; internal set; }  // Consider converting to Decimal if working with financial data
 
     /// <summary>
-    /// Gets or sets the currency code associated with the balance.
+    /// Gets the currency code associated with the balance.
     /// </summary>
     public string Currency { get; internal set; }
 }

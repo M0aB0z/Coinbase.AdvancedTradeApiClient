@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Utilities;
+using Coinbase.AdvancedTrade.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,8 +77,8 @@ internal class InternalOffer : IModelMapper<Offer>
     {
         return new Offer
         {
-            Price = UtilityHelper.ToNullableDouble(Price),
-            Size = UtilityHelper.ToNullableDouble(Size)
+            Price = Price?.ToNullableDouble(),
+            Size = Size?.ToNullableDouble()
         };
     }
 }
