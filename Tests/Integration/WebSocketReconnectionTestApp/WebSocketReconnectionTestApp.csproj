@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Coinbase.AdvancedTrade\Coinbase.AdvancedTrade.csproj" />
+    <ProjectReference Include="..\..\..\Coinbase.AdvancedTradeApiClient\Coinbase.AdvancedTradeApiClient.csproj" />
   </ItemGroup>
 
 </Project>
