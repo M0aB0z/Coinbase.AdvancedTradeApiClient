@@ -1,21 +1,20 @@
-﻿using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Enums;
-
+﻿using Coinbase.AdvancedTradeApiClient;
+using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 bool _isCleanupDone = false;
 
-// Coinbase Developer Platform Keys
+// Coinbase Cloud Trading Keys
 var apiKey = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_KEY", EnvironmentVariableTarget.User)
              ?? throw new InvalidOperationException("API Key not found");
 var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_SECRET", EnvironmentVariableTarget.User)
                ?? throw new InvalidOperationException("API Secret not found");
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
-// Coinbase Legacy Keys
-//var apiKey = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_KEY", EnvironmentVariableTarget.User)
-//         ?? throw new InvalidOperationException("API Key not found");
-//var apiSecret = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_SECRET", EnvironmentVariableTarget.User)
-//           ?? throw new InvalidOperationException("API Secret not found");
-//var coinbaseClient = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret, apiKeyType: ApiKeyType.Legacy);
+var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow, Granularity.ONE_MINUTE, CancellationToken.None);
+var accounts = await coinbaseClient.Accounts.ListAccountsAsync();
+var orders = await coinbaseClient.Orders.ListOrdersAsync();
+var products = await coinbaseClient.Products.ListProductsAsync();
+var trades = await coinbaseClient.Products.GetMarketTradesAsync("BTC-USDC", 50, CancellationToken.None);
 
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 
@@ -26,9 +25,9 @@ Console.CancelKeyPress += async (s, e) =>
     await CleanupAsync(webSocketManager);
 };
 
-webSocketManager!.HeartbeatMessageReceived += (sender, heartbeatData) =>
+webSocketManager!.CandleMessageReceived += (sender, candleData) =>
 {
-    Console.WriteLine($"Received heartbeat at {DateTime.UtcNow}");
+    Console.WriteLine($"Received new data at {DateTime.UtcNow}");
 };
 
 webSocketManager.MessageReceived += (sender, e) =>
@@ -41,8 +40,8 @@ try
     Console.WriteLine("Connecting to the WebSocket...");
     await webSocketManager.ConnectAsync();
 
-    Console.WriteLine("Subscribing to heartbeats...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
+    Console.WriteLine("Subscribing to candles...");
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -63,8 +62,8 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
 {
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
-    Console.WriteLine("Unsubscribing from heartbeats...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
+    Console.WriteLine("Unsubscribing...");
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

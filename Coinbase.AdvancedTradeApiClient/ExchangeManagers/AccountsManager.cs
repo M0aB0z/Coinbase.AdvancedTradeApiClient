@@ -1,14 +1,14 @@
-﻿using Coinbase.AdvancedTrade.Interfaces;
-using Coinbase.AdvancedTrade.Models;
-using Coinbase.AdvancedTrade.Models.Internal;
-using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Interfaces;
+using Coinbase.AdvancedTradeApiClient.Models;
+using Coinbase.AdvancedTradeApiClient.Models.Internal;
+using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.ExchangeManagers;
+namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 /// <summary>
 /// Manages account-related activities for the Coinbase Advanced Trade API.

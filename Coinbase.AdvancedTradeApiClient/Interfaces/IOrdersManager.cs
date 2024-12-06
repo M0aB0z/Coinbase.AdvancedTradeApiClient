@@ -1,11 +1,11 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Models;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.Interfaces;
+namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 
 /// <summary>
 /// Provides asynchronous methods for managing and interacting with orders.

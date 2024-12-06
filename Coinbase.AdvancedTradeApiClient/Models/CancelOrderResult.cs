@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTrade.Models;
+﻿namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents the result of an order cancellation request.

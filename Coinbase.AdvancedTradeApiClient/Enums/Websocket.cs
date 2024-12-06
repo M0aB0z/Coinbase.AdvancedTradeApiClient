@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTrade.Enums;
+﻿namespace Coinbase.AdvancedTradeApiClient.Enums;
 
 /// <summary>
 /// Represents different types of channels for data streams.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.WebSocket;
+namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket;
 
 /// <summary>
 /// Represents a ticker message from the Coinbase WebSocket API.

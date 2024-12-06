@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Public;
+namespace Coinbase.AdvancedTradeApiClient.Models.Public;
 
 /// <summary>
 /// Represents the server time details.

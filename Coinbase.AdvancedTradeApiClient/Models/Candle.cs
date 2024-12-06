@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents a candlestick data point for a specific time frame in a trading chart.

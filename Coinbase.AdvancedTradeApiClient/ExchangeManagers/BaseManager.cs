@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace Coinbase.AdvancedTrade.ExchangeManagers;
+namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 /// <summary>
 /// Provides base functionalities for interacting with Coinbase API.

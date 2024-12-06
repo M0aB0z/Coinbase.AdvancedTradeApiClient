@@ -1,5 +1,6 @@
-﻿using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient;
+using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 bool _isCleanupDone = false;
 
@@ -27,9 +28,9 @@ Console.CancelKeyPress += async (s, e) =>
     await CleanupAsync(webSocketManager);
 };
 
-webSocketManager!.TickerBatchMessageReceived += (sender, tickerData) =>
+webSocketManager!.StatusMessageReceived += (sender, statusData) =>
 {
-    Console.WriteLine($"Received ticker batch data at {DateTime.UtcNow}");
+    Console.WriteLine($"Received status data at {DateTime.UtcNow}");
 };
 
 webSocketManager.MessageReceived += (sender, e) =>
@@ -42,8 +43,8 @@ try
     Console.WriteLine("Connecting to the WebSocket...");
     await webSocketManager.ConnectAsync();
 
-    Console.WriteLine("Subscribing to ticker batch...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch);
+    Console.WriteLine("Subscribing to status...");
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Status);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -64,8 +65,8 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
 {
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
-    Console.WriteLine("Unsubscribing from ticker batch...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch);
+    Console.WriteLine("Unsubscribing from status...");
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Status);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

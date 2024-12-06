@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTrade.Enums;
+﻿namespace Coinbase.AdvancedTradeApiClient.Enums;
 
 /// <summary>
 /// Represents the granularity levels for candle data.

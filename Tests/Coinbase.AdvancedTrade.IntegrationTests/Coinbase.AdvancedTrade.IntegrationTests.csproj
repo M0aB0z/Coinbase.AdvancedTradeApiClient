@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Coinbase.AdvancedTradeApiClient\Coinbase.AdvancedTradeApiClient.csproj" />
+    <ProjectReference Include="..\..\Coinbase.AdvancedTradeApiClient\Coinbase.AdvancedTradeApiClient.csproj" />
   </ItemGroup>
 
 </Project>

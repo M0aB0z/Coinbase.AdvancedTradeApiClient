@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace Coinbase.AdvancedTrade.Utilities.Extensions;
+namespace Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 
 internal static class EnumExtensions
 {

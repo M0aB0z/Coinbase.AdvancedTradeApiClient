@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Public;
+namespace Coinbase.AdvancedTradeApiClient.Models.Public;
 
 /// <summary>
 /// Represents a single candle data point in a trading chart.

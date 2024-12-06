@@ -1,11 +1,11 @@
-﻿using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Internal;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 /// <summary>
 /// Represents the order book for a specific product on Coinbase.

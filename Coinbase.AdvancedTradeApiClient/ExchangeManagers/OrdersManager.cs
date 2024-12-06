@@ -1,10 +1,9 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Interfaces;
-using Coinbase.AdvancedTrade.Models;
-using Coinbase.AdvancedTrade.Models.Internal;
-using Coinbase.AdvancedTrade.Models.Internal.Orders;
-using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Interfaces;
+using Coinbase.AdvancedTradeApiClient.Models;
+using Coinbase.AdvancedTradeApiClient.Models.Internal;
+using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.ExchangeManagers;
+namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 /// <summary>
 /// Manages order-related activities for the Coinbase Advanced Trade API.

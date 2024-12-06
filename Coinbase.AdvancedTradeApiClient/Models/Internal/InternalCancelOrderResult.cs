@@ -1,7 +1,7 @@
-﻿using Coinbase.AdvancedTrade.Utilities;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Internal;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 /// <summary>
 /// Represents the result of an order cancellation request.

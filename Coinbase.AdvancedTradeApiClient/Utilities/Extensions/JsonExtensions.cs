@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Coinbase.AdvancedTrade.Utilities;
+namespace Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 
 internal static class JsonExtensions
 {

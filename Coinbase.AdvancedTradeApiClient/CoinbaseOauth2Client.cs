@@ -1,7 +1,7 @@
-﻿using Coinbase.AdvancedTrade.ExchangeManagers;
-using Coinbase.AdvancedTrade.Interfaces;
+﻿using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
+using Coinbase.AdvancedTradeApiClient.Interfaces;
 
-namespace Coinbase.AdvancedTrade;
+namespace Coinbase.AdvancedTradeApiClient;
 
 /// <summary>
 /// Provides access to various functionalities of the Coinbase API using OAuth2 authentication.

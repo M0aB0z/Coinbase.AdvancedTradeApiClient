@@ -1,9 +1,9 @@
-﻿using Coinbase.AdvancedTrade.Models;
+﻿using Coinbase.AdvancedTradeApiClient.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.Interfaces;
+namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 
 /// <summary>
 /// Provides methods to manage accounts on the Coinbase Advanced Trade API.
