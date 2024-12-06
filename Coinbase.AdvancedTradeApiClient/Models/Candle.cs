@@ -56,4 +56,7 @@ public class Candle
         }
         return DateTime.MinValue;
     }
+
+    /// <inheritDoc/>
+    public override string ToString() => $"[{StartDate:dd/MM/yyyy HH:mm}][Close={Math.Round(Close, 4)}] [Open={Math.Round(Open, 2)}][Low={Math.Round(Low, 2)}] [High={Math.Round(High, 2)}]";
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Coinbase.AdvancedTrade.Models;
 
@@ -36,52 +37,52 @@ public class Product
     /// <summary>
     /// Gets the current price of the product.
     /// </summary>
-    public double? Price { get; internal set; }
+    public double Price { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in price over the last 24 hours.
     /// </summary>
-    public double? PricePercentageChange24h { get; internal set; }
+    public double PricePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the trading volume of the product over the last 24 hours.
     /// </summary>"
-    public double? Volume24h { get; internal set; }
+    public double Volume24h { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in volume over the last 24 hours.
     /// </summary>
-    public double? VolumePercentageChange24h { get; internal set; }
+    public double VolumePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the smallest allowable increment in the base currency for this product.
     /// </summary>
-    public double? BaseIncrement { get; internal set; }
+    public double BaseIncrement { get; internal set; }
 
     /// <summary>
     /// Gets the smallest allowable increment in the quote currency for this product.
     /// </summary>
-    public double? QuoteIncrement { get; internal set; }
+    public double QuoteIncrement { get; internal set; }
 
     /// <summary>
     /// Gets the minimum order size in the quote currency for this product.
     /// </summary>
-    public double? QuoteMinSize { get; internal set; }
+    public double QuoteMinSize { get; internal set; }
 
     /// <summary>
     /// Gets the maximum order size in the quote currency for this product.
     /// </summary>
-    public double? QuoteMaxSize { get; internal set; }
+    public double QuoteMaxSize { get; internal set; }
 
     /// <summary>
     /// Gets the minimum order size in the base currency for this product.
     /// </summary>
-    public double? BaseMinSize { get; internal set; }
+    public double BaseMinSize { get; internal set; }
 
     /// <summary>
     /// Gets the maximum order size in the base currency for this product.
     /// </summary>
-    public double? BaseMaxSize { get; internal set; }
+    public double BaseMaxSize { get; internal set; }
 
     /// <summary>
     /// Gets the human-readable name of the base currency.
@@ -146,5 +147,10 @@ public class Product
     /// <summary>
     /// Gets the allowable price increment for placing orders.
     /// </summary>
-    public double? PriceIncrement { get; internal set; }
+    public double PriceIncrement { get; internal set; }
+
+
+    ///<inheritDoc/>
+    public override string ToString()
+    => $"{BaseName} {ProductId} @{Math.Round(Price, 4)} {ProductType}";
 }

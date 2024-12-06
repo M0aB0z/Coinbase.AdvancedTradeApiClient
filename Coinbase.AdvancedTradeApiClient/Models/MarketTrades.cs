@@ -1,4 +1,5 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -33,7 +34,7 @@ public class Trade
     /// <summary>
     /// Gets the timestamp of the trade.
     /// </summary>
-    public string Time { get; internal set; }
+    public DateTime Time { get; internal set; }
 
     /// <summary>
     /// Gets the side of the trade (e.g., "buy" or "sell").
@@ -49,6 +50,10 @@ public class Trade
     /// Gets the ask price at the time of the trade.
     /// </summary>
     public double Ask { get; internal set; }
+
+    /// <inheritDoc/>
+    public override string ToString()
+        => $"{Time} {Side} {Math.Round(Size, 4)} {ProductId} @{Math.Round(Price, 4)} (Bid={Math.Round(Bid, 4)} Ask={Math.Round(Ask, 4)})";
 }
 
 /// <summary>

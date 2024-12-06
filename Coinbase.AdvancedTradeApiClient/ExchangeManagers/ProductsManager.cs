@@ -79,10 +79,10 @@ public class ProductsManager : BaseManager, IProductsManager
         var trades = response.As<InternalTrade[]>("trades").ToModel();
 
         // Extract best bid and ask
-        double bestBid = response.As<double>("best_bid");
-        double bestAsk = response.As<double>("best_ask");
+        var bestBidStr = response.As<string>("best_bid");
+        var bestAskStr = response.As<string>("best_ask");
 
-        return new MarketTrades { Trades = trades, BestBid = bestBid, BestAsk = bestAsk };
+        return new MarketTrades { Trades = trades, BestBid = bestBidStr.ToDouble(), BestAsk = bestAskStr.ToDouble() };
     }
 
     /// <inheritdoc/>

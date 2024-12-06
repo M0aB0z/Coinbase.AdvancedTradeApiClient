@@ -1,6 +1,7 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Utilities;
 using Coinbase.AdvancedTrade.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -39,7 +40,7 @@ internal class InternalTrade : IModelMapper<Trade>
     /// Gets or sets the timestamp of the trade.
     /// </summary>
     [JsonPropertyName("time")]
-    public string Time { get; set; }
+    public DateTime Time { get; set; }
 
     /// <summary>
     /// Gets or sets the side of the trade (e.g., "buy" or "sell").

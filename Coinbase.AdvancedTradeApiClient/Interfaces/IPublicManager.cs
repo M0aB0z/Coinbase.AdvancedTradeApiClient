@@ -1,5 +1,6 @@
 ﻿using Coinbase.AdvancedTrade.Enums;
 using Coinbase.AdvancedTrade.Models.Public;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,20 +53,20 @@ public interface IPublicManager
     /// </summary>
     /// <param name="productId">The ID of the product to retrieve market trades for.</param>
     /// <param name="limit">The maximum number of trades to retrieve.</param>
-    /// <param name="start">The starting timestamp for the range of trades to retrieve. Null by default.</param>
-    /// <param name="end">The ending timestamp for the range of trades to retrieve. Null by default.</param>
+    /// <param name="startTimeUtc">The starting timestamp for the range of trades to retrieve. Null by default.</param>
+    /// <param name="endTimeUtc">The ending timestamp for the range of trades to retrieve. Null by default.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>The market trades details of the specified public product or null if not found.</returns>
-    Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, long? start = null, long? end = null, CancellationToken cancellationToken = default);
+    Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, DateTime? startTimeUtc = null, DateTime? endTimeUtc = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves candlestick data for a specific public product.
     /// </summary>
     /// <param name="productId">The ID of the product to retrieve candlestick data for.</param>
-    /// <param name="start">The starting timestamp for the range of candlestick data to retrieve.</param>
-    /// <param name="end">The ending timestamp for the range of candlestick data to retrieve.</param>
+    /// <param name="startTimeUtc">The starting timestamp for the range of candlestick data to retrieve.</param>
+    /// <param name="endTimeUtc">The ending timestamp for the range of candlestick data to retrieve.</param>
     /// <param name="granularity">The granularity of the candlestick data.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A list of candlestick data or an empty list if none are found.</returns>
-    Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken);
+    Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, DateTime startTimeUtc, DateTime endTimeUtc, Granularity granularity, CancellationToken cancellationToken);
 }

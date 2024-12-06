@@ -83,4 +83,7 @@ public class Balance
     /// Gets the currency code associated with the balance.
     /// </summary>
     public string Currency { get; internal set; }
+
+    /// <inheritDoc/>
+    public override string ToString() => $"{Value} {Currency}";
 }
