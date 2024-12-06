@@ -159,8 +159,8 @@ public class TestPublic
     {
         var productId = "BTC-USDC";
         var limit = 10;
-        var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
-        var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
 
         var marketTrades = await _coinbaseClient.Public.GetPublicMarketTradesAsync(productId, limit, start, end);
 
@@ -174,8 +174,8 @@ public class TestPublic
     {
         var productId = "BTC-USDC";
         var limit = 10;
-        var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
-        var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
 
         var marketTrades = await _coinbasePublicClient.Public.GetPublicMarketTradesAsync(productId, limit, start, end);
 
@@ -189,8 +189,8 @@ public class TestPublic
     public async Task Test_Public_GetPublicProductCandlesAsync_WithAuth()
     {
         var productId = "BTC-USDC";
-        var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
-        var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
         var granularity = Granularity.ONE_HOUR;
 
         var candles = await _coinbaseClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);
@@ -206,8 +206,8 @@ public class TestPublic
     public async Task Test_Public_GetPublicProductCandlesAsync_WithoutAuth()
     {
         var productId = "BTC-USDC";
-        var start = DateTimeOffset.UtcNow.AddDays(-1).ToUnixTimeSeconds();
-        var end = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var start = DateTime.UtcNow.AddDays(-1);
+        var end = DateTime.UtcNow;
         var granularity = Granularity.ONE_HOUR;
 
         var candles = await _coinbasePublicClient.Public.GetPublicProductCandlesAsync(productId, start, end, granularity, CancellationToken.None);

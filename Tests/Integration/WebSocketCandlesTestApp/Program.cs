@@ -13,6 +13,7 @@ var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", D
 var accounts = await coinbaseClient.Accounts.ListAccountsAsync();
 var orders = await coinbaseClient.Orders.ListOrdersAsync();
 var products = await coinbaseClient.Products.ListProductsAsync();
+var trades = await coinbaseClient.Products.GetMarketTradesAsync("BTC-USDC", 50, CancellationToken.None);
 
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 

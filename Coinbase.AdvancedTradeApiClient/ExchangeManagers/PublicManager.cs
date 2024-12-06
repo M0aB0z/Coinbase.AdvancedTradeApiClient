@@ -139,7 +139,7 @@ public class PublicManager : BaseManager, IPublicManager
     }
 
     /// <inheritdoc/>
-    public async Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, long? start = null, long? end = null, CancellationToken cancellationToken = default)
+    public async Task<PublicMarketTrades> GetPublicMarketTradesAsync(string productId, int limit, DateTime? startTimeUtc = null, DateTime? endTimeUtc = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
@@ -148,11 +148,11 @@ public class PublicManager : BaseManager, IPublicManager
         {
             var parameters = new Dictionary<string, object> { { "limit", limit } };
 
-            if (start.HasValue)
-                parameters.Add("start", start.Value);
+            if (startTimeUtc.HasValue)
+                parameters.Add("start", (long)startTimeUtc.Value.Subtract(DateTime.UnixEpoch).TotalSeconds);
 
-            if (end.HasValue)
-                parameters.Add("end", end.Value);
+            if (endTimeUtc.HasValue)
+                parameters.Add("end", (long)endTimeUtc.Value.Subtract(DateTime.UnixEpoch).TotalSeconds);
 
             var response = await _client.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/market/products/{productId}/ticker", parameters), cancellationToken);
             if (response.IsSuccessStatusCode)
@@ -172,14 +172,17 @@ public class PublicManager : BaseManager, IPublicManager
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, long start, long end, Granularity granularity, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<PublicCandle>> GetPublicProductCandlesAsync(string productId, DateTime startTimeUtc, DateTime endTimeUtc, Granularity granularity, CancellationToken cancellationToken)
     {
         try
         {
+            var startStr = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+            var endStr = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+
             var parameters = new Dictionary<string, object>
             {
-                { "start", start },
-                { "end", end },
+                { "start", startStr },
+                { "end", endStr },
                 { "granularity", granularity }
             };
 

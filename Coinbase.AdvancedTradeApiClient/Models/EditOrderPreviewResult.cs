@@ -44,4 +44,5 @@ public class EditOrderPreviewResult
     /// Gets the average price at which the order was filled after the edit.
     /// </summary>
     public double AverageFilledPrice { get; internal set; }
+
 }

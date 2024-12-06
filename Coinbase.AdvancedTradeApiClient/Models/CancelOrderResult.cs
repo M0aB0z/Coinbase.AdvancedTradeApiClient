@@ -19,4 +19,7 @@ public class CancelOrderResult
     /// Gets the unique identifier of the order that was requested to be canceled.
     /// </summary>
     public string OrderId { get; internal set; }
+
+    /// <inheritDoc/>
+    public override string ToString() => $"OrderId={OrderId} {(Success ? "Success" : "Fail")} {FailureReason}";
 }
