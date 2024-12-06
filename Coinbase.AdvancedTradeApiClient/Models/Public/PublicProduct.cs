@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Public;
+namespace Coinbase.AdvancedTradeApiClient.Models.Public;
 
 /// <summary>
 /// Represents a public product in the Coinbase trading environment.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Coinbase.AdvancedTrade.Utilities.Extensions;
+namespace Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 
 internal static class DateTimeExtensions
 {

@@ -1,14 +1,15 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Interfaces;
-using Coinbase.AdvancedTrade.Models.Public;
-using Coinbase.AdvancedTrade.Utilities;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Interfaces;
+using Coinbase.AdvancedTradeApiClient.Models.Public;
+using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.ExchangeManagers;
+namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 /// <summary>
 /// Manages public activities, including server time retrieval, for the Coinbase Advanced Trade API.

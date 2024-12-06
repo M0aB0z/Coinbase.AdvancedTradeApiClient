@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Public;
+namespace Coinbase.AdvancedTradeApiClient.Models.Public;
 
 /// <summary>
 /// Represents a single trade in the market.

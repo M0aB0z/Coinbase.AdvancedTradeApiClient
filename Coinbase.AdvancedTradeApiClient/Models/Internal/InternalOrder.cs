@@ -1,12 +1,12 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Internal.Orders;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 // Represents an order within the Coinbase AdvancedTrade system.
 /// <summary>

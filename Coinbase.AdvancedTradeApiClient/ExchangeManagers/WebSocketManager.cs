@@ -1,5 +1,5 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Models.WebSocket;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Models.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade;
+namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 /// <summary>
 /// Manages WebSocket communication for the Coinbase Advanced Trade API.

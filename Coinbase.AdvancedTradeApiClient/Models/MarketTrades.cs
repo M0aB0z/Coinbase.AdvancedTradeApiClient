@@ -1,9 +1,9 @@
-﻿using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents an individual trade on the market.

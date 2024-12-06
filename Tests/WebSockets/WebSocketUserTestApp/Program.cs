@@ -1,5 +1,6 @@
-﻿using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient;
+using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 bool _isCleanupDone = false;
 
@@ -18,7 +19,6 @@ var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 //           ?? throw new InvalidOperationException("API Secret not found");
 //var coinbaseClient = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret, apiKeyType: ApiKeyType.Legacy);
 
-
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 
 AppDomain.CurrentDomain.ProcessExit += async (s, e) => await CleanupAsync(webSocketManager);
@@ -28,9 +28,9 @@ Console.CancelKeyPress += async (s, e) =>
     await CleanupAsync(webSocketManager);
 };
 
-webSocketManager!.MarketTradeMessageReceived += (sender, marketTradeData) =>
+webSocketManager!.UserMessageReceived += (sender, userData) =>
 {
-    Console.WriteLine($"Received market trade data at {DateTime.UtcNow}");
+    Console.WriteLine($"Received User data at {DateTime.UtcNow}");
 };
 
 webSocketManager.MessageReceived += (sender, e) =>
@@ -43,8 +43,8 @@ try
     Console.WriteLine("Connecting to the WebSocket...");
     await webSocketManager.ConnectAsync();
 
-    Console.WriteLine("Subscribing to market trades...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades);
+    Console.WriteLine("Subscribing to User...");
+    await webSocketManager.SubscribeAsync(Array.Empty<string>(), ChannelType.User);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -65,8 +65,8 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
 {
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
-    Console.WriteLine("Unsubscribing from market trades...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades);
+    Console.WriteLine("Unsubscribing from User...");
+    await webSocketManager!.UnsubscribeAsync(Array.Empty<string>(), ChannelType.User);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

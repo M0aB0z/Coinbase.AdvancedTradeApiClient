@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTrade.Models;
+﻿namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents a tiered fee structure based on trade volume.

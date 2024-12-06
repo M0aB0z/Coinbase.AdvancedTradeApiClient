@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Coinbase.AdvancedTrade.Utilities;
+namespace Coinbase.AdvancedTradeApiClient.Utilities;
 
 /// <summary>
 /// Provides various utility functions for data manipulation and conversion.

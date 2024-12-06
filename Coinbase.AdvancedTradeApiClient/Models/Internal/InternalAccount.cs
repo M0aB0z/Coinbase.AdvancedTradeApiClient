@@ -1,10 +1,10 @@
-﻿using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Text.Json.Serialization;
 
 
-namespace Coinbase.AdvancedTrade.Models.Internal;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 /// <summary>
 /// Represents an account within the Coinbase system.

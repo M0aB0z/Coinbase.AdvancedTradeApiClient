@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents an account within the Coinbase system.

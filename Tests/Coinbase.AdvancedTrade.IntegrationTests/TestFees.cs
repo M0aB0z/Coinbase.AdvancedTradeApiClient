@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTradeTest;
+﻿namespace Coinbase.AdvancedTrade.IntegrationTests;
 
 [TestClass]
 public class TestFees : TestBase

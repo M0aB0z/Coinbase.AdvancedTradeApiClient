@@ -1,6 +1,7 @@
-﻿using Coinbase.AdvancedTrade;
+﻿using Coinbase.AdvancedTradeApiClient;
+using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
-namespace Coinbase.AdvancedTradeTest;
+namespace Coinbase.AdvancedTrade.IntegrationTests;
 
 public class TestBase
 {

@@ -1,6 +1,6 @@
-﻿using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
 
-namespace Coinbase.AdvancedTradeTest;
+namespace Coinbase.AdvancedTrade.IntegrationTests;
 
 [TestClass]
 public class TestOrders : TestBase

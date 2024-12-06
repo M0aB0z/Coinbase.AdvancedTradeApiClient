@@ -1,11 +1,11 @@
-﻿using Coinbase.AdvancedTrade.Enums;
-using Coinbase.AdvancedTrade.Models.Public;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Models.Public;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.Interfaces;
+namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 
 /// <summary>
 /// Interface for managing public endpoints of Coinbase Advanced Trade API.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Public;
+namespace Coinbase.AdvancedTradeApiClient.Models.Public;
 
 /// <summary>
 /// Represents the order book for a public product.

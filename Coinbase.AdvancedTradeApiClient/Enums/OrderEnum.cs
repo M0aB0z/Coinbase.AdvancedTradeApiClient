@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Coinbase.AdvancedTrade.Enums;
+namespace Coinbase.AdvancedTradeApiClient.Enums;
 
 /// <summary>
 /// Represents the status of an order.

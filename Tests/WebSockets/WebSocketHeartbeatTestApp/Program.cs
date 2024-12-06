@@ -1,5 +1,6 @@
-﻿using Coinbase.AdvancedTrade;
-using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient;
+using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 
 bool _isCleanupDone = false;
 
@@ -8,19 +9,14 @@ var apiKey = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_KEY"
              ?? throw new InvalidOperationException("API Key not found");
 var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_SECRET", EnvironmentVariableTarget.User)
                ?? throw new InvalidOperationException("API Secret not found");
-
+var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 // Coinbase Legacy Keys
 //var apiKey = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_KEY", EnvironmentVariableTarget.User)
 //         ?? throw new InvalidOperationException("API Key not found");
 //var apiSecret = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_SECRET", EnvironmentVariableTarget.User)
 //           ?? throw new InvalidOperationException("API Secret not found");
-
-
-var buffer10MegaBytes = 10 * 1024 * 1024; // 10 MB
-
-var coinbaseClient = new CoinbaseClient(apiKey, apiSecret, buffer10MegaBytes);
-//var coinbaseClient = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret, websocketBufferSize: buffer10MegaBytes, apiKeyType: ApiKeyType.Legacy);
+//var coinbaseClient = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret, apiKeyType: ApiKeyType.Legacy);
 
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 
@@ -31,9 +27,9 @@ Console.CancelKeyPress += async (s, e) =>
     await CleanupAsync(webSocketManager);
 };
 
-webSocketManager!.Level2MessageReceived += (sender, level2Data) =>
+webSocketManager!.HeartbeatMessageReceived += (sender, heartbeatData) =>
 {
-    Console.WriteLine($"Received Level 2 data at {DateTime.UtcNow}");
+    Console.WriteLine($"Received heartbeat at {DateTime.UtcNow}");
 };
 
 webSocketManager.MessageReceived += (sender, e) =>
@@ -46,8 +42,8 @@ try
     Console.WriteLine("Connecting to the WebSocket...");
     await webSocketManager.ConnectAsync();
 
-    Console.WriteLine("Subscribing to level 2...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Level2);
+    Console.WriteLine("Subscribing to heartbeats...");
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -68,8 +64,8 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
 {
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
-    Console.WriteLine("Unsubscribing from level 2...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Level2);
+    Console.WriteLine("Unsubscribing from heartbeats...");
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

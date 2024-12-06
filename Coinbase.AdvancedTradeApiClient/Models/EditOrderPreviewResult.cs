@@ -1,4 +1,4 @@
-﻿namespace Coinbase.AdvancedTrade.Models;
+﻿namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents the result from previewing an order edit within the Coinbase system.

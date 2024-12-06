@@ -1,6 +1,6 @@
-﻿using Coinbase.AdvancedTrade.Enums;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents a fill, which is a completed trade on the exchange. A fill is created for each side of the trade.

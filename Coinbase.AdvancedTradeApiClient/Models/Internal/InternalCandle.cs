@@ -1,8 +1,8 @@
-﻿using Coinbase.AdvancedTrade.Utilities;
-using Coinbase.AdvancedTrade.Utilities.Extensions;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTrade.Models.Internal;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 /// <summary>
 /// Represents a candlestick data point for a specific time frame in a trading chart.

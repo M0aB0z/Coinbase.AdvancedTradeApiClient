@@ -1,9 +1,9 @@
-﻿using Coinbase.AdvancedTrade.Models;
+﻿using Coinbase.AdvancedTradeApiClient.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade.Interfaces;
+namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 
 /// <summary>
 /// Represents the manager for fee-related operations on the Coinbase platform.

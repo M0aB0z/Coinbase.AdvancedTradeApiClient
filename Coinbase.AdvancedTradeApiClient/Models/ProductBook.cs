@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Coinbase.AdvancedTrade.Models;
+namespace Coinbase.AdvancedTradeApiClient.Models;
 
 /// <summary>
 /// Represents the order book for a specific product on Coinbase.

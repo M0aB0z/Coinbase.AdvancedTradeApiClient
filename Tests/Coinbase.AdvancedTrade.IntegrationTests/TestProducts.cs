@@ -1,6 +1,7 @@
-﻿using Coinbase.AdvancedTrade.Models;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Models;
 
-namespace Coinbase.AdvancedTradeTest;
+namespace Coinbase.AdvancedTrade.IntegrationTests;
 
 [TestClass]
 public class TestProducts : TestBase
@@ -58,7 +59,7 @@ public class TestProducts : TestBase
             {
                 string productId = "BTC-USDC";
 
-                var granularity = AdvancedTrade.Enums.Granularity.FIVE_MINUTE;
+                var granularity = Granularity.FIVE_MINUTE;
 
                 var candles = await (_coinbaseClient?.Products.GetProductCandlesAsync(productId, DateTime.UtcNow.AddMinutes(-25), DateTime.UtcNow.AddMinutes(-5), granularity, CancellationToken.None) ?? Task.FromResult<IReadOnlyList<Candle>?>(null));
 

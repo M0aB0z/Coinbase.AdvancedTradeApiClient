@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Coinbase.AdvancedTrade;
+namespace Coinbase.AdvancedTradeApiClient;
 
 /// <summary>
 /// Represents an authenticator for Coinbase API requests.
