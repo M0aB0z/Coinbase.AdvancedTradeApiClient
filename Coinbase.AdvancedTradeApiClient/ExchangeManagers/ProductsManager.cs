@@ -57,10 +57,10 @@ public class ProductsManager : BaseManager, IProductsManager
         if (startTimeUtc > endTimeUtc)
             throw new ArgumentException("Start date must be before end date");
 
-        var candleFrom = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
-        var candleTo = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var start = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var end = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
 
-        var parameters = new { candleFrom, candleTo, granularity };
+        var parameters = new { start, end, granularity };
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
         return response.As<InternalCandle[]>("candles").ToModel();
     }
