@@ -23,12 +23,11 @@ public class Trade
     /// <summary>
     /// Gets the price at which the trade occurred.
     /// </summary>
-    public double Price { get; internal set; }
+    public decimal Price { get; internal set; }
 
     /// <summary>
     /// Gets the size or quantity of the asset that was traded.
     /// </summary>
-    [JsonPropertyName("size")]
     public double Size { get; internal set; }
 
     /// <summary>
@@ -41,19 +40,10 @@ public class Trade
     /// </summary>
     public OrderSide Side { get; internal set; }
 
-    /// <summary>
-    /// Gets the bid price at the time of the trade.
-    /// </summary>
-    public double Bid { get; internal set; }
-
-    /// <summary>
-    /// Gets the ask price at the time of the trade.
-    /// </summary>
-    public double Ask { get; internal set; }
 
     /// <inheritDoc/>
     public override string ToString()
-        => $"{Time} {Side} {Math.Round(Size, 4)} {ProductId} @{Math.Round(Price, 4)} (Bid={Math.Round(Bid, 4)} Ask={Math.Round(Ask, 4)})";
+        => $"{Time} {Side} {Math.Round(Size, 4)} {ProductId} @{Math.Round(Price, 4)}";
 }
 
 /// <summary>
@@ -69,10 +59,10 @@ public class MarketTrades
     /// <summary>
     /// Gets the best bid price at the time of the data collection.
     /// </summary>
-    public double BestBid { get; internal set; }
+    public decimal BestBid { get; internal set; }
 
     /// <summary>
     /// Gets the best ask price at the time of the data collection.
     /// </summary>
-    public double BestAsk { get; internal set; }
+    public decimal BestAsk { get; internal set; }
 }

@@ -37,10 +37,10 @@ public class Offer
     /// <summary>
     /// Gets the price at which the offer is made.
     /// </summary>
-    public double? Price { get; internal set; }
+    public decimal? Price { get; internal set; }
 
     /// <summary>
     /// Gets the size or quantity of the offer.
     /// </summary>
-    public double? Size { get; internal set; }
+    public decimal? Size { get; internal set; }
 }

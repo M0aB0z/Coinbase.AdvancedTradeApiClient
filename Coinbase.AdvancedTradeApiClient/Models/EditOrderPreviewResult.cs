@@ -8,17 +8,17 @@ public class EditOrderPreviewResult
     /// <summary>
     /// Gets the estimated slippage for the edited order.
     /// </summary>
-    public double Slippage { get; internal set; }
+    public decimal Slippage { get; internal set; }
 
     /// <summary>
     /// Gets the total order value after the edit.
     /// </summary>
-    public double OrderTotal { get; internal set; }
+    public decimal OrderTotal { get; internal set; }
 
     /// <summary>
     /// Gets the total commission for the edited order.
     /// </summary>
-    public double CommissionTotal { get; internal set; }
+    public decimal CommissionTotal { get; internal set; }
 
     /// <summary>
     /// Gets the size of the order in quote currency after the edit.
@@ -33,16 +33,16 @@ public class EditOrderPreviewResult
     /// <summary>
     /// Gets the best bid price available for the order after the edit.
     /// </summary>
-    public double BestBid { get; internal set; }
+    public decimal BestBid { get; internal set; }
 
     /// <summary>
     /// Gets the best ask price available for the order after the edit.
     /// </summary>
-    public double BestAsk { get; internal set; }
+    public decimal BestAsk { get; internal set; }
 
     /// <summary>
     /// Gets the average price at which the order was filled after the edit.
     /// </summary>
-    public double AverageFilledPrice { get; internal set; }
+    public decimal AverageFilledPrice { get; internal set; }
 
 }

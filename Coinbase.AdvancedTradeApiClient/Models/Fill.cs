@@ -35,7 +35,7 @@ public class Fill
     /// <summary>
     /// Gets the price at which the trade was executed.
     /// </summary>
-    public double Price { get; internal set; }
+    public decimal Price { get; internal set; }
 
     /// <summary>
     /// Gets the size of the asset traded.
@@ -45,7 +45,7 @@ public class Fill
     /// <summary>
     /// Gets the commission or fee taken by the exchange for executing the trade.
     /// </summary>
-    public double Commission { get; internal set; }
+    public decimal Commission { get; internal set; }
 
     /// <summary>
     /// Gets the identifier of the product being traded.

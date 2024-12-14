@@ -77,8 +77,8 @@ internal class InternalOffer : IModelMapper<Offer>
     {
         return new Offer
         {
-            Price = Price?.ToNullableDouble(),
-            Size = Size?.ToNullableDouble()
+            Price = Price?.ToNullableDecimal(),
+            Size = Size?.ToNullableDecimal()
         };
     }
 }

@@ -74,7 +74,7 @@ public class ProductsManager : BaseManager, IProductsManager
         var parameters = new { limit };
 
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/ticker", parameters), cancellationToken);
-
+        var json = response.ToString();
         // Extract trades data from response
         var trades = response.As<InternalTrade[]>("trades").ToModel();
 
@@ -82,7 +82,7 @@ public class ProductsManager : BaseManager, IProductsManager
         var bestBidStr = response.As<string>("best_bid");
         var bestAskStr = response.As<string>("best_ask");
 
-        return new MarketTrades { Trades = trades, BestBid = bestBidStr.ToDouble(), BestAsk = bestAskStr.ToDouble() };
+        return new MarketTrades { Trades = trades, BestBid = bestBidStr.ToDecimal(), BestAsk = bestAskStr.ToDecimal() };
     }
 
     /// <inheritdoc/>

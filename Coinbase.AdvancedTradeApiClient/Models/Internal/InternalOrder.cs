@@ -208,14 +208,14 @@ internal class InternalOrder : IModelMapper<Order>
             EditHistory = EditHistory,
             CancelMessage = CancelMessage,
             ClientOrderId = ClientOrderId,
-            AverageFilledPrice = AverageFilledPrice?.ToNullableDouble(),
-            CompletionPercentage = CompletionPercentage?.ToNullableDouble(),
-            Fee = Fee?.ToNullableDouble(),
-            TotalFees = TotalFees?.ToNullableDouble(),
-            TotalValueAfterFees = TotalValueAfterFees?.ToNullableDouble(),
-            FilledSize = FilledSize?.ToNullableDouble(),
-            FilledValue = FilledValue?.ToNullableDouble(),
-            NumberOfFills = NumberOfFills?.ToNullableDouble(),
+            AverageFilledPrice = AverageFilledPrice?.ToNullableDecimal(),
+            CompletionPercentage = CompletionPercentage?.ToNullableDecimal(),
+            Fee = Fee?.ToNullableDecimal(),
+            TotalFees = TotalFees?.ToNullableDecimal(),
+            TotalValueAfterFees = TotalValueAfterFees?.ToNullableDecimal(),
+            FilledSize = FilledSize?.ToNullableDecimal(),
+            FilledValue = FilledValue?.ToNullableDecimal(),
+            NumberOfFills = NumberOfFills?.ToNullableDecimal(),
             OrderConfiguration = OrderConfiguration?.ToModel(),
             Side = Side.FromDescriptionToEnum<OrderSide>(),
             IsLiquidation = IsLiquidation,
@@ -316,8 +316,8 @@ public class InternalMarketIoc : IModelMapper<MarketIoc>
     {
         return new MarketIoc
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            QuoteSize = QuoteSize?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            QuoteSize = QuoteSize?.ToNullableDecimal(),
         };
     }
 }
@@ -353,8 +353,8 @@ public class InternalLimitGtc : IModelMapper<LimitGtc>
     {
         return new LimitGtc
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            LimitPrice = LimitPrice?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            LimitPrice = LimitPrice?.ToNullableDecimal(),
             PostOnly = PostOnly,
         };
     }
@@ -376,8 +376,8 @@ public class InternalLimitGtd : InternalLimitGtc, IModelMapper<LimitGtd>
     {
         return new LimitGtd
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            LimitPrice = LimitPrice?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            LimitPrice = LimitPrice?.ToNullableDecimal(),
             PostOnly = PostOnly,
             EndTime = EndTime
         };
@@ -418,9 +418,9 @@ public class InternalStopLimitGtc : IModelMapper<StopLimitGtc>
     {
         return new StopLimitGtc
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            LimitPrice = LimitPrice?.ToNullableDouble(),
-            StopPrice = StopPrice?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            LimitPrice = LimitPrice?.ToNullableDecimal(),
+            StopPrice = StopPrice?.ToNullableDecimal(),
             StopDirection = Enum.GetValues(typeof(OrderDirection)).Cast<OrderDirection>().FirstOrDefault(x => x.GetDescription().Equals(StopDirection, StringComparison.OrdinalIgnoreCase))
         };
     }
@@ -442,9 +442,9 @@ public class InternalStopLimitGtd : InternalStopLimitGtc, IModelMapper<StopLimit
     {
         return new StopLimitGtd
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            LimitPrice = LimitPrice?.ToNullableDouble(),
-            StopPrice = StopPrice?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            LimitPrice = LimitPrice?.ToNullableDecimal(),
+            StopPrice = StopPrice?.ToNullableDecimal(),
             StopDirection = StopDirection.FromDescriptionToEnum<OrderDirection>(),
             EndTime = EndTime
         };
@@ -476,8 +476,8 @@ public class InternalSorLimitIoc : IModelMapper<SorLimitIoc>
     {
         return new SorLimitIoc
         {
-            BaseSize = BaseSize?.ToNullableDouble(),
-            LimitPrice = LimitPrice?.ToNullableDouble(),
+            BaseSize = BaseSize?.ToNullableDecimal(),
+            LimitPrice = LimitPrice?.ToNullableDecimal(),
         };
     }
 }
@@ -513,8 +513,8 @@ public class InternalEditHistoryEntry : IModelMapper<EditHistoryEntry>
     {
         return new EditHistoryEntry
         {
-            Price = Price?.ToNullableDouble(),
-            Size = Size?.ToNullableDouble(),
+            Price = Price?.ToNullableDecimal(),
+            Size = Size?.ToNullableDecimal(),
             ReplaceAcceptTimestamp = ReplaceAcceptTimestamp
         };
     }

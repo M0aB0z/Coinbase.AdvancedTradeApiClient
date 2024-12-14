@@ -8,27 +8,27 @@ public class FeeTier
     /// <summary>
     /// Gets or sets the pricing tier identifier.
     /// </summary>
-    public double PricingTier { get; internal set; }
+    public decimal PricingTier { get; internal set; }
 
     /// <summary>
     /// Gets or sets the starting USD value for this tier.
     /// </summary>
-    public double UsdFrom { get; internal set; }
+    public decimal UsdFrom { get; internal set; }
 
     /// <summary>
     /// Gets or sets the ending USD value for this tier.
     /// </summary>
-    public double UsdTo { get; internal set; }
+    public decimal UsdTo { get; internal set; }
 
     /// <summary>
     /// Gets or sets the fee rate for takers in this tier.
     /// </summary>
-    public double TakerFeeRate { get; internal set; }
+    public decimal TakerFeeRate { get; internal set; }
 
     /// <summary>
     /// Gets or sets the fee rate for makers in this tier.
     /// </summary>
-    public double MakerFeeRate { get; internal set; }
+    public decimal MakerFeeRate { get; internal set; }
 }
 
 /// <summary>
@@ -39,7 +39,7 @@ public class MarginRate
     /// <summary>
     /// Gets or sets the value of the margin rate.
     /// </summary>
-    public double Value { get; internal set; }
+    public decimal Value { get; internal set; }
 }
 
 /// <summary>
@@ -50,7 +50,7 @@ public class GoodsAndServicesTax
     /// <summary>
     /// Gets or sets the tax rate value.
     /// </summary>
-    public double Rate { get; internal set; }
+    public decimal Rate { get; internal set; }
 
     /// <summary>
     /// Gets or sets the type of tax applied (e.g., GST, VAT).
@@ -71,7 +71,7 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the total fees accumulated from trades.
     /// </summary>
-    public double TotalFees { get; internal set; }
+    public decimal TotalFees { get; internal set; }
 
     /// <summary>
     /// Gets or sets the fee tier information for the trades.
@@ -96,7 +96,7 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the total fees specific to Advanced Trade.
     /// </summary>
-    public double AdvancedTradeOnlyFees { get; internal set; }
+    public decimal AdvancedTradeOnlyFees { get; internal set; }
 
     /// <summary>
     /// Gets or sets the trade volume specific to Coinbase Pro.
@@ -106,10 +106,10 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the total fees specific to Coinbase Pro.
     /// </summary>
-    public double CoinbaseProFees { get; internal set; }
+    public decimal CoinbaseProFees { get; internal set; }
 
     /// <summary>
     /// Gets or sets the low value for a given period.
     /// </summary>
-    public double Low { get; internal set; }
+    public decimal Low { get; internal set; }
 }

@@ -47,11 +47,11 @@ internal class InternalFeeTier : IModelMapper<FeeTier>
     {
         return new FeeTier
         {
-            PricingTier = PricingTier.ToDouble(),
-            UsdFrom = UsdFrom.ToDouble(),
-            UsdTo = UsdTo.ToDouble(),
-            TakerFeeRate = TakerFeeRate.ToDouble(),
-            MakerFeeRate = MakerFeeRate.ToDouble()
+            PricingTier = PricingTier.ToDecimal(),
+            UsdFrom = UsdFrom.ToDecimal(),
+            UsdTo = UsdTo.ToDecimal(),
+            TakerFeeRate = TakerFeeRate.ToDecimal(),
+            MakerFeeRate = MakerFeeRate.ToDecimal()
         };
     }
 }
@@ -75,7 +75,7 @@ internal class InternalMarginRate : IModelMapper<MarginRate>
     {
         return new MarginRate
         {
-            Value = Value.ToDouble()
+            Value = Value.ToDecimal()
         };
     }
 }
@@ -105,7 +105,7 @@ internal class InternalGoodsAndServicesTax : IModelMapper<GoodsAndServicesTax>
     {
         return new GoodsAndServicesTax
         {
-            Rate = Rate.ToDouble(),
+            Rate = Rate.ToDecimal(),
             Type = Type
         };
     }
@@ -126,7 +126,7 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the total fees accumulated from trades.
     /// </summary>
     [JsonPropertyName("total_fees")]
-    public double TotalFees { get; set; }
+    public decimal TotalFees { get; set; }
 
     /// <summary>
     /// Gets or sets the fee tier information for the trades.
@@ -156,7 +156,7 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the total fees specific to Advanced Trade.
     /// </summary>
     [JsonPropertyName("advanced_trade_only_fees")]
-    public double AdvancedTradeOnlyFees { get; set; }
+    public decimal AdvancedTradeOnlyFees { get; set; }
 
     /// <summary>
     /// Gets or sets the trade volume specific to Coinbase Pro.
@@ -168,13 +168,13 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the total fees specific to Coinbase Pro.
     /// </summary>
     [JsonPropertyName("coinbase_pro_fees")]
-    public double CoinbaseProFees { get; set; }
+    public decimal CoinbaseProFees { get; set; }
 
     /// <summary>
     /// Gets or sets the low value for a given period.
     /// </summary>
     [JsonPropertyName("low")]
-    public double Low { get; set; }
+    public decimal Low { get; set; }
 
     /// <summary>
     /// Maps the internal model to the public model.

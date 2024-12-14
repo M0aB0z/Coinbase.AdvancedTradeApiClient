@@ -66,14 +66,14 @@ internal class InternalEditOrderPreviewResult : IModelMapper<EditOrderPreviewRes
     {
         return new EditOrderPreviewResult
         {
-            Slippage = Slippage.ToDouble(),
-            OrderTotal = OrderTotal.ToDouble(),
-            CommissionTotal = CommissionTotal.ToDouble(),
+            Slippage = Slippage.ToDecimal(),
+            OrderTotal = OrderTotal.ToDecimal(),
+            CommissionTotal = CommissionTotal.ToDecimal(),
             QuoteSize = QuoteSize.ToDouble(),
             BaseSize = BaseSize.ToDouble(),
-            BestBid = BestBid.ToDouble(),
-            BestAsk = BestAsk.ToDouble(),
-            AverageFilledPrice = AverageFilledPrice.ToDouble()
+            BestBid = BestBid.ToDecimal(),
+            BestAsk = BestAsk.ToDecimal(),
+            AverageFilledPrice = AverageFilledPrice.ToDecimal()
         };
     }
 }
