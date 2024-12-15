@@ -67,6 +67,9 @@ public class Account
     /// Gets the funds on hold within the account.
     /// </summary>
     public Balance Hold { get; internal set; }
+
+    /// <inheritdoc/>
+    public override string ToString() => $"{Currency}";
 }
 
 /// <summary>
@@ -77,7 +80,7 @@ public class Balance
     /// <summary>
     /// Gets the value of the balance.
     /// </summary>
-    public double Value { get; internal set; }  // Consider converting to Decimal if working with financial data
+    public decimal Value { get; internal set; }  // Consider converting to Decimal if working with financial data
 
     /// <summary>
     /// Gets the currency code associated with the balance.

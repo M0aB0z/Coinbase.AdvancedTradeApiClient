@@ -58,32 +58,32 @@ public class Order
     /// <summary>
     /// The percentage of the order that has been completed.
     /// </summary>
-    public double? CompletionPercentage { get; internal set; }
+    public decimal? CompletionPercentage { get; internal set; }
 
     /// <summary>
     /// The quantity of the product that has been filled in the order.
     /// </summary>
-    public double? FilledSize { get; internal set; }
+    public decimal? FilledSize { get; internal set; }
 
     /// <summary>
     /// The average price at which the order has been filled.
     /// </summary>
-    public double? AverageFilledPrice { get; internal set; }
+    public decimal? AverageFilledPrice { get; internal set; }
 
     /// <summary>
     /// The fee associated with the order.
     /// </summary>
-    public double? Fee { get; internal set; }
+    public decimal? Fee { get; internal set; }
 
     /// <summary>
     /// The number of times the order has been filled.
     /// </summary>
-    public double? NumberOfFills { get; internal set; }
+    public decimal? NumberOfFills { get; internal set; }
 
     /// <summary>
     /// The total value of the filled portions of the order.
     /// </summary>
-    public double? FilledValue { get; internal set; }
+    public decimal? FilledValue { get; internal set; }
 
     /// <summary>
     /// Indicates if the order is pending cancellation.
@@ -98,7 +98,7 @@ public class Order
     /// <summary>
     /// The total fees associated with the order.
     /// </summary>
-    public double? TotalFees { get; internal set; }
+    public decimal? TotalFees { get; internal set; }
 
     /// <summary>
     /// If true, the size of the order includes fees.
@@ -108,7 +108,7 @@ public class Order
     /// <summary>
     /// The total value of the order after fees have been deducted.
     /// </summary>
-    public double? TotalValueAfterFees { get; internal set; }
+    public decimal? TotalValueAfterFees { get; internal set; }
 
     /// <summary>
     /// The status of the order's trigger if applicable.
@@ -211,12 +211,12 @@ public class MarketIoc
     /// <summary>
     /// The size of the order in the quote currency.
     /// </summary>
-    public double? QuoteSize { get; internal set; }
+    public decimal? QuoteSize { get; internal set; }
 
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; internal set; }
+    public decimal? BaseSize { get; internal set; }
 }
 
 /// <summary>
@@ -227,12 +227,12 @@ public class LimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; internal set; }
+    public decimal? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; internal set; }
+    public decimal? LimitPrice { get; internal set; }
 
     /// <summary>
     /// Indicates if the order can only be posted to the order book.
@@ -259,17 +259,17 @@ public class StopLimitGtc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; internal set; }
+    public decimal? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; internal set; }
+    public decimal? LimitPrice { get; internal set; }
 
     /// <summary>
     /// The stop price for the order.
     /// </summary>
-    public double? StopPrice { get; internal set; }
+    public decimal? StopPrice { get; internal set; }
 
     /// <summary>
     /// The direction in which the stop price is triggered (e.g. 'above', 'below').
@@ -296,12 +296,12 @@ public class SorLimitIoc
     /// <summary>
     /// The size of the order in the base currency.
     /// </summary>
-    public double? BaseSize { get; internal set; }
+    public decimal? BaseSize { get; internal set; }
 
     /// <summary>
     /// The limit price for the order.
     /// </summary>
-    public double? LimitPrice { get; internal set; }
+    public decimal? LimitPrice { get; internal set; }
 }
 
 /// <summary>
@@ -312,12 +312,12 @@ public class EditHistoryEntry
     /// <summary>
     /// The price associated with the edit.
     /// </summary>
-    public double? Price { get; internal set; }
+    public decimal? Price { get; internal set; }
 
     /// <summary>
     /// The size associated with the edit.
     /// </summary>
-    public double? Size { get; internal set; }
+    public decimal? Size { get; internal set; }
 
     /// <summary>
     /// The timestamp when the edit was accepted.

@@ -1,5 +1,6 @@
 ﻿using Coinbase.AdvancedTradeApiClient.Utilities;
 using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -198,32 +199,39 @@ internal class InternalProduct : IModelMapper<Product>
     /// <returns></returns>
     public Product ToModel()
     {
-        return new Product
+        try
         {
-            ProductId = ProductId,
-            Alias = Alias,
-            FcmTradingSessionDetails = FcmTradingSessionDetails?.ToModel(),
-            AliasTo = AliasTo,
-            BaseCurrencyId = BaseCurrencyId,
-            BaseDisplaySymbol = BaseDisplaySymbol,
-            QuoteDisplaySymbol = QuoteDisplaySymbol,
-            BaseIncrement = BaseIncrement.ToDouble(),
-            BaseMaxSize = BaseMaxSize.ToDouble(),
-            BaseMinSize = BaseMinSize.ToDouble(),
-            MidMarketPrice = MidMarketPrice?.ToNullableDouble(),
-            Price = Price.ToDouble(),
-            PricePercentageChange24h = PricePercentageChange24h.ToDouble(),
-            PriceIncrement = PriceIncrement.ToDouble(),
-            QuoteMaxSize = QuoteMaxSize.ToDouble(),
-            QuoteMinSize = QuoteMinSize.ToDouble(),
-            QuoteIncrement = QuoteIncrement.ToDouble(),
-            Volume24h = Volume24h.ToDouble(),
-            VolumePercentageChange24h = VolumePercentageChange24h.ToDouble(),
-            BaseName = BaseName,
-            ProductType = ProductType,
-            QuoteCurrencyId = QuoteCurrencyId,
-            QuoteName = QuoteName,
-            Status = Status
-        };
+            return new Product
+            {
+                ProductId = ProductId,
+                Alias = Alias,
+                FcmTradingSessionDetails = FcmTradingSessionDetails?.ToModel(),
+                AliasTo = AliasTo,
+                BaseCurrencyId = BaseCurrencyId,
+                BaseDisplaySymbol = BaseDisplaySymbol,
+                QuoteDisplaySymbol = QuoteDisplaySymbol,
+                BaseIncrement = BaseIncrement.ToDecimal(),
+                BaseMaxSize = BaseMaxSize.ToDecimal(),
+                BaseMinSize = BaseMinSize.ToDecimal(),
+                MidMarketPrice = MidMarketPrice?.ToNullableDecimal(),
+                Price = Price.ToDecimal(),
+                PricePercentageChange24h = PricePercentageChange24h.ToNullableDecimal(),
+                Volume24h = Volume24h.ToNullableDecimal(),
+                VolumePercentageChange24h = VolumePercentageChange24h.ToNullableDecimal(),
+                PriceIncrement = PriceIncrement.ToDecimal(),
+                QuoteMaxSize = QuoteMaxSize.ToDecimal(),
+                QuoteMinSize = QuoteMinSize.ToDecimal(),
+                QuoteIncrement = QuoteIncrement.ToDecimal(),
+                BaseName = BaseName,
+                ProductType = ProductType,
+                QuoteCurrencyId = QuoteCurrencyId,
+                QuoteName = QuoteName,
+                Status = Status
+            };
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }

@@ -35,6 +35,7 @@ public class ProductsManager : BaseManager, IProductsManager
             throw new InvalidOperationException("Authenticator is not initialized.");
 
         var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/products", new { product_type = productType }), cancellationToken);
+
         return response.As<InternalProduct[]>("products").ToModel();
     }
 
@@ -44,7 +45,7 @@ public class ProductsManager : BaseManager, IProductsManager
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty", nameof(productId));
 
-        var response = await _authenticator.GetAsync("/api/v3/brokerage/products", cancellationToken);
+        var response = await _authenticator.GetAsync($"/api/v3/brokerage/products/{productId}", cancellationToken);
         return response.As<InternalProduct>().ToModel();
     }
 
@@ -82,7 +83,7 @@ public class ProductsManager : BaseManager, IProductsManager
         var bestBidStr = response.As<string>("best_bid");
         var bestAskStr = response.As<string>("best_ask");
 
-        return new MarketTrades { Trades = trades, BestBid = bestBidStr.ToDouble(), BestAsk = bestAskStr.ToDouble() };
+        return new MarketTrades { Trades = trades, BestBid = bestBidStr.ToDecimal(), BestAsk = bestAskStr.ToDecimal() };
     }
 
     /// <inheritdoc/>

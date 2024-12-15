@@ -55,11 +55,11 @@ internal class InternalCandle : IModelMapper<Candle>
         return new Candle
         {
             StartUnix = StartUnix,
-            Low = Low.ToDouble(),
-            High = High.ToDouble(),
-            Open = Open.ToDouble(),
-            Close = Close.ToDouble(),
-            Volume = Volume.ToDouble(),
+            Low = Low.ToDecimal(),
+            High = High.ToDecimal(),
+            Open = Open.ToDecimal(),
+            Close = Close.ToDecimal(),
+            Volume = Volume.ToDecimal(),
         };
     }
 }

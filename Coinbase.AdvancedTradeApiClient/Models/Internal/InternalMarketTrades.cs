@@ -48,17 +48,6 @@ internal class InternalTrade : IModelMapper<Trade>
     [JsonPropertyName("side")]
     public string Side { get; set; }
 
-    /// <summary>
-    /// Gets or sets the bid price at the time of the trade.
-    /// </summary>
-    [JsonPropertyName("bid")]
-    public string Bid { get; set; }
-
-    /// <summary>
-    /// Gets or sets the ask price at the time of the trade.
-    /// </summary>
-    [JsonPropertyName("ask")]
-    public string Ask { get; set; }
 
     /// <summary>
     /// Maps the internal model to the public model.
@@ -66,17 +55,22 @@ internal class InternalTrade : IModelMapper<Trade>
     /// <returns></returns>
     public Trade ToModel()
     {
-        return new Trade
+        try
         {
-            TradeId = TradeId,
-            ProductId = ProductId,
-            Price = Price.ToDouble(),
-            Size = Size.ToDouble(),
-            Time = Time,
-            Side = Side.FromDescriptionToEnum<OrderSide>(),
-            Bid = Bid.ToDouble(),
-            Ask = Ask.ToDouble()
-        };
+            return new Trade
+            {
+                TradeId = TradeId,
+                ProductId = ProductId,
+                Price = Price.ToDecimal(),
+                Size = Size.ToDecimal(),
+                Time = Time,
+                Side = Side.FromDescriptionToEnum<OrderSide>()
+            };
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
 

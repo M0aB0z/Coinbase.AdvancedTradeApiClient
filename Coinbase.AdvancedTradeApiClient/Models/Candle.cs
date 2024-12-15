@@ -21,27 +21,27 @@ public class Candle
     /// <summary>
     /// Gets the lowest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Low { get; internal set; }
+    public decimal Low { get; internal set; }
 
     /// <summary>
     /// Gets the highest traded price of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double High { get; internal set; }
+    public decimal High { get; internal set; }
 
     /// <summary>
     /// Gets the opening price of the asset at the beginning of the time interval represented by the candlestick.
     /// </summary>
-    public double Open { get; internal set; }
+    public decimal Open { get; internal set; }
 
     /// <summary>
     /// Gets the closing price of the asset at the end of the time interval represented by the candlestick.
     /// </summary>
-    public double Close { get; internal set; }
+    public decimal Close { get; internal set; }
 
     /// <summary>
     /// Gets the trading volume of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Volume { get; internal set; }
+    public decimal Volume { get; internal set; }
 
     /// <summary>
     /// Converts a UNIX timestamp string to its corresponding DateTime value.

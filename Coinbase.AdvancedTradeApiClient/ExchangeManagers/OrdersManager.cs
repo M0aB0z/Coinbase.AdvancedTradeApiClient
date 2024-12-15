@@ -271,7 +271,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, double amount, CancellationToken cancellationToken)
+    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, decimal amount, CancellationToken cancellationToken)
     {
         // Ensure the product ID is provided and not empty
         if (string.IsNullOrEmpty(productId))
@@ -297,7 +297,7 @@ public class OrdersManager : BaseManager, IOrdersManager
     }
 
     /// <inheritdoc/>
-    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, double amount, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, decimal amount, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -309,7 +309,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly, CancellationToken cancellationToken)
+    public async Task<string> CreateLimitOrderGTCAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, bool postOnly, CancellationToken cancellationToken)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
@@ -336,7 +336,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateLimitOrderGTCAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, bool postOnly, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -348,7 +348,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default)
+    public async Task<string> CreateLimitOrderGTDAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, DateTime endTime, bool postOnly = true, CancellationToken cancellationToken = default)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
@@ -377,7 +377,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateLimitOrderGTDAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, DateTime endTime, bool postOnly = true, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -389,7 +389,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, CancellationToken cancellationToken)
+    public async Task<string> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, decimal stopPrice, CancellationToken cancellationToken)
     {
         // Validate input parameters
         if (string.IsNullOrEmpty(productId))
@@ -421,7 +421,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateStopLimitOrderGTCAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, decimal stopPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -434,7 +434,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, CancellationToken cancellationToken)
+    public async Task<string> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, decimal stopPrice, DateTime endTime, CancellationToken cancellationToken)
     {
         if (endTime <= DateTime.UtcNow)
             throw new ArgumentException("End time should be in the future.", nameof(endTime));
@@ -466,7 +466,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, double baseSize, double limitPrice, double stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateStopLimitOrderGTDAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, decimal stopPrice, DateTime endTime, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -478,7 +478,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, CancellationToken cancellationToken)
+    public async Task<string> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, CancellationToken cancellationToken)
     {
         // Prepare the order configuration for a SOR Limit IOC order
         var orderConfiguration = new InternalOrderConfiguration
@@ -496,7 +496,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, double baseSize, double limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateSORLimitIOCOrderAsync(string productId, OrderSide side, decimal baseSize, decimal limitPrice, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
@@ -509,7 +509,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<bool> EditOrderAsync(string orderId, double? price = null, double? size = null, CancellationToken cancellationToken = default)
+    public async Task<bool> EditOrderAsync(string orderId, decimal? price = null, decimal? size = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(orderId))
             throw new ArgumentException("Order ID cannot be null or empty.", nameof(orderId));
@@ -549,7 +549,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, double? price, double? size, CancellationToken cancellationToken)
+    public async Task<EditOrderPreviewResult> EditOrderPreviewAsync(string orderId, decimal? price, decimal? size, CancellationToken cancellationToken)
     {
         // Validation of input parameters
         if (string.IsNullOrEmpty(orderId))
@@ -613,4 +613,5 @@ public class OrdersManager : BaseManager, IOrdersManager
             throw new InvalidOperationException("Failed to preview order edit due to an exception.", ex);
         }
     }
+
 }

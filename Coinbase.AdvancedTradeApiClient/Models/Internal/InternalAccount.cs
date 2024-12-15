@@ -133,7 +133,7 @@ internal class InternalBalance : IModelMapper<Balance>
     {
         return new Balance
         {
-            Value = Value.ToDouble(),
+            Value = Value.ToDecimal(),
             Currency = Currency
         };
     }

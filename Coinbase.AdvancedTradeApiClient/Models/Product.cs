@@ -37,52 +37,52 @@ public class Product
     /// <summary>
     /// Gets the current price of the product.
     /// </summary>
-    public double Price { get; internal set; }
+    public decimal Price { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in price over the last 24 hours.
     /// </summary>
-    public double PricePercentageChange24h { get; internal set; }
+    public decimal? PricePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the trading volume of the product over the last 24 hours.
     /// </summary>"
-    public double Volume24h { get; internal set; }
+    public decimal? Volume24h { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in volume over the last 24 hours.
     /// </summary>
-    public double VolumePercentageChange24h { get; internal set; }
+    public decimal? VolumePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the smallest allowable increment in the base currency for this product.
     /// </summary>
-    public double BaseIncrement { get; internal set; }
+    public decimal BaseIncrement { get; internal set; }
 
     /// <summary>
     /// Gets the smallest allowable increment in the quote currency for this product.
     /// </summary>
-    public double QuoteIncrement { get; internal set; }
+    public decimal QuoteIncrement { get; internal set; }
 
     /// <summary>
     /// Gets the minimum order size in the quote currency for this product.
     /// </summary>
-    public double QuoteMinSize { get; internal set; }
+    public decimal QuoteMinSize { get; internal set; }
 
     /// <summary>
     /// Gets the maximum order size in the quote currency for this product.
     /// </summary>
-    public double QuoteMaxSize { get; internal set; }
+    public decimal QuoteMaxSize { get; internal set; }
 
     /// <summary>
     /// Gets the minimum order size in the base currency for this product.
     /// </summary>
-    public double BaseMinSize { get; internal set; }
+    public decimal BaseMinSize { get; internal set; }
 
     /// <summary>
     /// Gets the maximum order size in the base currency for this product.
     /// </summary>
-    public double BaseMaxSize { get; internal set; }
+    public decimal BaseMaxSize { get; internal set; }
 
     /// <summary>
     /// Gets the human-readable name of the base currency.
@@ -122,7 +122,7 @@ public class Product
     /// <summary>
     /// Gets the midpoint price between the best bid and best ask.
     /// </summary>
-    public double? MidMarketPrice { get; internal set; }
+    public decimal? MidMarketPrice { get; internal set; }
 
     /// <summary>
     /// Gets an alternate name for the product.
@@ -147,7 +147,7 @@ public class Product
     /// <summary>
     /// Gets the allowable price increment for placing orders.
     /// </summary>
-    public double PriceIncrement { get; internal set; }
+    public decimal PriceIncrement { get; internal set; }
 
 
     ///<inheritDoc/>
