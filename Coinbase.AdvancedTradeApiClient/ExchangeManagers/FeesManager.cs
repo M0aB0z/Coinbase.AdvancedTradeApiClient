@@ -48,11 +48,11 @@ public class FeesManager : BaseManager, IFeesManager
 
             return new InternalTransactionsSummary
             {
-                TotalVolume = response.As<double>("total_volume"),
+                TotalVolume = response.As<decimal>("total_volume"),
                 TotalFees = response.As<decimal>("total_fees"),
-                AdvancedTradeOnlyVolume = response.As<double>("advanced_trade_only_volume"),
+                AdvancedTradeOnlyVolume = response.As<decimal>("advanced_trade_only_volume"),
                 AdvancedTradeOnlyFees = response.As<decimal>("advanced_trade_only_fees"),
-                CoinbaseProVolume = response.As<double>("coinbase_pro_volume"),
+                CoinbaseProVolume = response.As<decimal>("coinbase_pro_volume"),
                 CoinbaseProFees = response.As<decimal>("coinbase_pro_fees"),
                 Low = response.As<decimal>("low"),
                 FeeTier = response.As<InternalFeeTier>("fee_tier"),

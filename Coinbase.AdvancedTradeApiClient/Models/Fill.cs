@@ -40,7 +40,7 @@ public class Fill
     /// <summary>
     /// Gets the size of the asset traded.
     /// </summary>
-    public double Size { get; internal set; }
+    public decimal Size { get; internal set; }
 
     /// <summary>
     /// Gets the commission or fee taken by the exchange for executing the trade.

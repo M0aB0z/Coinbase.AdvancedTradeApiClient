@@ -108,7 +108,7 @@ internal class InternalFill : IModelMapper<Fill>
             TradeTime = TradeTime,
             TradeType = TradeType,
             Price = Price.ToDecimal(),
-            Size = Size.ToDouble(),
+            Size = Size.ToDecimal(),
             Commission = Commission.ToDecimal(),
             ProductId = ProductId,
             SequenceTimestamp = SequenceTimestamp,

@@ -28,7 +28,7 @@ public class Trade
     /// <summary>
     /// Gets the size or quantity of the asset that was traded.
     /// </summary>
-    public double Size { get; internal set; }
+    public decimal Size { get; internal set; }
 
     /// <summary>
     /// Gets the timestamp of the trade.

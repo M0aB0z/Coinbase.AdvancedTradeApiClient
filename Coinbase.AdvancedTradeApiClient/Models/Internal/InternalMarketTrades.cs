@@ -62,7 +62,7 @@ internal class InternalTrade : IModelMapper<Trade>
                 TradeId = TradeId,
                 ProductId = ProductId,
                 Price = Price.ToDecimal(),
-                Size = Size.ToDouble(),
+                Size = Size.ToDecimal(),
                 Time = Time,
                 Side = Side.FromDescriptionToEnum<OrderSide>()
             };

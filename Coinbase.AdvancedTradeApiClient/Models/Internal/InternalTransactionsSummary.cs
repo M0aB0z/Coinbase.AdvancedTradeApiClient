@@ -120,7 +120,7 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the total trade volume.
     /// </summary>
     [JsonPropertyName("total_volume")]
-    public double TotalVolume { get; set; }
+    public decimal TotalVolume { get; set; }
 
     /// <summary>
     /// Gets or sets the total fees accumulated from trades.
@@ -150,7 +150,7 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the trade volume specific to Advanced Trade.
     /// </summary>
     [JsonPropertyName("advanced_trade_only_volume")]
-    public double AdvancedTradeOnlyVolume { get; set; }
+    public decimal AdvancedTradeOnlyVolume { get; set; }
 
     /// <summary>
     /// Gets or sets the total fees specific to Advanced Trade.
@@ -162,7 +162,7 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
     /// Gets or sets the trade volume specific to Coinbase Pro.
     /// </summary>
     [JsonPropertyName("coinbase_pro_volume")]
-    public double CoinbaseProVolume { get; set; }
+    public decimal CoinbaseProVolume { get; set; }
 
     /// <summary>
     /// Gets or sets the total fees specific to Coinbase Pro.

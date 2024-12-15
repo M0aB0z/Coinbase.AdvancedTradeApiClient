@@ -69,8 +69,8 @@ internal class InternalEditOrderPreviewResult : IModelMapper<EditOrderPreviewRes
             Slippage = Slippage.ToDecimal(),
             OrderTotal = OrderTotal.ToDecimal(),
             CommissionTotal = CommissionTotal.ToDecimal(),
-            QuoteSize = QuoteSize.ToDouble(),
-            BaseSize = BaseSize.ToDouble(),
+            QuoteSize = QuoteSize.ToDecimal(),
+            BaseSize = BaseSize.ToDecimal(),
             BestBid = BestBid.ToDecimal(),
             BestAsk = BestAsk.ToDecimal(),
             AverageFilledPrice = AverageFilledPrice.ToDecimal()

@@ -59,7 +59,7 @@ internal class InternalCandle : IModelMapper<Candle>
             High = High.ToDecimal(),
             Open = Open.ToDecimal(),
             Close = Close.ToDecimal(),
-            Volume = Volume.ToDouble(),
+            Volume = Volume.ToDecimal(),
         };
     }
 }

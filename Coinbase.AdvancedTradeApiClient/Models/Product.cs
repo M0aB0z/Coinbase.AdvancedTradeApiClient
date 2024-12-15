@@ -42,17 +42,17 @@ public class Product
     /// <summary>
     /// Gets the percentage change in price over the last 24 hours.
     /// </summary>
-    public decimal PricePercentageChange24h { get; internal set; }
+    public decimal? PricePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the trading volume of the product over the last 24 hours.
     /// </summary>"
-    public decimal Volume24h { get; internal set; }
+    public decimal? Volume24h { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in volume over the last 24 hours.
     /// </summary>
-    public decimal VolumePercentageChange24h { get; internal set; }
+    public decimal? VolumePercentageChange24h { get; internal set; }
 
     /// <summary>
     /// Gets the smallest allowable increment in the base currency for this product.

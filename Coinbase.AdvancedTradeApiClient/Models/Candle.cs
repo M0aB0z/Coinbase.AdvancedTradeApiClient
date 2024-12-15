@@ -41,7 +41,7 @@ public class Candle
     /// <summary>
     /// Gets the trading volume of the asset during the time interval represented by the candlestick.
     /// </summary>
-    public double Volume { get; internal set; }
+    public decimal Volume { get; internal set; }
 
     /// <summary>
     /// Converts a UNIX timestamp string to its corresponding DateTime value.

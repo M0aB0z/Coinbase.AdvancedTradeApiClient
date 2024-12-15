@@ -89,8 +89,8 @@ public class TestOrders : TestBase
         {
             string existingOrderId = "4a4445ef-3203-43f9-b5dd-933eeb145417";
 
-            double newPrice = 74000.00;
-            double? newSize = 0.0001;
+            decimal newPrice = 74000.00m;
+            decimal? newSize = 0.0001m;
 
             // Attempt to edit the order
             var result = await _coinbaseClient!.Orders.EditOrderAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
@@ -109,8 +109,8 @@ public class TestOrders : TestBase
         {
             string existingOrderId = "4a4445ef-3203-43f9-b5dd-933eeb145417";
 
-            double newPrice = 74000.00;
-            double? newSize = 0.0001;
+            decimal newPrice = 74000.00m;
+            decimal? newSize = 0.0001m;
 
             var result = await _coinbaseClient!.Orders.EditOrderPreviewAsync(existingOrderId, newPrice, newSize, CancellationToken.None);
 

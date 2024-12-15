@@ -23,12 +23,12 @@ public class EditOrderPreviewResult
     /// <summary>
     /// Gets the size of the order in quote currency after the edit.
     /// </summary>
-    public double QuoteSize { get; internal set; }
+    public decimal QuoteSize { get; internal set; }
 
     /// <summary>
     /// Gets the size of the order in base currency after the edit.
     /// </summary>
-    public double BaseSize { get; internal set; }
+    public decimal BaseSize { get; internal set; }
 
     /// <summary>
     /// Gets the best bid price available for the order after the edit.

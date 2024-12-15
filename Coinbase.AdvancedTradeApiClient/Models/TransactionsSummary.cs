@@ -66,7 +66,7 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the total trade volume.
     /// </summary>
-    public double TotalVolume { get; internal set; }
+    public decimal TotalVolume { get; internal set; }
 
     /// <summary>
     /// Gets or sets the total fees accumulated from trades.
@@ -91,7 +91,7 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the trade volume specific to Advanced Trade.
     /// </summary>
-    public double AdvancedTradeOnlyVolume { get; internal set; }
+    public decimal AdvancedTradeOnlyVolume { get; internal set; }
 
     /// <summary>
     /// Gets or sets the total fees specific to Advanced Trade.
@@ -101,7 +101,7 @@ public class TransactionsSummary
     /// <summary>
     /// Gets or sets the trade volume specific to Coinbase Pro.
     /// </summary>
-    public double CoinbaseProVolume { get; internal set; }
+    public decimal CoinbaseProVolume { get; internal set; }
 
     /// <summary>
     /// Gets or sets the total fees specific to Coinbase Pro.
