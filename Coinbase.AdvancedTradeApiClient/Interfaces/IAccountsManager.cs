@@ -11,13 +11,19 @@ namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 public interface IAccountsManager
 {
     /// <summary>
-    /// Asynchronously retrieves a list of accounts.
+    /// Asynchronously retrieves a paginated list of accounts.
     /// </summary>
-    /// <param name="limit">The maximum number of accounts to retrieve. Default is 49.</param>
+    /// <param name="size">The maximum number of accounts to retrieve. Default is 49.</param>
     /// <param name="cursor">The cursor for pagination. Null by default.</param>
     /// <param name="cancellationToken">Request cancellationToken</param>
     /// <returns>A list of accounts or null if none are found.</returns>
-    Task<IReadOnlyList<Account>> ListAccountsAsync(int limit = 49, string cursor = null, CancellationToken cancellationToken = default);
+    Task<PaginatedAccounts> ListAccountsAsync(int size = 49, string cursor = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously retrieves a list of all accounts.
+    /// </summary>
+    /// <param name="cancellationToken">Request cancellationToken</param>
+    Task<IReadOnlyList<Account>> ListAllAccountsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves a specific account by its UUID.
