@@ -10,11 +10,11 @@ public class TestAccounts : TestBase
         await ExecuteRateLimitedTest(async () =>
         {
             // Directly await the async method instead of using null-coalescing operator
-            var accounts = await _coinbaseClient!.Accounts.ListAccountsAsync(25);
+            var accountsPage = await _coinbaseClient!.Accounts.ListAccountsAsync(25);
 
-            Assert.IsNotNull(accounts, "Accounts list should not be null.");
+            Assert.IsNotNull(accountsPage, "Accounts list should not be null.");
 
-            var usdcAccount = accounts?.FirstOrDefault(account => account.Currency == "USDC");
+            var usdcAccount = accountsPage?.Accounts?.FirstOrDefault(account => account.Currency == "USDC");
             Assert.IsNotNull(usdcAccount, "USDC account should not be null.");
             Assert.IsNotNull(usdcAccount?.Uuid, "USDC Uuid should not be null.");
         });

@@ -14,7 +14,8 @@ var start = new DateTime(2024, 11, 01, 00, 00, 00);
 var end = new DateTime(2024, 11, 01, 01, 00, 00);
 
 var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
-var accounts = await coinbaseClient.Accounts.ListAccountsAsync();
+var accountsPage = await coinbaseClient.Accounts.ListAccountsAsync(10);
+var allAccounts = await coinbaseClient.Accounts.ListAllAccountsAsync();
 var orders = await coinbaseClient.Orders.ListOrdersAsync();
 var products = await coinbaseClient.Products.ListProductsAsync();
 var trades = await coinbaseClient.Products.GetMarketTradesAsync("BTC-USDC", 50, CancellationToken.None);
