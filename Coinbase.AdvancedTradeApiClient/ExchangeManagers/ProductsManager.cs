@@ -69,6 +69,7 @@ public class ProductsManager : BaseManager, IProductsManager
             Granularity.ONE_MINUTE => 1,
             Granularity.FIVE_MINUTE => 5,
             Granularity.FIFTEEN_MINUTE => 15,
+            Granularity.THIRTY_MINUTE => 30,
             Granularity.ONE_HOUR => 60,
             Granularity.SIX_HOUR => 360,
             Granularity.ONE_DAY => 1440,
