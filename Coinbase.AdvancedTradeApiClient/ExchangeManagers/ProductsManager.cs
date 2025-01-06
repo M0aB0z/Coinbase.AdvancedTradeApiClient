@@ -18,6 +18,7 @@ namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 /// </summary>
 public class ProductsManager : BaseManager, IProductsManager
 {
+    private const int MAX_CANDLES_FROM_API = 350;
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductsManager"/> class.
     /// </summary>
@@ -58,12 +59,49 @@ public class ProductsManager : BaseManager, IProductsManager
         if (startTimeUtc > endTimeUtc)
             throw new ArgumentException("Start date must be before end date");
 
-        var start = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
-        var end = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var finalEnd = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
 
-        var parameters = new { start, end, granularity };
-        var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
-        return response.As<InternalCandle[]>("candles").ToModel();
+        var start = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var end = finalEnd; // named parameter for API request
+
+        var granularityMinutes = granularity switch
+        {
+            Granularity.ONE_MINUTE => 1,
+            Granularity.FIVE_MINUTE => 5,
+            Granularity.FIFTEEN_MINUTE => 15,
+            Granularity.ONE_HOUR => 60,
+            Granularity.SIX_HOUR => 360,
+            Granularity.ONE_DAY => 1440,
+            _ => throw new ArgumentException("Invalid granularity")
+        };
+
+        var candlesCount = (endTimeUtc - startTimeUtc).TotalMinutes / granularityMinutes;
+
+        if (candlesCount < MAX_CANDLES_FROM_API)
+        {
+            var parameters = new { start, end, granularity };
+            var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
+            return response.As<InternalCandle[]>("candles").OrderBy(x => x.StartUnix).ToModel();
+        }
+
+        // If the number of candles is greater than MAX_CANDLES_FROM_API, we need to split the request into multiple requests
+        var candles = new List<Candle>();
+        var currentStart = startTimeUtc;
+
+        var currentEnd = currentStart.AddMinutes(MAX_CANDLES_FROM_API * granularityMinutes);
+        do
+        {
+            start = (long)currentStart.Subtract(DateTime.UnixEpoch).TotalSeconds;
+            end = Math.Min((long)currentEnd.Subtract(DateTime.UnixEpoch).TotalSeconds, finalEnd);
+            var parameters = new { start, end, granularity };
+            var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
+            candles.AddRange(response.As<InternalCandle[]>("candles").ToModel().OrderBy(x => x.StartDate));
+            currentStart = candles.Last().StartDate.AddMinutes(granularityMinutes);
+            currentEnd = currentStart.AddMinutes(MAX_CANDLES_FROM_API * granularityMinutes);
+        }
+        while (currentStart < endTimeUtc);
+
+        return candles;
     }
 
     /// <inheritdoc/>

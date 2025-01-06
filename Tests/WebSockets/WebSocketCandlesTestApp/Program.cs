@@ -11,7 +11,7 @@ var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_S
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 var start = new DateTime(2024, 11, 01, 00, 00, 00);
-var end = new DateTime(2024, 11, 01, 01, 00, 00);
+var end = new DateTime(2024, 11, 03, 01, 00, 00);
 
 var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
 var accountsPage = await coinbaseClient.Accounts.ListAccountsAsync(10);
