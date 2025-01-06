@@ -59,10 +59,10 @@ public class ProductsManager : BaseManager, IProductsManager
         if (startTimeUtc > endTimeUtc)
             throw new ArgumentException("Start date must be before end date");
 
-        var finalEnd = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
+        var finalEndSecs = (long)endTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
 
         var start = (long)startTimeUtc.Subtract(DateTime.UnixEpoch).TotalSeconds;
-        var end = finalEnd; // named parameter for API request
+        var end = finalEndSecs; // named parameter for API request
 
         var granularityMinutes = granularity switch
         {
@@ -92,11 +92,12 @@ public class ProductsManager : BaseManager, IProductsManager
         do
         {
             start = (long)currentStart.Subtract(DateTime.UnixEpoch).TotalSeconds;
-            end = Math.Min((long)currentEnd.Subtract(DateTime.UnixEpoch).TotalSeconds, finalEnd);
+            end = Math.Min((long)currentEnd.Subtract(DateTime.UnixEpoch).TotalSeconds, finalEndSecs);
             var parameters = new { start, end, granularity };
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
             candles.AddRange(response.As<InternalCandle[]>("candles").ToModel().OrderBy(x => x.StartDate));
-            currentStart = candles.Last().StartDate.AddMinutes(granularityMinutes);
+
+            currentStart = new DateTime[]{currentEnd.AddMinutes(granularityMinutes), endTimeUtc}.Min();
             currentEnd = currentStart.AddMinutes(MAX_CANDLES_FROM_API * granularityMinutes);
         }
         while (currentStart < endTimeUtc);

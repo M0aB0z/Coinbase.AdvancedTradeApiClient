@@ -10,10 +10,10 @@ var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_S
                ?? throw new InvalidOperationException("API Secret not found");
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
-var start = new DateTime(2024, 11, 01, 00, 00, 00);
-var end = new DateTime(2024, 11, 03, 01, 00, 00);
+var start = new DateTime(2023, 07, 01, 00, 00, 00);
+var end = new DateTime(2023, 09, 01, 01, 00, 00);
 
-var candles = await coinbaseClient.Products.GetProductCandlesAsync("BTC-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
+var candles = await coinbaseClient.Products.GetProductCandlesAsync("XRP-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
 var accountsPage = await coinbaseClient.Accounts.ListAccountsAsync(10);
 var allAccounts = await coinbaseClient.Accounts.ListAllAccountsAsync();
 var orders = await coinbaseClient.Orders.ListOrdersAsync();
