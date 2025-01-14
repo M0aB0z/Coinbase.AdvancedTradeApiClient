@@ -64,6 +64,10 @@ public class InternalTicker : IModelMapper<Ticker>
     [JsonPropertyName("price_percent_chg_24_h")]
     public string PricePercentChg24H { get; set; }
 
+    /// <summary>
+    /// Maps the internal model to the public model.
+    /// </summary>
+    /// <returns></returns>
     public Ticker ToModel()
     {
         return new Ticker
