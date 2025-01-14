@@ -13,13 +13,13 @@ var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 var start = new DateTime(2023, 07, 01, 00, 00, 00);
 var end = new DateTime(2023, 09, 01, 01, 00, 00);
 
-var candles = await coinbaseClient.Products.GetProductCandlesAsync("XRP-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
-var accountsPage = await coinbaseClient.Accounts.ListAccountsAsync(10);
-var allAccounts = await coinbaseClient.Accounts.ListAllAccountsAsync();
-var orders = await coinbaseClient.Orders.ListOrdersAsync();
-var products = await coinbaseClient.Products.ListProductsAsync();
-var trades = await coinbaseClient.Products.GetMarketTradesAsync("BTC-USDC", 50, CancellationToken.None);
-var product = await coinbaseClient.Products.GetProductAsync("BTC-USDC", CancellationToken.None);
+//var candles = await coinbaseClient.Products.GetProductCandlesAsync("XRP-USDC", start, end, Granularity.ONE_MINUTE, CancellationToken.None);
+//var accountsPage = await coinbaseClient.Accounts.ListAccountsAsync(10);
+//var allAccounts = await coinbaseClient.Accounts.ListAllAccountsAsync();
+//var orders = await coinbaseClient.Orders.ListOrdersAsync();
+//var products = await coinbaseClient.Products.ListProductsAsync();
+//var trades = await coinbaseClient.Products.GetMarketTradesAsync("BTC-USDC", 50, CancellationToken.None);
+//var product = await coinbaseClient.Products.GetProductAsync("BTC-USDC", CancellationToken.None);
 
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 
@@ -30,15 +30,22 @@ Console.CancelKeyPress += async (s, e) =>
     await CleanupAsync(webSocketManager);
 };
 
-webSocketManager!.CandleMessageReceived += (sender, candleData) =>
+//webSocketManager!.CandleMessageReceived += (sender, candleData) =>
+//{
+//    Console.WriteLine($"Received new data at {candleData.Message.Events.Last().Candles.Last().StartDate.ToString("dd-MM-yyyy HH:mm")} {candleData.Message.Events.Last().Candles.Last().Close}");
+//};
+
+webSocketManager!.TickerBatchMessageReceived += (sender, candleData) =>
 {
-    Console.WriteLine($"Received new data at {DateTime.UtcNow}");
+    Console.WriteLine($"Received new data at {candleData.Message.Events.Last().Tickers.Last().Price}");
 };
 
-webSocketManager.MessageReceived += (sender, e) =>
-{
-    Console.WriteLine($"Raw message received at {DateTime.UtcNow}: {e.StringData}");
-};
+
+
+//webSocketManager.MessageReceived += (sender, e) =>
+//{
+//    Console.WriteLine($"Raw message received at {DateTime.UtcNow}: {e.StringData}");
+//};
 
 try
 {
@@ -46,7 +53,7 @@ try
     await webSocketManager.ConnectAsync();
 
     Console.WriteLine("Subscribing to candles...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles);
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Ticker);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -68,7 +75,7 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles);
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Ticker);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

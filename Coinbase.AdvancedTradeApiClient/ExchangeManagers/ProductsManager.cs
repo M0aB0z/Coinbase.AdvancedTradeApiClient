@@ -98,7 +98,7 @@ public class ProductsManager : BaseManager, IProductsManager
             var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri($"/api/v3/brokerage/products/{productId}/candles", parameters), cancellationToken);
             candles.AddRange(response.As<InternalCandle[]>("candles").ToModel().OrderBy(x => x.StartDate));
 
-            currentStart = new DateTime[]{currentEnd.AddMinutes(granularityMinutes), endTimeUtc}.Min();
+            currentStart = new DateTime[] { currentEnd.AddMinutes(granularityMinutes), endTimeUtc }.Min();
             currentEnd = currentStart.AddMinutes(MAX_CANDLES_FROM_API * granularityMinutes);
         }
         while (currentStart < endTimeUtc);

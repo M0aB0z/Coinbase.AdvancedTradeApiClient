@@ -1,67 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
-/// <summary>
-/// Represents a ticker message from the Coinbase WebSocket API.
-/// </summary>
-public class TickerMessage
-{
-    /// <summary>
-    /// Gets or sets the channel for the ticker message.
-    /// </summary>
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; }
-
-    /// <summary>
-    /// Gets or sets the client ID associated with the ticker message.
-    /// </summary>
-    [JsonPropertyName("client_id")]
-    public string ClientId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the timestamp when the ticker message was sent.
-    /// </summary>
-    [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; set; }
-
-    /// <summary>
-    /// Gets or sets the sequence number for the ticker message.
-    /// </summary>
-    [JsonPropertyName("sequence_num")]
-    public int SequenceNum { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of ticker events.
-    /// </summary>
-    [JsonPropertyName("events")]
-    public List<TickerEvent> Events { get; set; }
-}
-
-/// <summary>
-/// Represents an individual ticker event within a <see cref="TickerMessage"/>.
-/// </summary>
-public class TickerEvent
-{
-    /// <summary>
-    /// Gets or sets the type of the ticker event.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of tickers associated with the ticker event.
-    /// </summary>
-    [JsonPropertyName("tickers")]
-    public List<Ticker> Tickers { get; set; }
-}
 
 /// <summary>
 /// Represents details about a specific ticker.
 /// </summary>
-public class Ticker
+public class InternalTicker : IModelMapper<Ticker>
 {
     /// <summary>
     /// Gets or sets the type of the ticker.
@@ -116,4 +63,19 @@ public class Ticker
     /// </summary>
     [JsonPropertyName("price_percent_chg_24_h")]
     public string PricePercentChg24H { get; set; }
+
+    public Ticker ToModel()
+    {
+        return new Ticker
+        {
+            ProductId = ProductId,
+            Price = Price.ToDecimal(),
+            Volume24H = Volume24H.ToDecimal(),
+            Low24H = Low24H.ToDecimal(),
+            High24H = High24H.ToDecimal(),
+            Low52W = Low52W.ToDecimal(),
+            High52W = High52W.ToDecimal(),
+            PricePercentChg24H = PricePercentChg24H.ToDecimal(),
+        };
+    }
 }
