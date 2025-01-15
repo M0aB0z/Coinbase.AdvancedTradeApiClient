@@ -11,23 +11,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{73E2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSockets", "WebSockets", "{44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coinbase.AdvancedTrade.IntegrationTests", "Tests\Coinbase.AdvancedTrade.IntegrationTests\Coinbase.AdvancedTrade.IntegrationTests.csproj", "{E12B9888-5D30-46EB-A419-22C5105F6B7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketCandlesTestApp", "Tests\Console\WebSockets\WebSocketCandlesTestApp\WebSocketCandlesTestApp.csproj", "{DB003F1B-0D3D-4B5F-ABE1-89118064CA42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketCandlesTestApp", "Tests\WebSockets\WebSocketCandlesTestApp\WebSocketCandlesTestApp.csproj", "{DB003F1B-0D3D-4B5F-ABE1-89118064CA42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketHeartbeatTestApp", "Tests\Console\WebSockets\WebSocketHeartbeatTestApp\WebSocketHeartbeatTestApp.csproj", "{A97F73A8-508F-4D43-B411-9EEB2316B1CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketHeartbeatTestApp", "Tests\WebSockets\WebSocketHeartbeatTestApp\WebSocketHeartbeatTestApp.csproj", "{A97F73A8-508F-4D43-B411-9EEB2316B1CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketLevel2TestApp", "Tests\Console\WebSockets\WebSocketLevel2TestApp\WebSocketLevel2TestApp.csproj", "{C3052E9A-2025-4E22-8B02-8EDBB2960B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketLevel2TestApp", "Tests\WebSockets\WebSocketLevel2TestApp\WebSocketLevel2TestApp.csproj", "{C3052E9A-2025-4E22-8B02-8EDBB2960B3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketMarketTradesTestApp", "Tests\Console\WebSockets\WebSocketMarketTradesTestApp\WebSocketMarketTradesTestApp.csproj", "{BA9633C3-4829-43B7-A00E-A8CC9EA00719}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketMarketTradesTestApp", "Tests\WebSockets\WebSocketMarketTradesTestApp\WebSocketMarketTradesTestApp.csproj", "{BA9633C3-4829-43B7-A00E-A8CC9EA00719}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketReconnectionTestApp", "Tests\Console\WebSockets\WebSocketReconnectionTestApp\WebSocketReconnectionTestApp.csproj", "{2F4E87A0-415D-4205-B4EC-9281E90F7C62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketReconnectionTestApp", "Tests\WebSockets\WebSocketReconnectionTestApp\WebSocketReconnectionTestApp.csproj", "{2F4E87A0-415D-4205-B4EC-9281E90F7C62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketStatusTestApp", "Tests\Console\WebSockets\WebSocketStatusTestApp\WebSocketStatusTestApp.csproj", "{87BA6AC1-CA74-4A95-916E-D5CF57ECE83E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketStatusTestApp", "Tests\WebSockets\WebSocketStatusTestApp\WebSocketStatusTestApp.csproj", "{87BA6AC1-CA74-4A95-916E-D5CF57ECE83E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketTickerBatchTestApp", "Tests\Console\WebSockets\WebSocketTickerBatchTestApp\WebSocketTickerBatchTestApp.csproj", "{A708122A-EC01-455A-B4D9-D104A951D332}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketTickerBatchTestApp", "Tests\WebSockets\WebSocketTickerBatchTestApp\WebSocketTickerBatchTestApp.csproj", "{A708122A-EC01-455A-B4D9-D104A951D332}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketUserTestApp", "Tests\Console\WebSockets\WebSocketUserTestApp\WebSocketUserTestApp.csproj", "{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketUserTestApp", "Tests\WebSockets\WebSocketUserTestApp\WebSocketUserTestApp.csproj", "{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Tests\Integration\IntegrationTests.csproj", "{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,6 @@ Global
 		{DE5388BA-84BA-4070-A535-C91671DA795E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5388BA-84BA-4070-A535-C91671DA795E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5388BA-84BA-4070-A535-C91671DA795E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E12B9888-5D30-46EB-A419-22C5105F6B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E12B9888-5D30-46EB-A419-22C5105F6B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E12B9888-5D30-46EB-A419-22C5105F6B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E12B9888-5D30-46EB-A419-22C5105F6B7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB003F1B-0D3D-4B5F-ABE1-89118064CA42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB003F1B-0D3D-4B5F-ABE1-89118064CA42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB003F1B-0D3D-4B5F-ABE1-89118064CA42}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +71,10 @@ Global
 		{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,7 +82,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{73E290AC-3118-41DD-A029-A21168D100C4} = {BE2C8EC4-CE0F-440A-9FB2-90B6E0F2F2A5}
 		{44B580EE-EA13-46FE-B1A7-6EE8ACCC7247} = {73E290AC-3118-41DD-A029-A21168D100C4}
-		{E12B9888-5D30-46EB-A419-22C5105F6B7A} = {BE2C8EC4-CE0F-440A-9FB2-90B6E0F2F2A5}
 		{DB003F1B-0D3D-4B5F-ABE1-89118064CA42} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
 		{A97F73A8-508F-4D43-B411-9EEB2316B1CC} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
 		{C3052E9A-2025-4E22-8B02-8EDBB2960B3D} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
@@ -91,5 +90,6 @@ Global
 		{87BA6AC1-CA74-4A95-916E-D5CF57ECE83E} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
 		{A708122A-EC01-455A-B4D9-D104A951D332} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
 		{97536CC0-5EAE-44C1-90F4-5E7FA1D8A821} = {44B580EE-EA13-46FE-B1A7-6EE8ACCC7247}
+		{2BDC1CDD-486E-4EA7-AA91-BA279AD35B3C} = {BE2C8EC4-CE0F-440A-9FB2-90B6E0F2F2A5}
 	EndGlobalSection
 EndGlobal

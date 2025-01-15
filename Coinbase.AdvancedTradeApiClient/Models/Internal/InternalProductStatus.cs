@@ -1,67 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
-/// <summary>
-/// Represents a status message from the Coinbase WebSocket API.
-/// </summary>
-public class StatusMessage
-{
-    /// <summary>
-    /// Gets or sets the channel for the status message.
-    /// </summary>
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; }
 
-    /// <summary>
-    /// Gets or sets the client ID associated with the status message.
-    /// </summary>
-    [JsonPropertyName("client_id")]
-    public string ClientId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the timestamp when the status message was sent.
-    /// </summary>
-    [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; set; }
-
-    /// <summary>
-    /// Gets or sets the sequence number for the status message.
-    /// </summary>
-    [JsonPropertyName("sequence_num")]
-    public int SequenceNum { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of status events.
-    /// </summary>
-    [JsonPropertyName("events")]
-    public List<StatusEvent> Events { get; set; }
-}
 
 /// <summary>
 /// Represents an individual status event within a <see cref="StatusMessage"/>.
 /// </summary>
-public class StatusEvent
-{
-    /// <summary>
-    /// Gets or sets the type of the status event.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of products associated with the status event.
-    /// </summary>
-    [JsonPropertyName("products")]
-    public List<Product> Products { get; set; }
-}
 
 /// <summary>
 /// Represents product details in the status event.
 /// </summary>
-public class Product
+public class InternalProductStatus : IModelMapper<ProductStatus>
 {
     /// <summary>
     /// Gets or sets the type of the product.
@@ -122,4 +74,25 @@ public class Product
     /// </summary>
     [JsonPropertyName("min_market_funds")]
     public string MinMarketFunds { get; set; }
+
+    /// <summary>
+    /// Maps the internal model to the public model.
+    /// </summary>
+    /// <returns></returns>
+    public ProductStatus ToModel()
+    {
+        return new ProductStatus
+        {
+            ProductType = ProductType,
+            Id = Id,
+            BaseCurrency = BaseCurrency,
+            QuoteCurrency = QuoteCurrency,
+            BaseIncrement = BaseIncrement.ToDecimal(),
+            QuoteIncrement = QuoteIncrement.ToDecimal(),
+            DisplayName = DisplayName,
+            Status = Status,
+            StatusMessage = StatusMessage,
+            MinMarketFunds = MinMarketFunds.ToDecimal()
+        };
+    }
 }

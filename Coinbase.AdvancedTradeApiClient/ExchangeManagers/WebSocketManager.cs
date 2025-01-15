@@ -57,25 +57,17 @@ public sealed class WebSocketManager : IDisposable
     {
         get
         {
-            switch (_webSocket.State)
+            return _webSocket.State switch
             {
-                case System.Net.WebSockets.WebSocketState.None:
-                    return Enums.WebSocketState.None;
-                case System.Net.WebSockets.WebSocketState.Connecting:
-                    return Enums.WebSocketState.Connecting;
-                case System.Net.WebSockets.WebSocketState.Open:
-                    return Enums.WebSocketState.Open;
-                case System.Net.WebSockets.WebSocketState.CloseSent:
-                    return Enums.WebSocketState.CloseSent;
-                case System.Net.WebSockets.WebSocketState.CloseReceived:
-                    return Enums.WebSocketState.CloseReceived;
-                case System.Net.WebSockets.WebSocketState.Closed:
-                    return Enums.WebSocketState.Closed;
-                case System.Net.WebSockets.WebSocketState.Aborted:
-                    return Enums.WebSocketState.Aborted;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                System.Net.WebSockets.WebSocketState.None => Enums.WebSocketState.None,
+                System.Net.WebSockets.WebSocketState.Connecting => Enums.WebSocketState.Connecting,
+                System.Net.WebSockets.WebSocketState.Open => Enums.WebSocketState.Open,
+                System.Net.WebSockets.WebSocketState.CloseSent => Enums.WebSocketState.CloseSent,
+                System.Net.WebSockets.WebSocketState.CloseReceived => Enums.WebSocketState.CloseReceived,
+                System.Net.WebSockets.WebSocketState.Closed => Enums.WebSocketState.Closed,
+                System.Net.WebSockets.WebSocketState.Aborted => Enums.WebSocketState.Aborted,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
         }
     }
 
@@ -111,14 +103,13 @@ public sealed class WebSocketManager : IDisposable
         _messageMap = new Dictionary<string, Action<string>>
         {
             ["candles"] = msg => ProcessInternalMessage<InternalCandleMessage, CandleMessage>(msg, CandleMessageReceived, (item) => item.ToModel()),
-            ["heartbeats"] = msg => ProcessMessage(msg, HeartbeatMessageReceived),
-            ["market_trades"] = msg => ProcessMessage(msg, MarketTradeMessageReceived),
-            ["status"] = msg => ProcessMessage(msg, StatusMessageReceived),
-            //["ticker"] = msg => ProcessMessage(msg, TickerMessageReceived),
             ["ticker"] = msg => ProcessInternalMessage<InternalTickerMessage, TickerMessage>(msg, TickerBatchMessageReceived, (item) => item.ToModel()),
+            ["market_trades"] = msg => ProcessInternalMessage<InternalMarketTradeMessage, MarketTradeMessage>(msg, MarketTradeMessageReceived, (item) => item.ToModel()),
+            ["status"] = msg => ProcessInternalMessage<InternalProductStatusMessage, ProductStatusMessage>(msg, ProductStatusMessageReceived, (item) => item.ToModel()),
+            ["level2"] = msg => ProcessInternalMessage<InternalLevel2Message, Level2Message>(msg, Level2MessageReceived, (item) => item.ToModel()),
+            ["user"] = msg => ProcessInternalMessage<InternalUserOrderMessage, UserOrderMessage>(msg, UserMessageReceived, (item) => item.ToModel()),
+            ["heartbeats"] = msg => ProcessMessage(msg, HeartbeatMessageReceived),
             ["ticker_batch"] = msg => ProcessMessage(msg, TickerBatchMessageReceived),
-            ["level2"] = msg => ProcessMessage(msg, Level2MessageReceived),
-            ["user"] = msg => ProcessMessage(msg, UserMessageReceived)
         };
     }
 
@@ -512,14 +503,14 @@ public sealed class WebSocketManager : IDisposable
     public event EventHandler<WebSocketMessageEventArgs<HeartbeatMessage>> HeartbeatMessageReceived;
 
     /// <summary>
-    /// Event raised when a WebSocket message of type <see cref="MarketTradesMessage"/> is received.
+    /// Event raised when a WebSocket message of type <see cref="MarketTradeMessage"/> is received.
     /// </summary>
-    public event EventHandler<WebSocketMessageEventArgs<MarketTradesMessage>> MarketTradeMessageReceived;
+    public event EventHandler<WebSocketMessageEventArgs<MarketTradeMessage>> MarketTradeMessageReceived;
 
     /// <summary>
-    /// Event raised when a WebSocket message of type <see cref="StatusMessage"/> is received.
+    /// Event raised when a WebSocket message of type <see cref="ProductStatusMessage"/> is received.
     /// </summary>
-    public event EventHandler<WebSocketMessageEventArgs<StatusMessage>> StatusMessageReceived;
+    public event EventHandler<WebSocketMessageEventArgs<ProductStatusMessage>> ProductStatusMessageReceived;
 
     /// <summary>
     /// Event raised when a WebSocket message of type <see cref="TickerMessage"/> is received.
@@ -537,9 +528,9 @@ public sealed class WebSocketManager : IDisposable
     public event EventHandler<WebSocketMessageEventArgs<Level2Message>> Level2MessageReceived;
 
     /// <summary>
-    /// Event raised when a WebSocket message of type <see cref="UserMessage"/> is received.
+    /// Event raised when a WebSocket message of type <see cref="UserOrderMessage"/> is received.
     /// </summary>
-    public event EventHandler<WebSocketMessageEventArgs<UserMessage>> UserMessageReceived;
+    public event EventHandler<WebSocketMessageEventArgs<UserOrderMessage>> UserMessageReceived;
 
     /// <summary>
     /// Disposes of the WebSocketManager instance.

@@ -1,67 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
+using System;
 using System.Text.Json.Serialization;
 
-namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket;
+namespace Coinbase.AdvancedTradeApiClient.Models.Internal;
 
 /// <summary>
-/// Represents a user message from the Coinbase WebSocket API.
+/// User Order event details
 /// </summary>
-public class UserMessage
-{
-    /// <summary>
-    /// Gets or sets the channel for the user message.
-    /// </summary>
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; }
-
-    /// <summary>
-    /// Gets or sets the client ID associated with the user message.
-    /// </summary>
-    [JsonPropertyName("client_id")]
-    public string ClientId { get; set; }
-
-    /// <summary>
-    /// Gets or sets the timestamp when the user message was sent.
-    /// </summary>
-    [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; set; }
-
-    /// <summary>
-    /// Gets or sets the sequence number for the user message.
-    /// </summary>
-    [JsonPropertyName("sequence_num")]
-    public int SequenceNum { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of user events.
-    /// </summary>
-    [JsonPropertyName("events")]
-    public List<UserEvent> Events { get; set; }
-}
-
-/// <summary>
-/// Represents an individual user event within a <see cref="UserMessage"/>.
-/// </summary>
-public class UserEvent
-{
-    /// <summary>
-    /// Gets or sets the type of the user event.
-    /// </summary>
-    [JsonPropertyName("type")]
-    public string Type { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list of user orders associated with the user event.
-    /// </summary>
-    [JsonPropertyName("orders")]
-    public List<UserOrder> Orders { get; set; }
-}
-
-/// <summary>
-/// Represents details about a specific user order.
-/// </summary>
-public class UserOrder
+internal class InternalUserOrder : IModelMapper<UserOrder>
 {
     /// <summary>
     /// Gets or sets the ID of the order.
@@ -128,4 +76,22 @@ public class UserOrder
     /// </summary>
     [JsonPropertyName("order_type")]
     public string OrderType { get; set; }
+
+    public UserOrder ToModel()
+    {
+        return new UserOrder
+        {
+            OrderId = OrderId,
+            ClientOrderId = ClientOrderId,
+            CumulativeQuantity = CumulativeQuantity.ToDecimal(),
+            LeavesQuantity = LeavesQuantity.ToDecimal(),
+            AvgPrice = AvgPrice.ToDecimal(),
+            TotalFees = TotalFees.ToDecimal(),
+            Status = Status,
+            ProductId = ProductId,
+            CreationTime = CreationTime,
+            OrderSide = Enum.Parse<OrderSide>(OrderSide, true),
+            OrderType = Enum.Parse<OrderType>(OrderType, true),
+        };
+    }
 }
