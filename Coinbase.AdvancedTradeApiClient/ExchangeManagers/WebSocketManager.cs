@@ -110,7 +110,6 @@ public sealed class WebSocketManager : IDisposable
             ["l2_data"] = msg => ProcessInternalMessage<InternalLevel2Message, Level2Message>(msg, Level2MessageReceived, (item) => item.ToModel()),
             ["user"] = msg => ProcessInternalMessage<InternalUserOrderMessage, UserOrderMessage>(msg, UserMessageReceived, (item) => item.ToModel()),
             ["heartbeats"] = msg => ProcessMessage(msg, HeartbeatMessageReceived),
-            //["ticker_batch"] = msg => ProcessMessage(msg, TickerBatchMessageReceived),
         };
     }
 
