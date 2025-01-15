@@ -43,7 +43,13 @@ public enum ChannelType
     /// <summary>
     /// Channel for user-specific data.
     /// </summary>
-    User
+    User,
+
+    /// <summary>
+    /// Channel for matches data.
+    /// </summary>
+    Matches,
+
 }
 
 /// <summary>
