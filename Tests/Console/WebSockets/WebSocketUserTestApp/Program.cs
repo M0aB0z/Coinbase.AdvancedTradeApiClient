@@ -11,14 +11,6 @@ var apiSecret = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_S
                ?? throw new InvalidOperationException("API Secret not found");
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
-
-// Coinbase Legacy Keys
-//var apiKey = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_KEY", EnvironmentVariableTarget.User)
-//         ?? throw new InvalidOperationException("API Key not found");
-//var apiSecret = Environment.GetEnvironmentVariable("COINBASE_LEGACY_API_SECRET", EnvironmentVariableTarget.User)
-//           ?? throw new InvalidOperationException("API Secret not found");
-//var coinbaseClient = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret, apiKeyType: ApiKeyType.Legacy);
-
 WebSocketManager? webSocketManager = coinbaseClient.WebSocket;
 
 AppDomain.CurrentDomain.ProcessExit += async (s, e) => await CleanupAsync(webSocketManager);
@@ -44,7 +36,7 @@ try
     await webSocketManager.ConnectAsync();
 
     Console.WriteLine("Subscribing to User...");
-    await webSocketManager.SubscribeAsync(Array.Empty<string>(), ChannelType.User);
+    await webSocketManager.SubscribeAsync([], ChannelType.User);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -66,7 +58,7 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing from User...");
-    await webSocketManager!.UnsubscribeAsync(Array.Empty<string>(), ChannelType.User);
+    await webSocketManager!.UnsubscribeAsync([], ChannelType.User);
 
     Console.WriteLine("Disconnecting...");
     await webSocketManager.DisconnectAsync();

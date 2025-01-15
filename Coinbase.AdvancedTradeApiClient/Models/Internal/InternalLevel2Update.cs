@@ -1,5 +1,5 @@
-﻿using Coinbase.AdvancedTradeApiClient.Enums;
-using Coinbase.AdvancedTradeApiClient.Utilities;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Text.Json.Serialization;
 
@@ -35,10 +35,10 @@ internal class InternalLevel2Update : IModelMapper<Level2Update>
     {
         return new Level2Update
         {
-            Side = Enum.Parse<OrderSide>(Side, true),
+            Side = Side,
             EventTime = EventTime,
-            PriceLevel = decimal.Parse(PriceLevel),
-            NewQuantity = decimal.Parse(NewQuantity)
+            PriceLevel = PriceLevel.ToDecimal(),
+            NewQuantity = NewQuantity.ToDecimal()
         };
     }
 }

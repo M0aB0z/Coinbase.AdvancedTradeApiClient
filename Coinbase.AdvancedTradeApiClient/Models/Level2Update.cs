@@ -1,5 +1,4 @@
-﻿using Coinbase.AdvancedTradeApiClient.Enums;
-using System;
+﻿using System;
 
 namespace Coinbase.AdvancedTradeApiClient.Models;
 
@@ -9,9 +8,9 @@ namespace Coinbase.AdvancedTradeApiClient.Models;
 public class Level2Update
 {
     /// <summary>
-    /// Gets or sets the side (e.g. "buy" or "sell") of the Level 2 update.
+    /// Gets or sets the side of the Level 2 update.
     /// </summary>
-    public OrderSide Side { get; set; }
+    public string Side { get; set; }
 
     /// <summary>
     /// Gets or sets the time when the Level 2 update occurred.

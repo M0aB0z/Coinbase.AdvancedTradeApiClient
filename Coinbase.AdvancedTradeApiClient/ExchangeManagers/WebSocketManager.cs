@@ -104,12 +104,13 @@ public sealed class WebSocketManager : IDisposable
         {
             ["candles"] = msg => ProcessInternalMessage<InternalCandleMessage, CandleMessage>(msg, CandleMessageReceived, (item) => item.ToModel()),
             ["ticker"] = msg => ProcessInternalMessage<InternalTickerMessage, TickerMessage>(msg, TickerBatchMessageReceived, (item) => item.ToModel()),
+            ["ticker_batch"] = msg => ProcessInternalMessage<InternalTickerMessage, TickerMessage>(msg, TickerBatchMessageReceived, (item) => item.ToModel()),
             ["market_trades"] = msg => ProcessInternalMessage<InternalMarketTradeMessage, MarketTradeMessage>(msg, MarketTradeMessageReceived, (item) => item.ToModel()),
             ["status"] = msg => ProcessInternalMessage<InternalProductStatusMessage, ProductStatusMessage>(msg, ProductStatusMessageReceived, (item) => item.ToModel()),
-            ["level2"] = msg => ProcessInternalMessage<InternalLevel2Message, Level2Message>(msg, Level2MessageReceived, (item) => item.ToModel()),
+            ["l2_data"] = msg => ProcessInternalMessage<InternalLevel2Message, Level2Message>(msg, Level2MessageReceived, (item) => item.ToModel()),
             ["user"] = msg => ProcessInternalMessage<InternalUserOrderMessage, UserOrderMessage>(msg, UserMessageReceived, (item) => item.ToModel()),
             ["heartbeats"] = msg => ProcessMessage(msg, HeartbeatMessageReceived),
-            ["ticker_batch"] = msg => ProcessMessage(msg, TickerBatchMessageReceived),
+            //["ticker_batch"] = msg => ProcessMessage(msg, TickerBatchMessageReceived),
         };
     }
 
@@ -384,18 +385,26 @@ public sealed class WebSocketManager : IDisposable
     /// <exception cref="ArgumentNullException"></exception>
     private void ProcessInternalMessage<TInternal, TPublic>(string message, EventHandler<WebSocketMessageEventArgs<TPublic>> eventInvoker, Func<TInternal, TPublic> converter)
     {
-        // Check if the message is null or empty and throw an exception if it is.
-        if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message));
-
-        // Deserialize the WebSocket message into the specified type.
-        var internalMessage = JsonSerializer.Deserialize<TInternal>(message);
-
-        // Check if the deserialized message is not null and if an event handler is provided.
-        if (internalMessage != null && eventInvoker != null)
+        try
         {
-            // Invoke the event handler with the deserialized message as an argument.
-            eventInvoker(this, new WebSocketMessageEventArgs<TPublic>(converter(internalMessage)));
+            // Check if the message is null or empty and throw an exception if it is.
+            if (string.IsNullOrWhiteSpace(message)) throw new ArgumentNullException(nameof(message));
+
+            // Deserialize the WebSocket message into the specified type.
+            var internalMessage = JsonSerializer.Deserialize<TInternal>(message);
+
+            // Check if the deserialized message is not null and if an event handler is provided.
+            if (internalMessage != null && eventInvoker != null)
+            {
+                // Invoke the event handler with the deserialized message as an argument.
+                eventInvoker(this, new WebSocketMessageEventArgs<TPublic>(converter(internalMessage)));
+            }
         }
+        catch (Exception er)
+        {
+            Console.WriteLine(er.Message);
+        }
+
     }
 
     /// <summary>
@@ -607,7 +616,7 @@ public class MessageEventArgs : EventArgs
     /// Gets a string representation of the WebSocket message data.
     /// </summary>
     public string StringData
-        => Encoding.UTF8.GetString(RawData.Array ?? Array.Empty<byte>(), RawData.Offset, RawData.Count);
+        => Encoding.UTF8.GetString(RawData.Array ?? [], RawData.Offset, RawData.Count);
 
     /// <summary>
     /// Initializes a new instance of the MessageEventArgs class with raw message data.
