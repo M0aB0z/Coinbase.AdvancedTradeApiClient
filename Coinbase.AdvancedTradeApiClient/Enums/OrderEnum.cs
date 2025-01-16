@@ -8,9 +8,19 @@ namespace Coinbase.AdvancedTradeApiClient.Enums;
 public enum OrderStatus
 {
     /// <summary>
+    /// The order is pending.
+    /// </summary>
+    PENDING,
+
+    /// <summary>
     /// The order is open.
     /// </summary>
     OPEN,
+
+    /// <summary>
+    /// The order is filled.
+    /// </summary>
+    FILLED,
 
     /// <summary>
     /// The order is cancelled.
@@ -20,7 +30,27 @@ public enum OrderStatus
     /// <summary>
     /// The order is expired.
     /// </summary>
-    EXPIRED
+    EXPIRED ,
+
+    /// <summary>
+    /// The order has failed.
+    /// </summary>
+    FAILED,
+
+    /// <summary>
+    /// The order has an unknown status.
+    /// </summary>
+    UNKNOWN_ORDER_STATUS,
+
+    /// <summary>
+    /// The order is queued.
+    /// </summary>
+    QUEUED,
+
+    /// <summary>
+    /// The order is cancelled.
+    /// </summary>
+    CANCEL_QUEUED,
 }
 
 /// <summary>
