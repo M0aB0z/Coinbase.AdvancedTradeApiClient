@@ -9,5 +9,10 @@ namespace Coinbase.AdvancedTradeApiClient.Interfaces;
 /// </summary>
 public interface IApiKeyManager
 {
+    /// <summary>
+    /// Asynchronously retrieves the details of the API key.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     Task<ApiKeyDetails> GetApiKeyDetailsAsync(CancellationToken cancellationToken);
 }

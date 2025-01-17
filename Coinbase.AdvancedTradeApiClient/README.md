@@ -2,14 +2,12 @@
 
 This project provides a C# wrapper for the [Coinbase Advanced Trade API](https://docs.cdp.coinbase.com/advanced-trade/docs/welcome/), facilitating interactions with various advanced trading functionalities on Coinbase.
 
-The wrapper supports both Coinbase Developer Platform (CDP) Keys, Legacy keys, and now OAuth2 access tokens. The new Coinbase Developer Platform (CDP) Keys utilize JWT for authentication. The legacy API keys option has been restored but is deprecated and will be removed in a future release following Coinbase's update and the removal of the ability to create and edit legacy API keys effective June 10, 2024. However, Coinbase will continue to allow existing legacy keys to work for some time. For more details on Coinbase Developer Platform (CDP) Keys, see [Coinbase's documentation](https://docs.cloud.coinbase.com/advanced-trade-api/docs/rest-api-auth#cloud-api-trading-keys).
+The wrapper supports Coinbase Developer Platform (CDP) Keys and  OAuth2 access tokens. The new Coinbase Developer Platform (CDP) Keys utilize JWT for authentication. The legacy API keys option has been restored but is deprecated and will be removed in a future release following Coinbase's update and the removal of the ability to create and edit legacy API keys effective June 10, 2024. However, Coinbase will continue to allow existing legacy keys to work for some time. For more details on Coinbase Developer Platform (CDP) Keys, see [Coinbase's documentation](https://docs.cloud.coinbase.com/advanced-trade-api/docs/rest-api-auth#cloud-api-trading-keys).
 
 For Coinbase Developer Platform (CDP) Keys, the `key_name` and `key_secret` are expected to follow this structure as per Coinbase:
 
 - key: `"organizations/{org_id}/apiKeys/{key_id}"`
 - secret: `"-----BEGIN EC PRIVATE KEY-----\nYOUR PRIVATE KEY\n-----END EC PRIVATE KEY-----\n"`
-
-**[View the Changelog](#changelog)** - See the detailed log of changes including updates, enhancements, and important notes.
 
 ## Overview
 The wrapper is organized into various namespaces, each serving a distinct purpose, covering the spectrum from data models to actual API interactions.
@@ -59,6 +57,10 @@ A sentinel that ensures every API request is authenticated.
   - `ListAccountsAsync`: Unveils a list of accounts.
   - `GetAccountAsync`: Zeros in on a specific account using its UUID.
 
+### `IApiKeyManager`
+- **Methods**:
+  - `GetApiKeyDetailsAsync`: Asynchronously retrieves the details of the API key.
+
 ### `IFeesManager`
 - **Methods**:
   - `GetTransactionsSummaryAsync`: Condenses transactions within a chosen date range into a summary.
@@ -95,5 +97,5 @@ Specialized in managing WebSocket communications for real-time updates from the 
 
 # Changelog
 
-## v1.4.0 - 2024-JUN-14
+## v2.0.11 - 2025-JAN-17
 -
