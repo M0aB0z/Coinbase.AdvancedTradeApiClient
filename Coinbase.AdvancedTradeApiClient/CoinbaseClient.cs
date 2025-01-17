@@ -24,6 +24,11 @@ public sealed class CoinbaseClient
     public IOrdersManager Orders { get; }
 
     /// <summary>
+    /// Gets the API key manager, responsible for API key-related operations.
+    /// </summary>
+    public IApiKeyManager ApiKey { get; }
+
+    /// <summary>
     /// Gets the fees manager, responsible for fee-related operations.
     /// </summary>
     public IFeesManager Fees { get; }
@@ -53,6 +58,7 @@ public sealed class CoinbaseClient
         Accounts = new AccountsManager(authenticator);
         Products = new ProductsManager(authenticator);
         Orders = new OrdersManager(authenticator);
+        ApiKey = new ApiKeyManager(authenticator);
         Fees = new FeesManager(authenticator);
         Public = new PublicManager(authenticator);
 
