@@ -30,7 +30,7 @@ public enum OrderStatus
     /// <summary>
     /// The order is expired.
     /// </summary>
-    EXPIRED ,
+    EXPIRED,
 
     /// <summary>
     /// The order has failed.

@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersApiTester", "Tests\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradesApiTester", "Tests\Console\RestAPIs\Trades\TradesApiTester.csproj", "{8C234B4E-9EA9-402D-8AB3-7402903E16DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiKeyTester", "Tests\Console\RestAPIs\ApiKey\ApiKeyTester.csproj", "{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{8C234B4E-9EA9-402D-8AB3-7402903E16DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C234B4E-9EA9-402D-8AB3-7402903E16DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C234B4E-9EA9-402D-8AB3-7402903E16DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,5 +135,6 @@ Global
 		{AA4D2618-2734-4FBB-87F0-E9018F62E8A1} = {1E45BEC0-469C-4785-B22C-FEFC61719899}
 		{E2339A21-3FE6-43F8-A123-F1F49BA3A407} = {1E45BEC0-469C-4785-B22C-FEFC61719899}
 		{8C234B4E-9EA9-402D-8AB3-7402903E16DA} = {1E45BEC0-469C-4785-B22C-FEFC61719899}
+		{0D4BF01A-DEC7-4C2D-A54B-B6F3EB29719B} = {1E45BEC0-469C-4785-B22C-FEFC61719899}
 	EndGlobalSection
 EndGlobal
