@@ -33,10 +33,10 @@ webSocketManager!.TickerBatchMessageReceived += (sender, tickerData) =>
 try
 {
     Console.WriteLine("Connecting to the WebSocket...");
-    await webSocketManager.ConnectAsync();
+    await webSocketManager.ConnectAsync(CancellationToken.None);
 
     Console.WriteLine("Subscribing to ticker batch...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch);
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch, CancellationToken.None);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -58,10 +58,10 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing from ticker batch...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch);
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.TickerBatch, CancellationToken.None);
 
     Console.WriteLine("Disconnecting...");
-    await webSocketManager.DisconnectAsync();
+    await webSocketManager.DisconnectAsync(CancellationToken.None);
 
     _isCleanupDone = true;  // Set the flag to indicate cleanup has been done
 }

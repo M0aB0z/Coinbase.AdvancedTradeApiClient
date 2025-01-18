@@ -38,7 +38,7 @@ class Program
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Connecting to the WebSocket...");
-            await webSocketManager.ConnectAsync();
+            await webSocketManager.ConnectAsync(CancellationToken.None);
             LogWebSocketStatus();
 
             // Start tasks to monitor and handle WebSocket connection and status
@@ -76,9 +76,9 @@ class Program
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("Unsubscribing from channels...");
-        await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
-        await webSocketManager.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles);
-        await webSocketManager.DisconnectAsync();
+        await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats, CancellationToken.None);
+        await webSocketManager.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
+        await webSocketManager.DisconnectAsync(CancellationToken.None);
         Console.ResetColor();
 
         webSocketManager.Dispose();
@@ -166,7 +166,7 @@ class Program
             Console.WriteLine("Forcing disconnect...");
 
             // Forcefully disconnect the WebSocket
-            await webSocketManager!.DisconnectAsync();
+            await webSocketManager!.DisconnectAsync(CancellationToken.None);
 
             Console.WriteLine("Forced disconnect complete.");
             Console.ResetColor();
@@ -192,7 +192,7 @@ class Program
         SubscribeToWebSocketEvents(webSocketManager);
 
         // Connect to the WebSocket server
-        await webSocketManager.ConnectAsync();
+        await webSocketManager.ConnectAsync(CancellationToken.None);
 
         // Log the current status of the WebSocket connection
         LogWebSocketStatus();
@@ -210,8 +210,8 @@ class Program
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("Subscribing to channels...");
 
-        await webSocketManager!.SubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats);
-        await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles);
+        await webSocketManager!.SubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats, CancellationToken.None);
+        await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
 
         LogWebSocketStatus();
         Console.ResetColor();

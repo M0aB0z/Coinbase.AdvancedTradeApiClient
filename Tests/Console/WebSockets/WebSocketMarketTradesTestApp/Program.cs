@@ -29,10 +29,10 @@ webSocketManager!.MarketTradeMessageReceived += (sender, marketTradeData) =>
 try
 {
     Console.WriteLine("Connecting to the WebSocket...");
-    await webSocketManager.ConnectAsync();
+    await webSocketManager.ConnectAsync(CancellationToken.None);
 
     Console.WriteLine("Subscribing to market trades...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades);
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades, CancellationToken.None);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -54,10 +54,10 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing from market trades...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades);
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.MarketTrades, CancellationToken.None);
 
     Console.WriteLine("Disconnecting...");
-    await webSocketManager.DisconnectAsync();
+    await webSocketManager.DisconnectAsync(CancellationToken.None);
 
     _isCleanupDone = true;  // Set the flag to indicate cleanup has been done
 }

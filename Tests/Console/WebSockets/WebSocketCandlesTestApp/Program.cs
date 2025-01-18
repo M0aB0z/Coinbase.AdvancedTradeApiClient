@@ -22,16 +22,18 @@ Console.CancelKeyPress += async (s, e) =>
 
 webSocketManager.CandleMessageReceived += (sender, candleData) =>
 {
-    Console.WriteLine($"Received candle data at {DateTime.UtcNow}");
+    Console.WriteLine($"Received candle data at {DateTime.UtcNow} [StartDate={candleData.Message.Events.Last().Candles.Last().StartDate}]");
 };
 
 try
 {
     Console.WriteLine("Connecting to the WebSocket...");
-    await webSocketManager.ConnectAsync();
+    await webSocketManager.ConnectAsync(CancellationToken.None);
+
+    var state = webSocketManager.WebSocketState;
 
     Console.WriteLine("Subscribing to candles...");
-    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles);
+    await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
 
     Console.WriteLine("Press any key to unsubscribe and exit.");
     Console.ReadKey();
@@ -53,10 +55,10 @@ async Task CleanupAsync(WebSocketManager? webSocketManager)
     if (_isCleanupDone) return;  // Return immediately if cleanup has been done
 
     Console.WriteLine("Unsubscribing...");
-    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles);
+    await webSocketManager!.UnsubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
 
     Console.WriteLine("Disconnecting...");
-    await webSocketManager.DisconnectAsync();
+    await webSocketManager.DisconnectAsync(CancellationToken.None);
 
     _isCleanupDone = true;  // Set the flag to indicate cleanup has been done
 }

@@ -139,10 +139,10 @@ public sealed class WebSocketManager : IDisposable
     /// <summary>
     /// Establishes a WebSocket connection asynchronously.
     /// </summary>
-    public async ValueTask ConnectAsync()
+    public async ValueTask ConnectAsync(CancellationToken cancellationToken)
     {
         // Acquire the semaphore to ensure exclusive access to this method.
-        await _semaphore.WaitAsync().ConfigureAwait(false);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -153,10 +153,10 @@ public sealed class WebSocketManager : IDisposable
             }
 
             // Attempt to establish the WebSocket connection to the specified URI.
-            await _webSocket.ConnectAsync(_webSocketUri, CancellationToken.None).ConfigureAwait(false);
+            await _webSocket.ConnectAsync(_webSocketUri, cancellationToken).ConfigureAwait(false);
 
             // Start the background task to receive WebSocket messages (fire and forget).
-            _ = ReceiveMessagesAsync().AsTask();
+            _ = ReceiveMessagesAsync(cancellationToken).AsTask();
         }
         finally
         {
@@ -168,10 +168,10 @@ public sealed class WebSocketManager : IDisposable
     /// <summary>
     /// Closes the WebSocket connection asynchronously.
     /// </summary>
-    public async ValueTask DisconnectAsync()
+    public async ValueTask DisconnectAsync(CancellationToken cancellationToken)
     {
         // Acquire the semaphore to ensure exclusive access to this method.
-        await _semaphore.WaitAsync().ConfigureAwait(false);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -179,7 +179,7 @@ public sealed class WebSocketManager : IDisposable
             if (IsWebSocketOpen || _webSocket.State == System.Net.WebSockets.WebSocketState.CloseReceived)
             {
                 // Close the WebSocket gracefully with a normal closure status.
-                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None).ConfigureAwait(false);
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", cancellationToken).ConfigureAwait(false);
             }
         }
         finally
@@ -194,14 +194,15 @@ public sealed class WebSocketManager : IDisposable
     /// </summary>
     /// <param name="products">An optional array of product IDs to subscribe to.</param>
     /// <param name="channelType">The type of channel to subscribe to.</param>
-    public async ValueTask SubscribeAsync(string[] products, ChannelType channelType)
+    /// <param name="cancellationToken">Your cancellation token</param>
+    public async ValueTask SubscribeAsync(string[] products, ChannelType channelType, CancellationToken cancellationToken)
     {
         // Check if the provided channel type is valid.
         if (!Enum.IsDefined(typeof(ChannelType), channelType))
             throw new ArgumentException("Invalid channel type provided.", nameof(channelType));
 
         // Acquire the semaphore to ensure exclusive access to this method.
-        await _semaphore.WaitAsync().ConfigureAwait(false);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -209,7 +210,7 @@ public sealed class WebSocketManager : IDisposable
             string channelString = GetChannelString(channelType);
 
             // Subscribe to the specified channel asynchronously.
-            await SubscribeToChannelAsync(products, channelString).ConfigureAwait(false);
+            await SubscribeToChannelAsync(products, channelString, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -223,14 +224,15 @@ public sealed class WebSocketManager : IDisposable
     /// </summary>
     /// <param name="products">An optional array of product IDs to unsubscribe from.</param>
     /// <param name="channelType">The type of channel to unsubscribe from.</param>
-    public async ValueTask UnsubscribeAsync(string[] products, ChannelType channelType)
+    /// <param name="cancellationToken">Your cancellation token</param>
+    public async ValueTask UnsubscribeAsync(string[] products, ChannelType channelType, CancellationToken cancellationToken)
     {
         // Check if the provided channel type is valid.
         if (!Enum.IsDefined(typeof(ChannelType), channelType))
             throw new ArgumentException("Invalid channel type provided.", nameof(channelType));
 
         // Acquire the semaphore to ensure exclusive access to this method.
-        await _semaphore.WaitAsync().ConfigureAwait(false);
+        await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -238,7 +240,7 @@ public sealed class WebSocketManager : IDisposable
             string channelString = GetChannelString(channelType);
 
             // Unsubscribe from the specified channel asynchronously.
-            await UnsubscribeFromChannelAsync(products, channelString).ConfigureAwait(false);
+            await UnsubscribeFromChannelAsync(products, channelString, cancellationToken).ConfigureAwait(false);
 
             // Remove from the subscription set
             _subscriptions.Remove(channelString);
@@ -255,7 +257,8 @@ public sealed class WebSocketManager : IDisposable
     /// </summary>
     /// <param name="products">An optional array of product IDs to subscribe to.</param>
     /// <param name="channelName">The name of the channel to subscribe to.</param>
-    private async ValueTask SubscribeToChannelAsync(string[] products, string channelName)
+    /// <param name="cancellationToken">Your cancellation token</param>
+    private async ValueTask SubscribeToChannelAsync(string[] products, string channelName, CancellationToken cancellationToken)
     {
         // Check if the channel name is null and throw an exception if it is.
         if (channelName == null) throw new ArgumentNullException(nameof(channelName));
@@ -276,7 +279,7 @@ public sealed class WebSocketManager : IDisposable
         var byteData = Encoding.UTF8.GetBytes(jsonString);
 
         // Send the subscription message as a text message over the WebSocket.
-        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
 
         // Add to the subscription set
         _subscriptions.Add(channelName);
@@ -287,7 +290,8 @@ public sealed class WebSocketManager : IDisposable
     /// </summary>
     /// <param name="products">An optional array of product IDs to unsubscribe from.</param>
     /// <param name="channelName">The name of the channel to unsubscribe from.</param>
-    private async ValueTask UnsubscribeFromChannelAsync(string[] products, string channelName)
+    /// <param name="cancellationToken">Your cancellation token</param>
+    private async ValueTask UnsubscribeFromChannelAsync(string[] products, string channelName, CancellationToken cancellationToken)
     {
         // Check if the channel name is null and throw an exception if it is.
         if (channelName == null) throw new ArgumentNullException(nameof(channelName));
@@ -308,7 +312,7 @@ public sealed class WebSocketManager : IDisposable
         var byteData = Encoding.UTF8.GetBytes(jsonString);
 
         // Send the unsubscribe message as a text message over the WebSocket.
-        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
 
         // Remove from the subscription set
         _subscriptions.Remove(channelName);
@@ -429,7 +433,7 @@ public sealed class WebSocketManager : IDisposable
     /// <summary>
     /// Asynchronously receives WebSocket messages and processes them.
     /// </summary>
-    private async ValueTask ReceiveMessagesAsync()
+    private async ValueTask ReceiveMessagesAsync(CancellationToken cancellationToken)
     {
         // Check if the WebSocket is not open, and if not, return immediately.
         if (!IsWebSocketOpen)
@@ -443,7 +447,7 @@ public sealed class WebSocketManager : IDisposable
         while (IsWebSocketOpen)
         {
             // Receive a WebSocket message into the buffer.
-            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).ConfigureAwait(false);
+            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken).ConfigureAwait(false);
 
             // Add the received message segment to the list.
             messageSegments.Add(new ArraySegment<byte>(buffer, 0, result.Count));
