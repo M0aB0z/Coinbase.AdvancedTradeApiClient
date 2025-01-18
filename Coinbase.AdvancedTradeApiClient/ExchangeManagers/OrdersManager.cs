@@ -150,7 +150,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             var requestBody = new { order_ids = orderIds };
 
             // Send authenticated request to the API to cancel the orders and obtain response
-            var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", requestBody, cancellationToken);
+            var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/batch_cancel", requestBody, cancellationToken);
             return response.As<InternalCancelOrderResult[]>("results").ToModel();
         }
         catch (Exception ex)
