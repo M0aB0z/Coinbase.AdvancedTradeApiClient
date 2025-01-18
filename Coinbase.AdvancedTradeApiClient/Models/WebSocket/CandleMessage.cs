@@ -7,6 +7,10 @@ namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket.Internal;
 /// </summary>
 public class CandleMessage : WebSocketMessage<CandleEvent>
 {
+    /// <summary>
+    /// The candle's product id
+    /// </summary>
+    public string ProductId { get; internal set; }
 }
 
 /// <summary>
@@ -17,6 +21,6 @@ public class CandleEvent : WebSocketEvent
     /// <summary>
     /// Gets or sets the list of candles in the event.
     /// </summary>
-    public List<Candle> Candles { get; set; }
+    public List<WebSocketCandle> Candles { get; set; }
 }
 

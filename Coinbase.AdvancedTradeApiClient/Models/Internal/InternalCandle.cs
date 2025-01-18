@@ -50,7 +50,7 @@ internal class InternalCandle : IModelMapper<Candle>
     /// Maps the internal model to the public model.
     /// </summary>
     /// <returns></returns>
-    public Candle ToModel()
+    public virtual Candle ToModel()
     {
         return new Candle
         {
