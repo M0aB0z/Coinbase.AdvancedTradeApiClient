@@ -23,6 +23,7 @@ public class Ticker
 
     /// <summary>
     /// Gets or sets the volume of the product over the last 24 hours.
+    /// </summary>
     public decimal Volume24H { get; set; }
 
     /// <summary>

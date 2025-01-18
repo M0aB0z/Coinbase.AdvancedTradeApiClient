@@ -13,7 +13,7 @@ public class TestOrderCreation : TestBase
         await ExecuteRateLimitedTest(async () =>
         {
             Assert.IsNotNull(_coinbaseClient, "Coinbase client should not be null.");
-            var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.Buy, 1);
+            var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.Buy, 1, SizeCurrencyType.Quote);
             Assert.IsNotNull(orderNumber, "Order Number should not be null.");
         });
     }
@@ -30,7 +30,8 @@ public class TestOrderCreation : TestBase
             Order order = await _coinbaseClient!.Orders.CreateMarketOrderAsync(
                 productId: "BTC-USDC",
                 side: OrderSide.Buy,
-                amount: 1,
+                size: 1,
+                SizeCurrencyType.Quote,
                 returnOrder: true
             );
 
@@ -49,7 +50,7 @@ public class TestOrderCreation : TestBase
         await ExecuteRateLimitedTest(async () =>
         {
             Assert.IsNotNull(_coinbaseClient, "Coinbase client should not be null.");
-            var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.Sell, 0.00001m);
+            var orderNumber = await _coinbaseClient!.Orders.CreateMarketOrderAsync("BTC-USDC", OrderSide.Sell, 0.00001m, SizeCurrencyType.Quote);
             Assert.IsNotNull(orderNumber, "Order Number should not be null.");
         });
     }
@@ -67,7 +68,8 @@ public class TestOrderCreation : TestBase
             Order order = await _coinbaseClient!.Orders.CreateMarketOrderAsync(
                 productId: "BTC-USDC",
                 side: OrderSide.Sell,
-                amount: 0.00001m,
+                size: 0.00001m,
+                SizeCurrencyType.Base,
                 returnOrder: true
             );
 

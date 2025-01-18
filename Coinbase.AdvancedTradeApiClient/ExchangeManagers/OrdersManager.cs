@@ -194,7 +194,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             };
 
             // Send a POST request to create the order
-            var response = await _authenticator.PostAsync("/api/v3/brokerage/orders/historical/fills", orderRequest, cancellationToken);
+            var response = await _authenticator.PostAsync("/api/v3/brokerage/orders", orderRequest, cancellationToken);
 
             // Check if we have a 'success_response' in the received response
             if (response.TryGetProperty("success_response", out var successResponse))
@@ -271,20 +271,18 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, decimal amount, CancellationToken cancellationToken)
+    public async Task<string> CreateMarketOrderAsync(string productId, OrderSide side, decimal size, SizeCurrencyType sizeCurrencyType, CancellationToken cancellationToken)
     {
         // Ensure the product ID is provided and not empty
         if (string.IsNullOrEmpty(productId))
             throw new ArgumentException("Product ID cannot be null or empty.", nameof(productId));
 
-        // Determine the market order details based on the side (BUY or SELL)
-        InternalMarketIoc marketDetails = side switch
+        // Determine the market order details (size regarding asset or quote ?)
+        InternalMarketIoc marketDetails = new InternalMarketIoc
         {
-            OrderSide.Buy => new InternalMarketIoc { QuoteSize = amount.ToString() }, // Buy orders use the QuoteSize
-            OrderSide.Sell => new InternalMarketIoc { BaseSize = amount.ToString() }, // Sell orders use the BaseSize
-            _ => throw new ArgumentException($"Invalid order side provided: {side}.")
+            QuoteSize = sizeCurrencyType == SizeCurrencyType.Quote ? size.ToApiString() : default,
+            BaseSize = sizeCurrencyType == SizeCurrencyType.Base ? size.ToApiString() : default
         };
-
 
         // Create the order configuration using the determined market details
         var orderConfiguration = new InternalOrderConfiguration
@@ -297,12 +295,12 @@ public class OrdersManager : BaseManager, IOrdersManager
     }
 
     /// <inheritdoc/>
-    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, decimal amount, bool returnOrder = true, CancellationToken cancellationToken = default)
+    public async Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, decimal size, SizeCurrencyType sizeCurrency, bool returnOrder = true, CancellationToken cancellationToken = default)
     {
         if (!returnOrder)
             throw new ArgumentException("returnOrder must be true to return an Order object.", nameof(returnOrder));
 
-        string orderId = await CreateMarketOrderAsync(productId, side, amount, cancellationToken);
+        string orderId = await CreateMarketOrderAsync(productId, side, size, sizeCurrency, cancellationToken);
 
         return await GetOrderWithRetryAsync(orderId);
     }
@@ -323,8 +321,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         {
             LimitGtc = new InternalLimitGtc
             {
-                BaseSize = baseSize.ToString(),
-                LimitPrice = limitPrice.ToString(),
+                BaseSize = baseSize.ToApiString(),
+                LimitPrice = limitPrice.ToApiString(),
                 PostOnly = postOnly
             }
         };
@@ -364,8 +362,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         {
             LimitGtd = new InternalLimitGtd
             {
-                BaseSize = baseSize.ToString(),
-                LimitPrice = limitPrice.ToString(),
+                BaseSize = baseSize.ToApiString(),
+                LimitPrice = limitPrice.ToApiString(),
                 EndTime = endTime,
                 PostOnly = postOnly
             }
@@ -408,9 +406,9 @@ public class OrdersManager : BaseManager, IOrdersManager
         {
             StopLimitGtc = new InternalStopLimitGtc
             {
-                BaseSize = baseSize.ToString(),
-                LimitPrice = limitPrice.ToString(),
-                StopPrice = stopPrice.ToString(),
+                BaseSize = baseSize.ToApiString(),
+                LimitPrice = limitPrice.ToApiString(),
+                StopPrice = stopPrice.ToApiString(),
                 StopDirection = stopDirection.GetDescription()
             }
         };
@@ -452,9 +450,9 @@ public class OrdersManager : BaseManager, IOrdersManager
         {
             StopLimitGtd = new InternalStopLimitGtd
             {
-                BaseSize = baseSize.ToString(),
-                LimitPrice = limitPrice.ToString(),
-                StopPrice = stopPrice.ToString(),
+                BaseSize = baseSize.ToApiString(),
+                LimitPrice = limitPrice.ToApiString(),
+                StopPrice = stopPrice.ToApiString(),
                 StopDirection = stopDirection.GetDescription(),
                 EndTime = endTime
             }
@@ -485,8 +483,8 @@ public class OrdersManager : BaseManager, IOrdersManager
         {
             SorLimitIoc = new InternalSorLimitIoc
             {
-                BaseSize = baseSize.ToString(),
-                LimitPrice = limitPrice.ToString()
+                BaseSize = baseSize.ToApiString(),
+                LimitPrice = limitPrice.ToApiString()
             }
         };
 

@@ -72,21 +72,23 @@ public interface IOrdersManager
     /// <param name="productId">Product ID for which the order is being placed.</param>
     /// <param name="side">Side of the order (buy/sell).</param>
     /// <param name="size">Size of the order.</param>
+    /// <param name="sizeCurrency">Currency type for the specified size</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the ID of the created order, or null if creation failed.</returns>
-    Task<string> CreateMarketOrderAsync(string productId, OrderSide side, decimal size, CancellationToken cancellationToken);
+    Task<string> CreateMarketOrderAsync(string productId, OrderSide side, decimal size, SizeCurrencyType sizeCurrency, CancellationToken cancellationToken);
 
     /// <summary>
     /// Asynchronously creates a market order and optionally returns the full order details.
     /// </summary>
     /// <param name="productId">Product ID for which the order is being placed.</param>
     /// <param name="side">Side of the order (buy/sell).</param>
-    /// <param name="amount">Size of the order.</param>
+    /// <param name="size">Size of the order.</param>
+    /// <param name="sizeCurrency">Currency type for the specified size</param>
     /// <param name="returnOrder">Must be set to true to return the full order details. If false, an exception is thrown.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains the order object if returnOrder is true.</returns>
     /// <exception cref="ArgumentException">Thrown if returnOrder is false.</exception>
-    Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, decimal amount, bool returnOrder = true, CancellationToken cancellationToken = default);
+    Task<Order> CreateMarketOrderAsync(string productId, OrderSide side, decimal size, SizeCurrencyType sizeCurrency, bool returnOrder = true, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously creates a limit order with good-till-canceled (GTC) duration.

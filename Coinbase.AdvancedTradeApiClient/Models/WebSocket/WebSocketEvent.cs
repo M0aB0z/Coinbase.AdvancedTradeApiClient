@@ -7,6 +7,9 @@ namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket;
 /// </summary>
 public abstract class WebSocketEvent
 {
+    /// <summary>
+    /// Socket event type
+    /// </summary>
     [JsonPropertyName("type")]
     public string Type { get; set; }
 }

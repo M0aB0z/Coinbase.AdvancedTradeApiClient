@@ -245,6 +245,7 @@ internal class InternalOrder : IModelMapper<Order>
 /// </summary>
 internal class InternalOrderConfiguration : IModelMapper<OrderConfiguration>
 {
+    [JsonPropertyName("market_market_ioc")]
     public InternalMarketIoc MarketIoc { get; set; }
 
     /// <summary>

@@ -16,4 +16,7 @@ Console.WriteLine("Retrieving all filled orders...");
 var filledOrders = await coinbaseClient.Orders.ListFillsAsync();
 Console.WriteLine(filledOrders.Count + " filled orders retrieved");
 
+
+//var orderCreationOpe = await coinbaseClient.Orders.CreateLimitOrderGTCAsync("DOGE-USDC", OrderSide.Buy, 1m, 0.30m, false, CancellationToken.None);
+
 Console.ReadLine();
