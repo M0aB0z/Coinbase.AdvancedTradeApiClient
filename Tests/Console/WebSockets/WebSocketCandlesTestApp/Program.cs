@@ -22,7 +22,7 @@ Console.CancelKeyPress += async (s, e) =>
 
 webSocketManager.CandleMessageReceived += (sender, candleData) =>
 {
-    Console.WriteLine($"Received candle data at {DateTime.UtcNow} [StartDate={candleData.Message.Events.Last().Candles.Last().StartDate}]");
+    Console.WriteLine($"Received candle data at {DateTime.UtcNow} [{candleData.Message.Events.Last().Candles.Last()}]");
 };
 
 try

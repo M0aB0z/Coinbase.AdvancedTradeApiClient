@@ -37,7 +37,7 @@ public class Product
     /// <summary>
     /// Gets the current price of the product.
     /// </summary>
-    public decimal Price { get; internal set; }
+    public decimal? Price { get; internal set; }
 
     /// <summary>
     /// Gets the percentage change in price over the last 24 hours.
@@ -152,5 +152,5 @@ public class Product
 
     ///<inheritDoc/>
     public override string ToString()
-    => $"{BaseName} {ProductId} @{Math.Round(Price, 4)} {ProductType}";
+    => $"{BaseName} {ProductId} @{(Price.HasValue ? Math.Round(Price.Value, 4) : "?")} {ProductType}";
 }

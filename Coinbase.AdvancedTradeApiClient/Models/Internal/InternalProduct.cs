@@ -214,7 +214,7 @@ internal class InternalProduct : IModelMapper<Product>
                 BaseMaxSize = BaseMaxSize.ToDecimal(),
                 BaseMinSize = BaseMinSize.ToDecimal(),
                 MidMarketPrice = MidMarketPrice?.ToNullableDecimal(),
-                Price = Price.ToDecimal(),
+                Price = Price.ToNullableDecimal(),
                 PricePercentageChange24h = PricePercentageChange24h.ToNullableDecimal(),
                 Volume24h = Volume24h.ToNullableDecimal(),
                 VolumePercentageChange24h = VolumePercentageChange24h.ToNullableDecimal(),
