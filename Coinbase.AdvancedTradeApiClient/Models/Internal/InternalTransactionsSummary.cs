@@ -47,7 +47,7 @@ internal class InternalFeeTier : IModelMapper<FeeTier>
     {
         return new FeeTier
         {
-            PricingTier = PricingTier.ToDecimal(),
+            PricingTier = PricingTier,
             UsdFrom = UsdFrom.ToDecimal(),
             UsdTo = UsdTo.ToDecimal(),
             TakerFeeRate = TakerFeeRate.ToDecimal(),
@@ -188,8 +188,8 @@ internal class InternalTransactionsSummary : IModelMapper<TransactionsSummary>
             TotalVolume = TotalVolume,
             TotalFees = TotalFees,
             FeeTier = FeeTier.ToModel(),
-            MarginRate = MarginRate.ToModel(),
-            GoodsAndServicesTax = GoodsAndServicesTax.ToModel(),
+            MarginRate = MarginRate?.ToModel(),
+            GoodsAndServicesTax = GoodsAndServicesTax?.ToModel(),
             AdvancedTradeOnlyVolume = AdvancedTradeOnlyVolume,
             AdvancedTradeOnlyFees = AdvancedTradeOnlyFees,
             CoinbaseProVolume = CoinbaseProVolume,

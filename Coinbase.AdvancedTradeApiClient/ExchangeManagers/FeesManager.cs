@@ -30,12 +30,11 @@ public class FeesManager : BaseManager, IFeesManager
         CancellationToken cancellationToken = default)
     {
         // Create request parameters
-        var paramsDict = new Dictionary<string, string>
+        var paramsDict = new
         {
-            {"start_date", startDate.ToString("yyyy-MM-ddTHH:mm:ssZ")},
-            {"end_date", endDate.ToString("yyyy-MM-ddTHH:mm:ssZ")},
-            {"user_native_currency", userNativeCurrency},
-            {"product_type", productType}
+            product_type = productType,
+            product_venue = "UNKNOWN_VENUE_TYPE",
+            contract_expiry_type = "UNKNOWN_CONTRACT_EXPIRY_TYPE"
         };
 
         try

@@ -8,7 +8,7 @@ public class FeeTier
     /// <summary>
     /// Gets or sets the pricing tier identifier.
     /// </summary>
-    public decimal PricingTier { get; internal set; }
+    public string PricingTier { get; internal set; }
 
     /// <summary>
     /// Gets or sets the starting USD value for this tier.
