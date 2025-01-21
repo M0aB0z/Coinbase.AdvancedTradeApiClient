@@ -1,4 +1,6 @@
-﻿namespace Coinbase.AdvancedTrade.IntegrationTests;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+
+namespace Coinbase.AdvancedTrade.IntegrationTests;
 
 [TestClass]
 public class TestFees : TestBase
@@ -9,13 +11,9 @@ public class TestFees : TestBase
     {
         await ExecuteRateLimitedTest(async () =>
         {
-            DateTime startDate = new(2023, 1, 1);
-            DateTime endDate = new(2023, 12, 31);
-            string userNativeCurrency = "CAD";
-            string productType = "SPOT";
 
             // Directly await the method call, instead of using null-coalescing operator
-            var result = await _coinbaseClient!.Fees.GetTransactionsSummaryAsync(startDate, endDate, userNativeCurrency, productType);
+            var result = await _coinbaseClient!.Fees.GetTransactionsSummaryAsync(ProductType.Spot, ProductVenue.Unknown, ContractExpiryType.Unknown, CancellationToken.None);
 
             Assert.IsNotNull(result, "Result should not be null.");
             Assert.IsNotNull(result?.FeeTier?.PricingTier, "FeeTier should not be null.");
