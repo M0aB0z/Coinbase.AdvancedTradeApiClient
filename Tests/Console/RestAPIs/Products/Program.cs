@@ -1,6 +1,5 @@
 ﻿// Coinbase Cloud Trading Keys
 using Coinbase.AdvancedTradeApiClient;
-using System.Threading;
 
 var apiKey = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_KEY", EnvironmentVariableTarget.User)
              ?? throw new InvalidOperationException("API Key not found");

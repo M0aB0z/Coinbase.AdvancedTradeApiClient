@@ -1,6 +1,6 @@
 ﻿// Coinbase Cloud Trading Keys
 using Coinbase.AdvancedTradeApiClient;
-using System.Threading;
+using Coinbase.AdvancedTradeApiClient.Enums;
 
 var apiKey = Environment.GetEnvironmentVariable("COINBASE_CLOUD_TRADING_API_KEY", EnvironmentVariableTarget.User)
              ?? throw new InvalidOperationException("API Key not found");
@@ -10,7 +10,8 @@ var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 Console.WriteLine("Retrieving transactions summary...");
 
-var transactionsSummary = await coinbaseClient.Fees.GetTransactionsSummaryAsync(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, "USD", "SPOT", CancellationToken.None);
+Coinbase.AdvancedTradeApiClient.Models.TransactionsSummary transactionsSummary 
+    = await coinbaseClient.Fees.GetTransactionsSummaryAsync(ProductType.Spot, ProductVenue.Unknown, ContractExpiryType.Unknown, CancellationToken.None);
 
 
 Console.ReadLine();

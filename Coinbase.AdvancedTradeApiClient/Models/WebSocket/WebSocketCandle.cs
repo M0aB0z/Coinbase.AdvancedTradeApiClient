@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket
+﻿namespace Coinbase.AdvancedTradeApiClient.Models.WebSocket
 {
     /// <summary>
     /// Candle with extra property ProductId

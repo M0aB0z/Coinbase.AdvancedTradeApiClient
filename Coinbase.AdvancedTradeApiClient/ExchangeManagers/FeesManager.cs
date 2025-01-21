@@ -1,10 +1,10 @@
-﻿using Coinbase.AdvancedTradeApiClient.Interfaces;
+﻿using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Interfaces;
 using Coinbase.AdvancedTradeApiClient.Models;
 using Coinbase.AdvancedTradeApiClient.Models.Internal;
 using Coinbase.AdvancedTradeApiClient.Utilities;
 using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,17 +23,16 @@ public class FeesManager : BaseManager, IFeesManager
 
     /// <inheritdoc/>
     public async Task<TransactionsSummary> GetTransactionsSummaryAsync(
-        DateTime startDate,
-        DateTime endDate,
-        string userNativeCurrency = "USD",
-        string productType = "SPOT",
-        CancellationToken cancellationToken = default)
+        ProductType productType,
+        ProductVenue productVenue,
+        ContractExpiryType contractExpiryType,
+        CancellationToken cancellationToken)
     {
         // Create request parameters
         var paramsDict = new
         {
-            product_type = productType,
-            product_venue = "UNKNOWN_VENUE_TYPE",
+            product_type = productType.GetDescription(),
+            product_venue = productVenue.GetDescription(),
             contract_expiry_type = "UNKNOWN_CONTRACT_EXPIRY_TYPE"
         };
 

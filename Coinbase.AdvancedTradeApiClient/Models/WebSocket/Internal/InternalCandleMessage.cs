@@ -1,5 +1,4 @@
-﻿using Coinbase.AdvancedTradeApiClient.Models.Internal;
-using Coinbase.AdvancedTradeApiClient.Utilities;
+﻿using Coinbase.AdvancedTradeApiClient.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
