@@ -26,7 +26,7 @@ public class ProductsManager : BaseManager, IProductsManager
     public ProductsManager(CoinbaseAuthenticator authenticator) : base(authenticator) { }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", string[] productsIds = null, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(productType))
             throw new ArgumentException("Product type cannot be null or empty", nameof(productType));
@@ -35,7 +35,7 @@ public class ProductsManager : BaseManager, IProductsManager
         if (_authenticator == null)
             throw new InvalidOperationException("Authenticator is not initialized.");
 
-        var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/products", new { product_type = productType }), cancellationToken);
+        var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/products", new { product_type = productType, product_ids = productsIds }), cancellationToken);
 
         return response.As<InternalProduct[]>("products").ToModel();
     }

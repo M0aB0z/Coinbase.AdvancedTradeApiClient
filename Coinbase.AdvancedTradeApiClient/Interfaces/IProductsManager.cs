@@ -16,9 +16,10 @@ public interface IProductsManager
     /// Asynchronously retrieves a list of products.
     /// </summary>
     /// <param name="productType">The type of product. Defaults to "SPOT".</param>
+    /// <param name="productsIds">The products ids filter</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of products or null if none are found.</returns>
-    Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Product>> ListProductsAsync(string productType = "SPOT", string[] productsIds = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously retrieves a specific product by its ID.

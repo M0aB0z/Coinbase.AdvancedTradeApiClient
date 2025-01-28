@@ -10,7 +10,7 @@ var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 Console.WriteLine("Retrieving transactions summary...");
 
-Coinbase.AdvancedTradeApiClient.Models.TransactionsSummary transactionsSummary 
+Coinbase.AdvancedTradeApiClient.Models.TransactionsSummary transactionsSummary
     = await coinbaseClient.Fees.GetTransactionsSummaryAsync(ProductType.Spot, ProductVenue.Unknown, ContractExpiryType.Unknown, CancellationToken.None);
 
 
