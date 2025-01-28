@@ -68,6 +68,11 @@ internal class InternalOrder : IModelMapper<Order>
     [JsonPropertyName("created_time")]
     public DateTime? CreatedTime { get; set; }
 
+    /// Time of the most recent fill for this order.
+    /// </summary>
+    [JsonPropertyName("last_fill_time")]
+    public DateTime? LastFillTime { get; set; }
+
     /// <summary>
     /// The percentage of the order that has been completed.
     /// </summary>
@@ -205,6 +210,7 @@ internal class InternalOrder : IModelMapper<Order>
         return new Order
         {
             CreatedTime = CreatedTime,
+            LastFillTime = LastFillTime,
             EditHistory = EditHistory,
             CancelMessage = CancelMessage,
             ClientOrderId = ClientOrderId,
