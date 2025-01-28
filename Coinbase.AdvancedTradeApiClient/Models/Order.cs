@@ -54,6 +54,7 @@ public class Order
     /// The timestamp when the order was created.
     /// </summary>
     public DateTime? CreatedTime { get; internal set; }
+    public DateTime? LastFillTime { get; internal set; }
 
     /// <summary>
     /// The percentage of the order that has been completed.
