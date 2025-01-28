@@ -54,6 +54,10 @@ public class Order
     /// The timestamp when the order was created.
     /// </summary>
     public DateTime? CreatedTime { get; internal set; }
+
+    /// <summary>
+    /// The timestamp when the last fill occurred.
+    /// </summary>
     public DateTime? LastFillTime { get; internal set; }
 
     /// <summary>
