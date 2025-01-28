@@ -10,30 +10,37 @@ namespace Coinbase.AdvancedTradeApiClient.Utilities;
 /// </summary>
 internal static class UtilityHelper
 {
-
-
     /// <summary>
     /// Converts an object's properties to a dictionary of string keys and values.
     /// </summary>
     /// <param name="obj">The object to convert.</param>
     /// <returns>A dictionary representation of the object's properties.</returns>
-    private static Dictionary<string, string> ConvertToPropertiesDictionary(this object obj)
+    private static List<(string, string)> ConvertToPropertiesDictionary(this object obj)
     {
-        return obj.GetType().GetProperties()
-            .Where(prop => prop.GetValue(obj) != null) // Simplified null check
-            .ToDictionary(
-                prop => prop.Name,
-                prop =>
-                {
-                    var value = prop.GetValue(obj);
-                    if (value is Array array) // Handle arrays
-                        return string.Join(",", array.Cast<object>());
-                    else if (value is IList && !(value is string)) // Handle non-generic lists
-                        return string.Join(",", ((IList)value).Cast<object>());
-                    else // Handle other types
-                        return value?.ToString() ?? string.Empty;
-                }
-            );
+        var res = new List<(string, string)>();
+
+        var props = obj.GetType().GetProperties()
+            .Where(prop => prop.GetValue(obj) != null); // Simplified null check
+
+        foreach (var prop in props)
+        {
+            var propName = prop.Name;
+            var propValue = prop.GetValue(obj);
+            if (propValue is Array array) // Handle arrays
+            {
+                foreach (var item in array)
+                    res.Add((propName, item.ToString()));
+            }
+            else if (propValue is IList propValueList && propValue is not string) // Handle non-generic lists
+            {
+                foreach (var item in propValueList)
+                    res.Add((propName, item.ToString()));
+            }
+            else
+                res.Add((propName, propValue?.ToString() ?? string.Empty));
+        }
+
+        return res;
     }
 
     /// <summary>
@@ -45,7 +52,7 @@ internal static class UtilityHelper
     public static string BuildParamUri(string uri, object paramsObj)
     {
         var parameters = paramsObj.ConvertToPropertiesDictionary();
-        var queryString = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+        var queryString = string.Join("&", parameters.Select(kvp => $"{kvp.Item1}={kvp.Item2}"));
         return $"{uri}?{queryString}";
     }
 
