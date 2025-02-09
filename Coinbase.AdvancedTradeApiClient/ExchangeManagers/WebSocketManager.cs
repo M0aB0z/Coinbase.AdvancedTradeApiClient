@@ -1,6 +1,7 @@
 ﻿using Coinbase.AdvancedTradeApiClient.Enums;
 using Coinbase.AdvancedTradeApiClient.Models.WebSocket;
 using Coinbase.AdvancedTradeApiClient.Models.WebSocket.Internal;
+using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Coinbase.AdvancedTradeApiClient.ExchangeManagers;
 public sealed class WebSocketManager : IDisposable
 {
     // WebSocket instance for managing the WebSocket connection.
-    private readonly ClientWebSocket _webSocket = new ClientWebSocket();
+    private ClientWebSocket WebSocket { get; set; } = new ClientWebSocket();
 
     // The URI of the WebSocket server.
     private readonly Uri _webSocketUri;
@@ -33,13 +34,26 @@ public sealed class WebSocketManager : IDisposable
     private readonly Dictionary<string, Action<string>> _messageMap = [];
 
     // Semaphore for controlling access to critical sections of the code.
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     // Flag to track whether the object has been disposed.
     private bool _disposed;
 
+    private CancellationTokenSource _reconnectCancellationToken = new();
+
+    /// <summary>
+    /// Subscriptions channels names
+    /// </summary>
+    public string[] Subscriptions
+    {
+        get
+        {
+            return [.. _subscriptions.Keys.Select(x => x.ToString())];
+        }
+    }
+
     // Property to check if the WebSocket connection is open.
-    private bool IsWebSocketOpen => _webSocket.State == System.Net.WebSockets.WebSocketState.Open;
+    private bool IsWebSocketOpen => WebSocket.State == System.Net.WebSockets.WebSocketState.Open;
 
     // JSON serialization options for WebSocket messages.
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
@@ -48,7 +62,7 @@ public sealed class WebSocketManager : IDisposable
     };
 
     // Tracks the subscriptions
-    private readonly HashSet<string> _subscriptions = [];
+    private readonly Dictionary<ChannelType, string[]> _subscriptions = [];
 
     /// <summary>
     /// Gets the current status of the WebSocket connection.
@@ -57,7 +71,7 @@ public sealed class WebSocketManager : IDisposable
     {
         get
         {
-            return _webSocket.State switch
+            return WebSocket.State switch
             {
                 System.Net.WebSockets.WebSocketState.None => Enums.WebSocketState.None,
                 System.Net.WebSockets.WebSocketState.Connecting => Enums.WebSocketState.Connecting,
@@ -74,7 +88,7 @@ public sealed class WebSocketManager : IDisposable
     /// <summary>
     /// Gets the current active subscriptions.
     /// </summary>
-    public IEnumerable<string> Subscriptions => _subscriptions;
+    //public IEnumerable<string> Subscriptions => _subscriptions;
 
     // Buffer size for receiving messages.
     private readonly int _bufferSize;
@@ -116,25 +130,9 @@ public sealed class WebSocketManager : IDisposable
     /// <summary>
     /// Gets the string representation of a channel type.
     /// </summary>
+    /// <param name="cancellationToken"></param>
     /// <param name="channelType">The channel type to convert to a string.</param>
     /// <returns>The string representation of the channel type.</returns>
-    public static string GetChannelString(ChannelType channelType)
-    {
-        // Use a switch statement to map the channel type to its string representation.
-        return channelType switch
-        {
-            ChannelType.Candles => "candles",
-            ChannelType.Matches => "match",
-            ChannelType.Heartbeats => "heartbeats",
-            ChannelType.MarketTrades => "market_trades",
-            ChannelType.Status => "status",
-            ChannelType.Ticker => "ticker",
-            ChannelType.TickerBatch => "ticker_batch",
-            ChannelType.Level2 => "level2",
-            ChannelType.User => "user",
-            _ => throw new ArgumentOutOfRangeException(nameof(channelType), channelType, "Invalid channel type provided."),
-        };
-    }
 
     /// <summary>
     /// Establishes a WebSocket connection asynchronously.
@@ -146,17 +144,23 @@ public sealed class WebSocketManager : IDisposable
 
         try
         {
+            if (IsWebSocketOpen && !_reconnectCancellationToken.IsCancellationRequested)
+                _reconnectCancellationToken.Cancel();
+
+            _reconnectCancellationToken = new CancellationTokenSource();
+
             // If the WebSocket is already open, return without doing anything.
             if (IsWebSocketOpen)
-            {
                 return;
-            }
 
             // Attempt to establish the WebSocket connection to the specified URI.
-            await _webSocket.ConnectAsync(_webSocketUri, cancellationToken).ConfigureAwait(false);
+            await WebSocket.ConnectAsync(_webSocketUri, cancellationToken).ConfigureAwait(false);
 
             // Start the background task to receive WebSocket messages (fire and forget).
             _ = ReceiveMessagesAsync(cancellationToken).AsTask();
+
+            // Start the background task to reconnect web socket when closed
+            _ = AutoReconnectWatcher(_reconnectCancellationToken.Token);
         }
         finally
         {
@@ -170,16 +174,24 @@ public sealed class WebSocketManager : IDisposable
     /// </summary>
     public async ValueTask DisconnectAsync(CancellationToken cancellationToken)
     {
+        if (!_reconnectCancellationToken.IsCancellationRequested)
+            _reconnectCancellationToken.Cancel();
+
+        await InternalDisconnect(cancellationToken).ConfigureAwait(false);
+    }
+
+    internal async Task InternalDisconnect(CancellationToken cancellationToken)
+    {
         // Acquire the semaphore to ensure exclusive access to this method.
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         try
         {
             // Check if the WebSocket is open or in the process of closing.
-            if (IsWebSocketOpen || _webSocket.State == System.Net.WebSockets.WebSocketState.CloseReceived)
+            if (IsWebSocketOpen || WebSocket.State == System.Net.WebSockets.WebSocketState.CloseReceived)
             {
                 // Close the WebSocket gracefully with a normal closure status.
-                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", cancellationToken).ConfigureAwait(false);
+                await WebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", cancellationToken).ConfigureAwait(false);
             }
         }
         finally
@@ -187,6 +199,7 @@ public sealed class WebSocketManager : IDisposable
             // Always release the semaphore to allow other threads to access this method.
             _semaphore.Release();
         }
+
     }
 
     /// <summary>
@@ -206,11 +219,8 @@ public sealed class WebSocketManager : IDisposable
 
         try
         {
-            // Get the string representation of the channel type.
-            string channelString = GetChannelString(channelType);
-
             // Subscribe to the specified channel asynchronously.
-            await SubscribeToChannelAsync(products, channelString, cancellationToken).ConfigureAwait(false);
+            await SubscribeToChannelAsync(products, channelType, cancellationToken).ConfigureAwait(false);
         }
         finally
         {
@@ -236,14 +246,11 @@ public sealed class WebSocketManager : IDisposable
 
         try
         {
-            // Get the string representation of the channel type.
-            string channelString = GetChannelString(channelType);
-
             // Unsubscribe from the specified channel asynchronously.
-            await UnsubscribeFromChannelAsync(products, channelString, cancellationToken).ConfigureAwait(false);
+            await UnsubscribeFromChannelAsync(products, channelType, cancellationToken).ConfigureAwait(false);
 
             // Remove from the subscription set
-            _subscriptions.Remove(channelString);
+            _subscriptions.Remove(channelType);
         }
         finally
         {
@@ -256,21 +263,16 @@ public sealed class WebSocketManager : IDisposable
     /// Subscribes to a WebSocket channel with the specified products and channel name asynchronously.
     /// </summary>
     /// <param name="products">An optional array of product IDs to subscribe to.</param>
-    /// <param name="channelName">The name of the channel to subscribe to.</param>
+    /// <param name="channelType">The channel to subscribe to.</param>
     /// <param name="cancellationToken">Your cancellation token</param>
-    private async ValueTask SubscribeToChannelAsync(string[] products, string channelName, CancellationToken cancellationToken)
+    private async ValueTask SubscribeToChannelAsync(string[] products, ChannelType channelType, CancellationToken cancellationToken)
     {
-        // Check if the channel name is null and throw an exception if it is.
-        if (channelName == null) throw new ArgumentNullException(nameof(channelName));
-
         // If the WebSocket is not open, return without sending the subscribe message.
         if (!IsWebSocketOpen)
-        {
             return;
-        }
 
         // Create a subscription message based on the provided products and channel name.
-        var message = CreateSubscriptionMessage(products, channelName, "subscribe");
+        var message = CreateSubscriptionMessage(products, channelType, "subscribe");
 
         // Serialize the message to JSON format.
         var jsonString = JsonSerializer.Serialize(message, JsonOptions);
@@ -279,23 +281,20 @@ public sealed class WebSocketManager : IDisposable
         var byteData = Encoding.UTF8.GetBytes(jsonString);
 
         // Send the subscription message as a text message over the WebSocket.
-        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
+        await WebSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
 
         // Add to the subscription set
-        _subscriptions.Add(channelName);
+        _subscriptions[channelType] = products;
     }
 
     /// <summary>
     /// Unsubscribes from a WebSocket channel with the specified products and channel name asynchronously.
     /// </summary>
     /// <param name="products">An optional array of product IDs to unsubscribe from.</param>
-    /// <param name="channelName">The name of the channel to unsubscribe from.</param>
+    /// <param name="channelType">The channel to unsubscribe from.</param>
     /// <param name="cancellationToken">Your cancellation token</param>
-    private async ValueTask UnsubscribeFromChannelAsync(string[] products, string channelName, CancellationToken cancellationToken)
+    private async ValueTask UnsubscribeFromChannelAsync(string[] products, ChannelType channelType, CancellationToken cancellationToken)
     {
-        // Check if the channel name is null and throw an exception if it is.
-        if (channelName == null) throw new ArgumentNullException(nameof(channelName));
-
         // If the WebSocket is not open, return without sending the unsubscribe message.
         if (!IsWebSocketOpen)
         {
@@ -303,7 +302,7 @@ public sealed class WebSocketManager : IDisposable
         }
 
         // Create an unsubscribe message based on the provided products and channel name.
-        var message = CreateSubscriptionMessage(products, channelName, "unsubscribe");
+        var message = CreateSubscriptionMessage(products, channelType, "unsubscribe");
 
         // Serialize the message to JSON format.
         var jsonString = JsonSerializer.Serialize(message, JsonOptions);
@@ -312,10 +311,10 @@ public sealed class WebSocketManager : IDisposable
         var byteData = Encoding.UTF8.GetBytes(jsonString);
 
         // Send the unsubscribe message as a text message over the WebSocket.
-        await _webSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
+        await WebSocket.SendAsync(new ArraySegment<byte>(byteData), WebSocketMessageType.Text, true, cancellationToken).ConfigureAwait(false);
 
         // Remove from the subscription set
-        _subscriptions.Remove(channelName);
+        _subscriptions.Remove(channelType);
     }
 
     /// <summary>
@@ -327,11 +326,9 @@ public sealed class WebSocketManager : IDisposable
     /// <param name="type">The type of the subscription message (e.g., 'subscribe' or 'unsubscribe').</param>
     /// <returns>A subscription message object in JSON format.</returns>
     /// <exception cref="ArgumentNullException">Thrown if channelName or type is null or empty.</exception>
-    private object CreateSubscriptionMessage(string[] products, string channelName, string type)
+    private object CreateSubscriptionMessage(string[] products, ChannelType channelType, string type)
     {
         // Validate parameters to ensure they are not null or empty
-        if (string.IsNullOrWhiteSpace(channelName))
-            throw new ArgumentNullException(nameof(channelName));
         if (string.IsNullOrWhiteSpace(type))
             throw new ArgumentNullException(nameof(type));
 
@@ -343,7 +340,7 @@ public sealed class WebSocketManager : IDisposable
         {
             {"type", type},
             {"product_ids", products},
-            {"channel", channelName},
+            {"channel", channelType.GetDescription()},
             {"api_key", _apiKey},
             {"timestamp", timestamp}
         };
@@ -431,32 +428,88 @@ public sealed class WebSocketManager : IDisposable
     }
 
     /// <summary>
+    /// Reconnect method on connection loss
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<bool> ReconnectIfNeeded(CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Acquire the semaphore to ensure exclusive access to this method.
+            var reconnectionNeeded = false;
+            try
+            {
+                await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+                reconnectionNeeded = _subscriptions.Count > 0 && WebSocket.State != System.Net.WebSockets.WebSocketState.Open;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+
+            if (reconnectionNeeded)
+            {
+                WebSocket.Dispose();
+                WebSocket = new ClientWebSocket();
+                await ConnectAsync(cancellationToken).ConfigureAwait(false);
+                var subscriptions = _subscriptions.ToDictionary(x => x.Key, x => x.Value);
+                foreach (var subscription in subscriptions)
+                {
+                    await UnsubscribeAsync(subscription.Value, subscription.Key, cancellationToken);
+                    await SubscribeToChannelAsync(subscription.Value, subscription.Key, cancellationToken);
+                }
+                return true;
+            }
+        }
+        finally
+        {
+            //_semaphore.Release();
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Asynchronously receives WebSocket messages and processes them.
     /// </summary>
+
+    private async ValueTask AutoReconnectWatcher(CancellationToken cancellationToken)
+    {
+        try
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(250);
+                if (!cancellationToken.IsCancellationRequested)
+                    await ReconnectIfNeeded(cancellationToken);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex is not TaskCanceledException)
+                throw;
+        }
+    }
     private async ValueTask ReceiveMessagesAsync(CancellationToken cancellationToken)
     {
         // Check if the WebSocket is not open, and if not, return immediately.
         if (!IsWebSocketOpen)
-        {
             return;
-        }
 
         var buffer = new byte[_bufferSize];
         var messageSegments = new List<ArraySegment<byte>>();
 
-        while (IsWebSocketOpen)
+        while (IsWebSocketOpen && !cancellationToken.IsCancellationRequested)
         {
             // Receive a WebSocket message into the buffer.
-            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken).ConfigureAwait(false);
+            var result = await WebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken).ConfigureAwait(false);
 
             // Add the received message segment to the list.
             messageSegments.Add(new ArraySegment<byte>(buffer, 0, result.Count));
 
             // Check if the received message is of type WebSocketMessageType.Close, indicating the WebSocket is closing.
             if (result.MessageType == WebSocketMessageType.Close)
-            {
                 break;
-            }
 
             // Check if this is the end of a complete message.
             if (result.EndOfMessage)
@@ -469,9 +522,7 @@ public sealed class WebSocketManager : IDisposable
                 foreach (var segment in messageSegments)
                 {
                     if (segment.Array is null)
-                    {
                         throw new InvalidOperationException("ArraySegment does not have an underlying array.");
-                    }
 
                     // Copy the data from each segment into the complete message buffer.
                     Buffer.BlockCopy(segment.Array, segment.Offset, messageBuffer, offset, segment.Count);
@@ -486,17 +537,13 @@ public sealed class WebSocketManager : IDisposable
 
                 // Check if the string data is not empty or null, and then process it.
                 if (!string.IsNullOrWhiteSpace(stringData))
-                {
                     ProcessMessage(stringData);
-                }
 
                 // Clear the message segments list to prepare for the next message.
                 messageSegments.Clear();
             }
         }
     }
-
-
 
     /// <summary>
     /// Event raised when a WebSocket message is received.
@@ -563,7 +610,7 @@ public sealed class WebSocketManager : IDisposable
         {
             if (disposing)
             {
-                _webSocket.Dispose();
+                WebSocket.Dispose();
             }
 
             _disposed = true;

@@ -39,18 +39,23 @@ class Program
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Connecting to the WebSocket...");
             await webSocketManager.ConnectAsync(CancellationToken.None);
-            LogWebSocketStatus();
-
-            // Start tasks to monitor and handle WebSocket connection and status
-            var statusTask = LogConnectionStatusAndSubscriptionsAsync();
-            var monitorTask = MonitorAndReconnectAsync();
-            var forceDisconnectTask = ForceDisconnectAsync();
-
+            
             // Subscribe to necessary channels
             await SubscribeToChannelsAsync();
 
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
+            var statusTimer = new System.Timers.Timer(2000);
+            statusTimer.Elapsed += (e, a) =>
+            {
+                LogWebSocketStatus();
+            };
+            statusTimer.Enabled = true;
+
+            while(true)
+            {
+                Console.WriteLine($"Press a key to disconnect");
+                Console.ReadKey();
+                await webSocketManager!.InternalDisconnect(CancellationToken.None);
+            }
         }
         catch (Exception ex)
         {
@@ -105,102 +110,6 @@ class Program
             Console.WriteLine($"Raw message received at {DateTime.UtcNow}: {e.StringData}");
         };
     }
-
-    /// <summary>
-    /// Logs WebSocket connection status and subscriptions every 5 seconds.
-    /// </summary>
-    private static async Task LogConnectionStatusAndSubscriptionsAsync()
-    {
-        while (true)
-        {
-            LogWebSocketStatus();
-            await Task.Delay(5000);
-        }
-    }
-
-    /// <summary>
-    /// Monitors the WebSocket connection and attempts to reconnect if disconnected.
-    /// </summary>
-    private static async Task MonitorAndReconnectAsync()
-    {
-        while (true)
-        {
-            // Wait for 5 seconds before checking the WebSocket state again
-            await Task.Delay(5000);
-
-            // Check if the WebSocket connection is not open
-            if (webSocketManager!.WebSocketState != WebSocketState.Open)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("WebSocket disconnected. Attempting to reconnect...");
-                Console.ResetColor();
-
-                try
-                {
-                    // Attempt to reconnect and resubscribe to channels
-                    await ReconnectAndResubscribeAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Log any errors that occur during the reconnection process
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred during reconnection and resubscription: {ex.Message}");
-                    Console.ResetColor();
-                }
-            }
-        }
-    }
-
-
-    /// <summary>
-    /// Forces a disconnect every 30 seconds to test reconnection logic.
-    /// </summary>
-    private static async Task ForceDisconnectAsync()
-    {
-        while (true)
-        {
-            // Wait for 30 seconds before forcing a disconnect
-            await Task.Delay(30000);
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Forcing disconnect...");
-
-            // Forcefully disconnect the WebSocket
-            await webSocketManager!.DisconnectAsync(CancellationToken.None);
-
-            Console.WriteLine("Forced disconnect complete.");
-            Console.ResetColor();
-        }
-    }
-
-
-    /// <summary>
-    /// Reconnects to the WebSocket and resubscribes to necessary channels.
-    /// </summary>
-    private static async Task ReconnectAndResubscribeAsync()
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Reconnecting to the WebSocket...");
-
-        // Dispose of the current WebSocketManager instance to ensure a fresh connection
-        webSocketManager!.Dispose();
-
-        // Create a new WebSocketManager instance using the Coinbase client
-        webSocketManager = new CoinbaseClient(apiKey: apiKey, apiSecret: apiSecret).WebSocket;
-
-        // Re-subscribe to WebSocket events with the new WebSocketManager instance
-        SubscribeToWebSocketEvents(webSocketManager);
-
-        // Connect to the WebSocket server
-        await webSocketManager.ConnectAsync(CancellationToken.None);
-
-        // Log the current status of the WebSocket connection
-        LogWebSocketStatus();
-
-        // Resubscribe to the necessary channels after reconnecting
-        await SubscribeToChannelsAsync();
-    }
-
 
     /// <summary>
     /// Subscribes to required channels like Heartbeats and Candles.
