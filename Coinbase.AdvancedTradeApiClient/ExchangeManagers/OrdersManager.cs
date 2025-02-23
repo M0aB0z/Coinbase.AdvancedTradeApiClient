@@ -6,6 +6,7 @@ using Coinbase.AdvancedTradeApiClient.Utilities;
 using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -82,41 +83,90 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<Fill>> ListFillsAsync(
-        string orderId = null,
+    //public async Task<IReadOnlyList<Fill>> ListFillsAsync(
+    //    string orderId = null,
+    //    string productId = null,
+    //    DateTime? startSequenceTimestamp = null,
+    //    DateTime? endSequenceTimestamp = null,
+    //    CancellationToken cancellationToken = default)
+    //{
+    //    // Convert DateTime to the desired ISO8601 format
+    //    string startSequenceTimestampString = startSequenceTimestamp?.FormatDateToISO8601();
+    //    string endSequenceTimestampString = endSequenceTimestamp?.FormatDateToISO8601();
+
+    //    // Prepare request parameters using anonymous type
+    //    var paramsObj = new
+    //    {
+    //        order_id = orderId,
+    //        product_id = productId,
+    //        start_sequence_timestamp = startSequenceTimestampString,
+    //        end_sequence_timestamp = endSequenceTimestampString,
+    //        sort_by = "TRADE_TIME",
+    //        limit = 2000
+    //    };
+
+    //    try
+    //    {
+    //        // Send authenticated request to the API and obtain response
+    //        var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
+
+    //        // Deserialize response to obtain fills
+    //        return response.As<InternalFill[]>("fills").ToModel();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Rethrow exception with additional context
+    //        throw new InvalidOperationException("Failed to list fills", ex);
+    //    }
+    //}
+
+    public async Task<IReadOnlyList<Fill>> ListFillsAsync(string orderId = null,
         string productId = null,
         DateTime? startSequenceTimestamp = null,
-        DateTime? endSequenceTimestamp = null,
-        CancellationToken cancellationToken = default)
+        DateTime? endSequenceTimestamp = null, CancellationToken cancellationToken = default)
     {
-        // Convert DateTime to the desired ISO8601 format
-        string startSequenceTimestampString = startSequenceTimestamp?.FormatDateToISO8601();
-        string endSequenceTimestampString = endSequenceTimestamp?.FormatDateToISO8601();
-
-        // Prepare request parameters using anonymous type
-        var paramsObj = new
-        {
-            order_id = orderId,
-            product_id = productId,
-            start_sequence_timestamp = startSequenceTimestampString,
-            end_sequence_timestamp = endSequenceTimestampString
-        };
-
         try
         {
-            // Send authenticated request to the API and obtain response
-            var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
+            int size = 100;
 
-            // Deserialize response to obtain fills
-            return response.As<InternalFill[]>("fills").ToModel();
+            // Convert DateTime to the desired ISO8601 format
+            string startSequenceTimestampString = startSequenceTimestamp?.FormatDateToISO8601();
+            string endSequenceTimestampString = endSequenceTimestamp?.FormatDateToISO8601();
+
+            var fills = new List<Fill>();
+            var maxPageSize = 500;
+            var pageSize = Math.Min(size, maxPageSize);
+
+            string cursor = null;
+
+            do
+            {
+                var limit = Math.Min(size - fills.Count, maxPageSize);
+                var paramsObj = new
+                {
+                    cursor,
+                    order_id = orderId,
+                    product_ids = new string[] { productId },
+                    sort_by = "TRADE_TIME",
+                    limit = size,
+                    start_sequence_timestamp = startSequenceTimestampString,
+                    end_sequence_timestamp = endSequenceTimestampString,
+                };
+
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj));
+                fills.AddRange(response.As<InternalFill[]>("fills").ToModel());
+
+                cursor = response.As<string>("cursor");
+            } while (!string.IsNullOrEmpty(cursor));
+
+            return fills;
         }
         catch (Exception ex)
         {
-            // Rethrow exception with additional context
+            // Wrap and rethrow exceptions to provide more context.
             throw new InvalidOperationException("Failed to list fills", ex);
         }
     }
-
 
     /// <inheritdoc/>
     public async Task<Order> GetOrderAsync(string orderId, CancellationToken cancellationToken = default)
