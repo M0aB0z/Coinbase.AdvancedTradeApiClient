@@ -39,7 +39,7 @@ class Program
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Connecting to the WebSocket...");
             await webSocketManager.ConnectAsync(CancellationToken.None);
-            
+
             // Subscribe to necessary channels
             await SubscribeToChannelsAsync();
 
@@ -50,7 +50,7 @@ class Program
             };
             statusTimer.Enabled = true;
 
-            while(true)
+            while (true)
             {
                 Console.WriteLine($"Press a key to disconnect");
                 Console.ReadKey();
@@ -97,17 +97,11 @@ class Program
     {
         webSocketManager.HeartbeatMessageReceived += (sender, heartbeatData) =>
         {
-            Console.WriteLine($"Received heartbeat at {DateTime.UtcNow}");
+            Console.WriteLine($"Received heartbeat at {DateTime.UtcNow}  {heartbeatData.Message.Events.Last().CurrentTime}");
         };
-
         webSocketManager.CandleMessageReceived += (sender, candleData) =>
         {
-            Console.WriteLine($"Received candle data at {DateTime.UtcNow}");
-        };
-
-        webSocketManager.MessageReceived += (sender, e) =>
-        {
-            Console.WriteLine($"Raw message received at {DateTime.UtcNow}: {e.StringData}");
+            Console.WriteLine($"Received candle data at {DateTime.UtcNow}  {candleData.Message.Events.Last().Candles.Last().StartDate.ToString("HH-mm-ss")}");
         };
     }
 
@@ -120,7 +114,7 @@ class Program
         Console.WriteLine("Subscribing to channels...");
 
         await webSocketManager!.SubscribeAsync(["BTC-USDC"], ChannelType.Heartbeats, CancellationToken.None);
-        await webSocketManager.SubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
+        await webSocketManager!.SubscribeAsync(["BTC-USDC"], ChannelType.Candles, CancellationToken.None);
 
         LogWebSocketStatus();
         Console.ResetColor();
