@@ -9,7 +9,7 @@ var apiSecret = Environment.GetEnvironmentVariable("CB_API_SECRET_ALBUS", Enviro
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 Console.WriteLine("Retrieving all orders...");
-var orders = await coinbaseClient.Orders.ListOrdersAsync("DOGE-USDC", [OrderStatus.FILLED]);
+var orders = await coinbaseClient.Orders.ListOrdersAsync(null, [OrderStatus.FILLED]);
 Console.WriteLine(orders.Count + " orders retrieved");
 
 //Console.WriteLine("Retrieving all filled orders...");

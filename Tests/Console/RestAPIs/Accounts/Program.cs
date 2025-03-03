@@ -18,4 +18,7 @@ Console.WriteLine("Retrieving all accounts...");
 var allAccounts = await coinbaseClient.Accounts.ListAllAccountsAsync();
 Console.WriteLine(allAccounts.Count + " accounts retrieved");
 
+var usdcAccount = allAccounts.First(x => x.Currency == "USDC");
+
+
 Console.ReadLine();

@@ -6,6 +6,7 @@ using Coinbase.AdvancedTradeApiClient.Utilities;
 using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -51,21 +52,36 @@ public class OrdersManager : BaseManager, IOrdersManager
         string orderTypeString = orderType?.GetDescription();
         string orderSideString = orderSide?.GetDescription();
 
-        // Create an anonymous object with the parameters
-        var paramsObj = new
-        {
-            product_id = productId,
-            order_status = orderStatusStrings,
-            start_date = startDateString,
-            end_date = endDateString,
-            order_type = orderTypeString,
-            order_side = orderSideString
-        };
-
         try
         {
-            var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj), cancellationToken);
-            return response.As<InternalOrder[]>("orders").ToModel();
+            int size = 100;
+
+            var orders = new List<Order>();
+            var pageSize = 1000;
+
+            string cursor = null;
+
+            do
+            {
+                var limit = Math.Min(size - orders.Count, pageSize);
+                var paramsObj = new
+                {
+                    cursor,
+                    product_id = productId,
+                    order_status = orderStatusStrings,
+                    start_date = startDateString,
+                    end_date = endDateString,
+                    order_type = orderTypeString,
+                    order_side = orderSideString
+                };
+
+                var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj));
+                orders.AddRange(response.As<InternalOrder[]>("orders").ToModel());
+
+                cursor = response.As<string>("cursor");
+            } while (!string.IsNullOrEmpty(cursor));
+
+            return orders;
         }
         catch (Exception ex)
         {
@@ -80,45 +96,6 @@ public class OrdersManager : BaseManager, IOrdersManager
             throw new ArgumentException("Cannot pair OPEN orders with other order types.");
         }
     }
-
-
-    /// <inheritdoc/>
-    //public async Task<IReadOnlyList<Fill>> ListFillsAsync(
-    //    string orderId = null,
-    //    string productId = null,
-    //    DateTime? startSequenceTimestamp = null,
-    //    DateTime? endSequenceTimestamp = null,
-    //    CancellationToken cancellationToken = default)
-    //{
-    //    // Convert DateTime to the desired ISO8601 format
-    //    string startSequenceTimestampString = startSequenceTimestamp?.FormatDateToISO8601();
-    //    string endSequenceTimestampString = endSequenceTimestamp?.FormatDateToISO8601();
-
-    //    // Prepare request parameters using anonymous type
-    //    var paramsObj = new
-    //    {
-    //        order_id = orderId,
-    //        product_id = productId,
-    //        start_sequence_timestamp = startSequenceTimestampString,
-    //        end_sequence_timestamp = endSequenceTimestampString,
-    //        sort_by = "TRADE_TIME",
-    //        limit = 2000
-    //    };
-
-    //    try
-    //    {
-    //        // Send authenticated request to the API and obtain response
-    //        var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/fills", paramsObj), cancellationToken);
-
-    //        // Deserialize response to obtain fills
-    //        return response.As<InternalFill[]>("fills").ToModel();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // Rethrow exception with additional context
-    //        throw new InvalidOperationException("Failed to list fills", ex);
-    //    }
-    //}
 
     public async Task<IReadOnlyList<Fill>> ListFillsAsync(string orderId = null,
         string productId = null,
