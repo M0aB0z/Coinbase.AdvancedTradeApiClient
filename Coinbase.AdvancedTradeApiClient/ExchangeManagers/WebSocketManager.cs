@@ -21,6 +21,11 @@ public sealed class WebSocketManager : IDisposable
     // WebSocket instance for managing the WebSocket connection.
     private ClientWebSocket WebSocket { get; set; } = new ClientWebSocket();
 
+    /// <summary>
+    /// Event raised when a log message is generated.
+    /// </summary>
+    public EventHandler<string> OnLogEvent { get; set; }
+
     // The URI of the WebSocket server.
     private readonly Uri _webSocketUri;
 
@@ -131,7 +136,6 @@ public sealed class WebSocketManager : IDisposable
     /// Gets the string representation of a channel type.
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <param name="channelType">The channel type to convert to a string.</param>
     /// <returns>The string representation of the channel type.</returns>
 
     /// <summary>
@@ -297,9 +301,7 @@ public sealed class WebSocketManager : IDisposable
     {
         // If the WebSocket is not open, return without sending the unsubscribe message.
         if (!IsWebSocketOpen)
-        {
             return;
-        }
 
         // Create an unsubscribe message based on the provided products and channel name.
         var message = CreateSubscriptionMessage(products, channelType, "unsubscribe");
@@ -322,7 +324,7 @@ public sealed class WebSocketManager : IDisposable
     /// The message object is structured differently based on the type of API key used.
     /// </summary>
     /// <param name="products">An optional array of product IDs to include in the subscription.</param>
-    /// <param name="channelName">The name of the channel to subscribe to or unsubscribe from.</param>
+    /// <param name="channelType">The channel to subscribe to or unsubscribe from.</param>
     /// <param name="type">The type of the subscription message (e.g., 'subscribe' or 'unsubscribe').</param>
     /// <returns>A subscription message object in JSON format.</returns>
     /// <exception cref="ArgumentNullException">Thrown if channelName or type is null or empty.</exception>
@@ -450,15 +452,24 @@ public sealed class WebSocketManager : IDisposable
 
             if (reconnectionNeeded)
             {
+                OnLogEvent?.Invoke(this, "Reconnecting WebSocket in 5s...");
+                await Task.Delay(5000, cancellationToken);
+                OnLogEvent?.Invoke(this, "Force disconnect WebSocket");
+
                 WebSocket.Dispose();
                 WebSocket = new ClientWebSocket();
+
+                OnLogEvent?.Invoke(this, "Reconnecting WebSocket...");
                 await ConnectAsync(cancellationToken).ConfigureAwait(false);
+
+                OnLogEvent?.Invoke(this, "Restoring subscriptions...");
                 var subscriptions = _subscriptions.ToDictionary(x => x.Key, x => x.Value);
                 foreach (var subscription in subscriptions)
                 {
                     await UnsubscribeAsync(subscription.Value, subscription.Key, cancellationToken);
                     await SubscribeToChannelAsync(subscription.Value, subscription.Key, cancellationToken);
                 }
+                OnLogEvent?.Invoke(this, "Websocket connected, subscriptions restored !");
                 return true;
             }
         }
@@ -479,7 +490,7 @@ public sealed class WebSocketManager : IDisposable
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(250);
+                await Task.Delay(250, cancellationToken);
                 if (!cancellationToken.IsCancellationRequested)
                     await ReconnectIfNeeded(cancellationToken);
             }
@@ -488,6 +499,8 @@ public sealed class WebSocketManager : IDisposable
         {
             if (ex is not TaskCanceledException)
                 throw;
+            else
+                OnLogEvent?.Invoke(this, "AutoReconnectWatcher stopped due to task cancellation");
         }
     }
     private async ValueTask ReceiveMessagesAsync(CancellationToken cancellationToken)
