@@ -12,12 +12,15 @@ public class TestOrders : TestBase
         await ExecuteRateLimitedTest(async () =>
         {
             var result = await _coinbaseClient!.Orders.ListOrdersAsync(
-                "BTC-USDC",
-                [OrderStatus.CANCELLED],
-                new(2023, 10, 1),
-                new(2023, 10, 31),
-                OrderType.Limit,
-                OrderSide.Buy
+                new AdvancedTradeApiClient.Models.Queries.OrderQueryFilter
+                {
+                    ProductId = "BTC-USDC",
+                    OrderStatus = [OrderStatus.CANCELLED],
+                    StartDate = new(2023, 10, 1),
+                    EndDate = new(2023, 10, 31),
+                    OrderType = OrderType.Limit,
+                    OrderSide = OrderSide.Buy
+                }
             );
 
             Assert.IsNotNull(result, "Result should not be null.");

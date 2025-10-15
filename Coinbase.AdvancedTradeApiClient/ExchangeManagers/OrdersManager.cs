@@ -2,6 +2,7 @@
 using Coinbase.AdvancedTradeApiClient.Interfaces;
 using Coinbase.AdvancedTradeApiClient.Models;
 using Coinbase.AdvancedTradeApiClient.Models.Internal;
+using Coinbase.AdvancedTradeApiClient.Models.Queries;
 using Coinbase.AdvancedTradeApiClient.Utilities;
 using Coinbase.AdvancedTradeApiClient.Utilities.Extensions;
 using System;
@@ -34,23 +35,18 @@ public class OrdersManager : BaseManager, IOrdersManager
 
     /// <inheritdoc/>
     public async Task<IReadOnlyList<Order>> ListOrdersAsync(
-        string productId = null,
-        OrderStatus[] orderStatus = null,
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        OrderType? orderType = null,
-        OrderSide? orderSide = null,
+        OrderQueryFilter queryFilter = null,
         CancellationToken cancellationToken = default)
     {
         // Guard against invalid OrderStatus combinations
-        ValidateOrderStatus(orderStatus);
+        ValidateOrderStatus(queryFilter?.OrderStatus);
 
         // Use utility methods for conversion
-        string[] orderStatusStrings = UtilityHelper.EnumToStringArray(orderStatus);
-        string startDateString = startDate?.FormatDateToISO8601();
-        string endDateString = endDate?.FormatDateToISO8601();
-        string orderTypeString = orderType?.GetDescription();
-        string orderSideString = orderSide?.GetDescription();
+        string[] orderStatusStrings = UtilityHelper.EnumToStringArray(queryFilter?.OrderStatus);
+        string startDateString = queryFilter?.StartDate?.FormatDateToISO8601();
+        string endDateString = queryFilter?.EndDate?.FormatDateToISO8601();
+        string orderTypeString = queryFilter?.OrderType?.GetDescription();
+        string orderSideString = queryFilter?.OrderSide?.GetDescription();
 
         try
         {
@@ -63,23 +59,25 @@ public class OrdersManager : BaseManager, IOrdersManager
 
             do
             {
-                var limit = Math.Min(size - orders.Count, pageSize);
+                var limit = queryFilter.Limit ?? Math.Min(size, pageSize);
                 var paramsObj = new
                 {
                     cursor,
-                    product_id = productId,
+                    limit,
+                    product_id = queryFilter?.ProductId,
                     order_status = orderStatusStrings,
                     start_date = startDateString,
                     end_date = endDateString,
                     order_type = orderTypeString,
-                    order_side = orderSideString
+                    order_side = orderSideString,                 
+                    sort_by = queryFilter?.SortingType?.GetDescription() ?? OrderSortingType.Unknown.GetDescription()
                 };
 
                 var response = await _authenticator.GetAsync(UtilityHelper.BuildParamUri("/api/v3/brokerage/orders/historical/batch", paramsObj));
                 orders.AddRange(response.As<InternalOrder[]>("orders").ToModel());
 
                 cursor = response.As<string>("cursor");
-            } while (!string.IsNullOrEmpty(cursor));
+            } while (!string.IsNullOrEmpty(cursor) && (!queryFilter.Limit.HasValue || orders.Count < queryFilter.Limit.Value));
 
             return orders;
         }

@@ -1,5 +1,6 @@
 ﻿using Coinbase.AdvancedTradeApiClient.Enums;
 using Coinbase.AdvancedTradeApiClient.Models;
+using Coinbase.AdvancedTradeApiClient.Models.Queries;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,21 +16,11 @@ public interface IOrdersManager
     /// <summary>
     /// Asynchronously lists orders based on the provided criteria.
     /// </summary>
-    /// <param name="productId">Optional product ID to filter the results.</param>
-    /// <param name="orderStatus">Optional array of order statuses to filter the results.</param>
-    /// <param name="startDate">Optional start date to filter the results.</param>
-    /// <param name="endDate">Optional end date to filter the results.</param>
-    /// <param name="orderType">Optional order type to filter the results.</param>
-    /// <param name="orderSide">Optional order side to filter the results.</param>
+    /// <param name="filter">Optional filter</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains a list of orders that match the given criteria.</returns>
     Task<IReadOnlyList<Order>> ListOrdersAsync(
-        string productId = null,
-        OrderStatus[] orderStatus = null,
-        DateTime? startDate = null,
-        DateTime? endDate = null,
-        OrderType? orderType = null,
-        OrderSide? orderSide = null,
+        OrderQueryFilter? filter,
         CancellationToken cancellationToken = default
     );
 

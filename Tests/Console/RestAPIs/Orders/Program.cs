@@ -1,6 +1,7 @@
 ﻿// Coinbase Cloud Trading Keys
 using Coinbase.AdvancedTradeApiClient;
 using Coinbase.AdvancedTradeApiClient.Enums;
+using Coinbase.AdvancedTradeApiClient.Models.Queries;
 
 var apiKey = Environment.GetEnvironmentVariable("CB_API_KEY_ALBUS", EnvironmentVariableTarget.User)
              ?? throw new InvalidOperationException("API Key not found");
@@ -9,7 +10,12 @@ var apiSecret = Environment.GetEnvironmentVariable("CB_API_SECRET_ALBUS", Enviro
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 Console.WriteLine("Retrieving all orders...");
-var orders = await coinbaseClient.Orders.ListOrdersAsync(null, [OrderStatus.FILLED]);
+var orders = await coinbaseClient.Orders.ListOrdersAsync(new OrderQueryFilter
+{
+    OrderStatus = [OrderStatus.FILLED],
+    Limit = 100,
+    SortingType = OrderSortingType.LastFillTime,
+});
 Console.WriteLine(orders.Count + " orders retrieved");
 
 //Console.WriteLine("Retrieving all filled orders...");

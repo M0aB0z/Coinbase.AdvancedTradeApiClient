@@ -100,3 +100,15 @@ public enum OrderSide
     [Description("SELL")]
     Sell
 }
+
+public enum OrderSortingType
+{
+    [Description("UNKNOWN_SORT_BY")]
+    Unknown = 0,
+
+    [Description("LIMIT_PRICE")]
+    LimitPrice = 1,
+    
+    [Description("LAST_FILL_TIME")]
+    LastFillTime = 2
+}
