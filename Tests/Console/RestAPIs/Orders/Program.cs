@@ -10,13 +10,14 @@ var apiSecret = Environment.GetEnvironmentVariable("CB_API_SECRET_ALBUS", Enviro
 var coinbaseClient = new CoinbaseClient(apiKey, apiSecret);
 
 Console.WriteLine("Retrieving all orders...");
-var orders = await coinbaseClient.Orders.ListOrdersAsync(new OrderQueryFilter
+var paginatedOrders = await coinbaseClient.Orders.ListOrdersAsync(new OrderQueryFilter
 {
     OrderStatus = [OrderStatus.FILLED],
     Limit = 100,
+    //Cursor = "2",
     SortingType = OrderSortingType.LastFillTime,
 });
-Console.WriteLine(orders.Count + " orders retrieved");
+Console.WriteLine(paginatedOrders.orders.Count + " orders retrieved");
 
 //Console.WriteLine("Retrieving all filled orders...");
 //var filledOrders = await coinbaseClient.Orders.ListFillsAsync(null, "SOL-USDC");

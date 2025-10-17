@@ -34,7 +34,7 @@ public class OrdersManager : BaseManager, IOrdersManager
 
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<Order>> ListOrdersAsync(
+    public async Task<(IReadOnlyList<Order> orders, string cursor)> ListOrdersAsync(
         OrderQueryFilter queryFilter = null,
         CancellationToken cancellationToken = default)
     {
@@ -55,7 +55,7 @@ public class OrdersManager : BaseManager, IOrdersManager
             var orders = new List<Order>();
             var pageSize = 1000;
 
-            string cursor = null;
+            string cursor = queryFilter?.Cursor;
 
             do
             {
@@ -79,7 +79,7 @@ public class OrdersManager : BaseManager, IOrdersManager
                 cursor = response.As<string>("cursor");
             } while (!string.IsNullOrEmpty(cursor) && (!queryFilter.Limit.HasValue || orders.Count < queryFilter.Limit.Value));
 
-            return orders;
+            return (orders, cursor);
         }
         catch (Exception ex)
         {

@@ -49,5 +49,14 @@ public class OrderQueryFilter
     /// </summary>
     public OrderSortingType? SortingType { get; set; } = null;
 
+    /// <summary>
+    /// Max page size
+    /// </summary>
     public int? Limit { get; set; } = null;
+
+
+    /// <summary>
+    ///  Pagination cursor for fetching the next set of results.
+    /// </summary>
+    public string? Cursor { get; set; } = null;
 }

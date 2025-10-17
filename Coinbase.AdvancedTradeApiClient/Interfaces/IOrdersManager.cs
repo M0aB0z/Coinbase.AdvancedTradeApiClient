@@ -19,7 +19,7 @@ public interface IOrdersManager
     /// <param name="filter">Optional filter</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task representing the operation. The task result contains a list of orders that match the given criteria.</returns>
-    Task<IReadOnlyList<Order>> ListOrdersAsync(
+    Task<(IReadOnlyList<Order> orders, string cursor)> ListOrdersAsync(
         OrderQueryFilter? filter,
         CancellationToken cancellationToken = default
     );

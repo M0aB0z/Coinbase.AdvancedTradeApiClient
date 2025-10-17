@@ -24,9 +24,9 @@ public class TestOrders : TestBase
             );
 
             Assert.IsNotNull(result, "Result should not be null.");
-            Assert.IsTrue(result.Count > 0, "Should return at least one order.");
-            Assert.IsTrue(result.All(r => r.OrderType == OrderType.Limit), "All orders should be of type LIMIT.");
-            Assert.IsTrue(result.All(r => r.Side == OrderSide.Buy), "All orders should be of side BUY.");
+            Assert.IsTrue(result.orders.Count > 0, "Should return at least one order.");
+            Assert.IsTrue(result.orders.All(r => r.OrderType == OrderType.Limit), "All orders should be of type LIMIT.");
+            Assert.IsTrue(result.orders.All(r => r.Side == OrderSide.Buy), "All orders should be of side BUY.");
         });
     }
 
